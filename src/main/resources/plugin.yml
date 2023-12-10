@@ -1,0 +1,7 @@
+name: JojosSMPEngine
+main: it.einjojo.smpengine.SMPEnginePlugin
+version: ${version}
+author: EinJoJo
+description: A plugin for SMP Engine
+api-version: 1.20
+website: einjojo.it
