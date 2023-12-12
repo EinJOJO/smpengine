@@ -2,7 +2,6 @@ package it.einjojo.smpengine.config;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.io.IOException;
 
 public class DatabaseConfig extends Config {
@@ -15,7 +14,7 @@ public class DatabaseConfig extends Config {
     private int connectionTimeout;
 
     public DatabaseConfig(JavaPlugin plugin) throws IOException {
-        super(new File(plugin.getDataFolder(), "database.yml"));
+        super(plugin.getDataFolder(), "database.yml");
         this.plugin = plugin;
         load();
     }

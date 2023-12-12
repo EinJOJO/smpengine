@@ -2,6 +2,7 @@ package it.einjojo.smpengine.command.admin;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -26,12 +27,32 @@ public class AdminCommand implements TabCompleter, CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length == 0) {
+            if (sender.hasPermission("smpengine.admin")) {
+                showHelp(sender);
+            } else {
+                sender.sendMessage(plugin.getPrefix().append(plugin.getMessage("no-permission")));
+            }
+            return true;
+        }
         Command subCommand = subCommands.get(args[0]);
         if (subCommand == null) {
             return true;
         }
         Command.CommandResult result = subCommand.execute(sender, args);
         return true;
+    }
+
+    private void showHelp(CommandSender sender) {
+        Component component = plugin.getPrefix().append(Component.text(" §7Help:").append(Component.newline()));
+        for (Command command : subCommands.values()) {
+            component = component
+                    .append(Component.text("§7- ")
+                            .append(Component.text(command.getCommand()).color(plugin.getPrimaryColor()))
+                            .append(Component.text(" §7- §8" + command.getDescription())))
+                    .append(Component.newline());
+        }
+        sender.sendMessage(component);
     }
 
     @Override

@@ -3,6 +3,7 @@ package it.einjojo.smpengine.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import it.einjojo.smpengine.config.DatabaseConfig;
+import lombok.Getter;
 import org.flywaydb.core.Flyway;
 
 import java.sql.Connection;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 
 public class HikariCP {
 
+    @Getter
     private final HikariDataSource dataSource;
     private final Flyway flyway;
 
@@ -22,8 +24,8 @@ public class HikariCP {
         loadMysqlOptimization(hikariConfig);
         dataSource = new HikariDataSource(hikariConfig);
         flyway = Flyway.configure()
-                .locations("classpath:/migration/")
                 .dataSource(dataSource)
+                .locations("classpath:db/migration")
                 .load();
         flyway.migrate();
     }
@@ -40,10 +42,6 @@ public class HikariCP {
         config.addDataSourceProperty("cacheServerConfiguration", true);
         config.addDataSourceProperty("elideSetAutoCommits", true);
         config.addDataSourceProperty("maintainTimeStats", false);
-    }
-
-    public HikariDataSource getDataSource() {
-        return dataSource;
     }
 
     public Connection getConnection() throws SQLException {

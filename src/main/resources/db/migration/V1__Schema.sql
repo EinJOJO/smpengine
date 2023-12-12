@@ -3,8 +3,8 @@ CREATE TABLE spieler
     uuid       varchar(36) PRIMARY KEY,
     team_id    int,
     online     boolean,
-    first_join BIGINT,
-    last_join  BIGINT
+    first_join TIMESTAMP,
+    last_join  TIMESTAMP
 );
 
 CREATE TABLE team
@@ -13,7 +13,7 @@ CREATE TABLE team
     name        varchar(32),
     displayName text,
     owner_uuid  varchar(36),
-    created_at  BIGINT
+    created_at  TIMESTAMP
 );
 
 CREATE TABLE sessions
@@ -21,8 +21,8 @@ CREATE TABLE sessions
     id         int PRIMARY KEY AUTO_INCREMENT,
     uuid       varchar(36),
     ip_address varchar(255),
-    login_at   BIGINT,
-    logout_at  BIGINT
+    login_at   TIMESTAMP,
+    logout_at  TIMESTAMP
 );
 
 CREATE TABLE stats

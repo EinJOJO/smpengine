@@ -30,6 +30,11 @@ public class ReloadSubCommand implements Command {
     }
 
     @Override
+    public String getDescription() {
+        return "Reloads the Plugin Configs";
+    }
+
+    @Override
     public String getCommand() {
         return "reload";
     }

@@ -19,6 +19,10 @@ dependencies {
     implementation("org.flywaydb:flyway-core:10.2.0")
     implementation("org.flywaydb:flyway-mysql:10.2.0")
 
+    compileOnly("org.projectlombok:lombok:1.18.20")
+    annotationProcessor("org.projectlombok:lombok:1.18.20")
+
+
 }
 
 

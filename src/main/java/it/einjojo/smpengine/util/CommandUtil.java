@@ -2,6 +2,7 @@ package it.einjojo.smpengine.util;
 
 
 import it.einjojo.smpengine.command.Command;
+import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+@UtilityClass
 public class CommandUtil {
 
     public static Optional<Player> isPlayer(CommandSender sender, Consumer<Player> playerConsumer) {

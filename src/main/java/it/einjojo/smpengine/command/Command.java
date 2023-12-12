@@ -11,6 +11,7 @@ public interface Command {
 
     public String getPermission();
 
+    public String getDescription();
     public String getCommand();
 
     public enum CommandResult {
