@@ -5,8 +5,10 @@ import it.einjojo.smpengine.config.DatabaseConfig;
 import it.einjojo.smpengine.config.MaintenanceConfig;
 import it.einjojo.smpengine.config.MessagesConfig;
 import it.einjojo.smpengine.config.ModuleConfig;
+import it.einjojo.smpengine.core.player.SMPPlayerManager;
 import it.einjojo.smpengine.database.DatabaseMigrator;
 import it.einjojo.smpengine.database.HikariCP;
+import it.einjojo.smpengine.listener.JoinListener;
 import it.einjojo.smpengine.util.MessageUtil;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -32,6 +34,9 @@ public class SMPEnginePlugin extends JavaPlugin {
     private MaintenanceConfig maintenanceConfig;
     @Getter
     private HikariCP hikariCP;
+
+    @Getter
+    SMPPlayerManager playerManager;
 
     @Override
     public void onEnable() {
@@ -75,6 +80,9 @@ public class SMPEnginePlugin extends JavaPlugin {
             getLogger().severe(e.getMessage());
             return false;
         }
+
+        playerManager = new SMPPlayerManager(this);
+
         return true;
     }
 
@@ -87,7 +95,7 @@ public class SMPEnginePlugin extends JavaPlugin {
     }
 
     private void loadListener() {
-
+        new JoinListener(this);
     }
 
     public void saveConfigs() {

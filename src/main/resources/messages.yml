@@ -1,3 +1,4 @@
 # messages
 prefix: "<gray><pkr><bold>JojosSMPEngine</bold></pkr></gray> •<reset>"
 no-permission: "<prefix> <red>Dazu hast du keine Berechtigung!"
+error.player-creation-failed: "<prefix> <red>Der Spieler konnte nicht erstellt werden!"

@@ -1,6 +1,8 @@
 package it.einjojo.smpengine.database;
 
+import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.player.SMPPlayerImpl;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.Optional;
@@ -13,7 +15,7 @@ public class PlayerDatabase {
         this.hikariCP = hikariCP;
     }
 
-    public Optional<SMPPlayerImpl> get(UUID uuid) {
+    public Optional<SMPPlayer> get(@NotNull UUID uuid) {
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `spieler` WHERE uuid = ?")) {
                 ps.setString(1, uuid.toString());
@@ -36,7 +38,7 @@ public class PlayerDatabase {
         }
     }
 
-    public Optional<SMPPlayerImpl> createPlayer(SMPPlayerImpl player) {
+    public Optional<SMPPlayer> createPlayer(@NotNull SMPPlayer player) {
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement("INSERT INTO `spieler`(uuid, online, first_join, last_join, name) VALUES(?, ?, ?, ?, ?)")) {
                 ps.setString(1, player.getUuid().toString());

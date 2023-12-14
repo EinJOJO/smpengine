@@ -17,32 +17,35 @@ public class SMPPlayerManager {
         this.playerDatabase = new PlayerDatabase(plugin.getHikariCP());
     }
 
-    public Optional<SMPPlayerImpl> getPlayer(UUID uuid) {
+    public Optional<SMPPlayer> getPlayer(UUID uuid) {
+        if (uuid == null) return Optional.empty();
+        return playerDatabase.get(uuid);
+    }
+
+    public Optional<SMPPlayer> getPlayer(String name) {
+        //TODO: Implement
         return Optional.empty();
     }
 
-    public Optional<SMPPlayerImpl> getPlayer(String name) {
-        return Optional.empty();
-    }
-
-    public CompletableFuture<Optional<SMPPlayerImpl>> getPlayerAsync(UUID uuid) {
+    public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> getPlayer(uuid));
     }
 
-    public CompletableFuture<Optional<SMPPlayerImpl>> getPlayerAsync(String name) {
+    public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(String name) {
         return CompletableFuture.supplyAsync(() -> getPlayer(name));
     }
 
-    public void updatePlayer(SMPPlayerImpl smpPlayer) {
-        //playerDatabase.updatePlayer(smpPlayer);
+    public void updatePlayer(SMPPlayer smpPlayer) {
+        plugin.getLogger().info("Updating player " + smpPlayer.getName() + " (" + smpPlayer.getUuid() + ")");
+        //TODO: Implement
     }
 
-    public CompletableFuture<Void> updatePlayerAsync(SMPPlayerImpl smpPlayer) {
+    public CompletableFuture<Void> updatePlayerAsync(SMPPlayer smpPlayer) {
         return CompletableFuture.runAsync(() -> updatePlayer(smpPlayer));
     }
 
 
-    public Optional<SMPPlayerImpl> createPlayer(UUID uuid, String name) {
+    public Optional<SMPPlayer> createPlayer(UUID uuid, String name) {
         var smpPlayer = new SMPPlayerImpl(uuid, true, Instant.now(), Instant.now(), name, null);
         return playerDatabase.createPlayer(smpPlayer);
     }

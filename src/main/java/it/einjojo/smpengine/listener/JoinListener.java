@@ -3,6 +3,7 @@ package it.einjojo.smpengine.listener;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.config.MaintenanceConfig;
+import it.einjojo.smpengine.core.player.SMPPlayerImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.event.EventHandler;
@@ -32,8 +33,23 @@ public class JoinListener implements Listener {
         }
     }
 
+    @EventHandler
     public void loadPlayer(PlayerJoinEvent event) {
-
+        plugin.getPlayerManager().getPlayerAsync(event.getPlayer().getUniqueId()).thenAccept(smpPlayer -> {
+            if (smpPlayer.isEmpty()) {
+                var optionalPlayer = plugin.getPlayerManager().createPlayer(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+                if (optionalPlayer.isEmpty()) {
+                    event.getPlayer().kick(plugin.getMessage("error.player-creation-failed"));
+                    return;
+                }
+                smpPlayer = optionalPlayer;
+            }
+            var smpPlayerImpl = (SMPPlayerImpl) smpPlayer.get();
+            smpPlayerImpl.setOnline(true);
+            smpPlayerImpl.setLastJoin(smpPlayerImpl.getLastJoin());
+            smpPlayerImpl.setName(event.getPlayer().getName());
+            plugin.getPlayerManager().updatePlayerAsync(smpPlayerImpl);
+        });
     }
 
 

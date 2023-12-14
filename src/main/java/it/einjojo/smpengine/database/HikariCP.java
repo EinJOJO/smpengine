@@ -7,9 +7,9 @@ import lombok.Getter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@Getter
 public class HikariCP {
 
-    @Getter
     private final HikariDataSource dataSource;
 
     public HikariCP(DatabaseCredentials config) {
