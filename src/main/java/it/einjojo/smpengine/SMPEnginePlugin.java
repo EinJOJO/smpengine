@@ -5,17 +5,12 @@ import it.einjojo.smpengine.config.DatabaseConfig;
 import it.einjojo.smpengine.config.MaintenanceConfig;
 import it.einjojo.smpengine.config.MessagesConfig;
 import it.einjojo.smpengine.config.ModuleConfig;
+import it.einjojo.smpengine.database.DatabaseMigrator;
 import it.einjojo.smpengine.database.HikariCP;
-import it.einjojo.smpengine.util.PlaceholderValue;
+import it.einjojo.smpengine.util.MessageUtil;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -26,12 +21,11 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     private final Map<String, Component> cachedMessages = new WeakHashMap<>();
 
+    private DatabaseMigrator databaseMigrator;
     private boolean startedSuccessfully = false;
     private DatabaseConfig databaseConfig;
     private MessagesConfig messagesConfig;
 
-    @Getter
-    private MiniMessage miniMessage;
     @Getter
     private ModuleConfig moduleConfig;
     @Getter
@@ -74,26 +68,18 @@ public class SMPEnginePlugin extends JavaPlugin {
         // Create database connection pool
         try {
             hikariCP = new HikariCP(databaseConfig);
+            databaseMigrator = new DatabaseMigrator(hikariCP.getDataSource());
+            databaseMigrator.migrate();
         } catch (Exception e) {
-            getLogger().severe("Failed to initialize HikariCP! \n" + e.getMessage());
+            getLogger().severe("Failed to initialize Database!");
+            getLogger().severe(e.getMessage());
             return false;
         }
-        // Initialize MiniMessage
-        System.out.println(moduleConfig.getColor());
-        miniMessage = MiniMessage.builder()
-                .tags(TagResolver.builder()
-                        .resolver(StandardTags.defaults())
-                        .resolver(Placeholder.component("prefix", getPrefix()))
-                        .resolver(Placeholder.styling("pc", moduleConfig.getColor()))
-                        .build())
-                .build();
-
         return true;
     }
 
     public void clearCache() {
         cachedMessages.clear();
-        cachedPrefix = null;
     }
 
     private void loadCommands() {
@@ -128,39 +114,27 @@ public class SMPEnginePlugin extends JavaPlugin {
         return true;
     }
 
+
     public Component getMessage(String key) {
         Component cachedMessage = cachedMessages.get(key);
         if (cachedMessage != null) {
             return cachedMessage;
         }
-        Component legacy = LegacyComponentSerializer.legacy('&').deserialize(messagesConfig.get(key));
-        String toBeConverted = MiniMessage.miniMessage().serialize(legacy);
-        Component converted = getMiniMessage().deserialize(toBeConverted);
+        String toBeConverted = messagesConfig.get(key);
+        if (toBeConverted == null) {
+            getLogger().warning("Failed to get message with key '" + key + "'!");
+            return Component.empty();
+        }
+        Component converted = MessageUtil.format(toBeConverted, getPrimaryColor(), getPrefix());
         cachedMessages.put(key, converted);
         return converted;
     }
-
-    public Component applyPlaceholders(Component component, PlaceholderValue... placeholders) {
-        TextReplacementConfig.Builder configBuilder = TextReplacementConfig.builder();
-        for (var placeholder : placeholders) {
-            configBuilder.matchLiteral("{" + placeholder.getKey() + "}")
-                    .replacement(placeholder.getValue());
-        }
-
-        return component.replaceText(configBuilder.build());
-    }
-
-    private Component cachedPrefix;
 
     public TextColor getPrimaryColor() {
         return moduleConfig.getColor();
     }
 
     public Component getPrefix() {
-        if (cachedPrefix != null) {
-            return cachedPrefix;
-        }
-        cachedPrefix = MiniMessage.miniMessage().deserialize(messagesConfig.get("prefix"));
-        return cachedPrefix;
+        return MessageUtil.format(messagesConfig.get("prefix"), getPrimaryColor());
     }
 }

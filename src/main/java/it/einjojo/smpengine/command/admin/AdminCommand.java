@@ -3,6 +3,7 @@ package it.einjojo.smpengine.command.admin;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -31,7 +32,7 @@ public class AdminCommand implements TabCompleter, CommandExecutor {
             if (sender.hasPermission("smpengine.admin")) {
                 showHelp(sender);
             } else {
-                sender.sendMessage(plugin.getPrefix().append(plugin.getMessage("no-permission")));
+                sender.sendMessage(plugin.getMessage("no-permission"));
             }
             return true;
         }
@@ -44,12 +45,15 @@ public class AdminCommand implements TabCompleter, CommandExecutor {
     }
 
     private void showHelp(CommandSender sender) {
-        Component component = plugin.getPrefix().append(Component.text(" §7Help:").append(Component.newline()));
+        Component component = plugin.getPrefix().append(
+                Component.text("Hilfe").color(NamedTextColor.GRAY)
+                        .append(Component.newline()));
         for (Command command : subCommands.values()) {
             component = component
-                    .append(Component.text("§7- ")
+                    .append(Component.text(" ⋆ ").color(NamedTextColor.DARK_GRAY)
                             .append(Component.text(command.getCommand()).color(plugin.getPrimaryColor()))
-                            .append(Component.text(" §7- §8" + command.getDescription())))
+                            .append(Component.text(" - ").color(NamedTextColor.DARK_GRAY))
+                            .append(Component.text(command.getDescription()).color(NamedTextColor.GRAY)))
                     .append(Component.newline());
         }
         sender.sendMessage(component);

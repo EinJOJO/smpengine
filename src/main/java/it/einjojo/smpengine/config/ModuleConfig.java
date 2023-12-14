@@ -8,7 +8,7 @@ import java.io.IOException;
 
 @Getter
 public class ModuleConfig extends Config {
-    static final TextColor DEFAULT_COLOR = TextColor.color(255, 133, 39);
+    static final TextColor DEFAULT_COLOR = TextColor.color(213, 91, 218);
     private TextColor color;
     private boolean joinMessages;
     private String joinMessage;
@@ -26,11 +26,12 @@ public class ModuleConfig extends Config {
         getConfiguration().addDefault("primaryColor", DEFAULT_COLOR.asHexString());
         getConfiguration().addDefault("join-messages", true);
         getConfiguration().addDefault("quit-messages", true);
+        getConfiguration().options().copyDefaults(true);
     }
 
     @Override
     public void load() {
-        String hexString = getConfiguration().getString("color");
+        String hexString = getConfiguration().getString("primaryColor");
         color = TextColor.fromCSSHexString(hexString == null ? DEFAULT_COLOR.asHexString() : hexString);
         if (color == null) {
             color = DEFAULT_COLOR;

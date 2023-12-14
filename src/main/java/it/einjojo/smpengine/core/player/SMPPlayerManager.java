@@ -17,27 +17,34 @@ public class SMPPlayerManager {
         this.playerDatabase = new PlayerDatabase(plugin.getHikariCP());
     }
 
-    public Optional<SMPPlayer> getPlayer(UUID uuid) {
+    public Optional<SMPPlayerImpl> getPlayer(UUID uuid) {
         return Optional.empty();
     }
 
-    public Optional<SMPPlayer> getPlayer(String name) {
+    public Optional<SMPPlayerImpl> getPlayer(String name) {
         return Optional.empty();
     }
 
-    public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(UUID uuid) {
+    public CompletableFuture<Optional<SMPPlayerImpl>> getPlayerAsync(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> getPlayer(uuid));
     }
 
-    public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(String name) {
+    public CompletableFuture<Optional<SMPPlayerImpl>> getPlayerAsync(String name) {
         return CompletableFuture.supplyAsync(() -> getPlayer(name));
     }
 
+    public void updatePlayer(SMPPlayerImpl smpPlayer) {
+        //playerDatabase.updatePlayer(smpPlayer);
+    }
 
-    public SMPPlayer createPlayer(UUID uuid) {
-        var smpPlayer = new SMPPlayer(uuid, null, true, Instant.now(), Instant.now());
-        playerDatabase.createPlayer(smpPlayer);
-        return smpPlayer;
+    public CompletableFuture<Void> updatePlayerAsync(SMPPlayerImpl smpPlayer) {
+        return CompletableFuture.runAsync(() -> updatePlayer(smpPlayer));
+    }
+
+
+    public Optional<SMPPlayerImpl> createPlayer(UUID uuid, String name) {
+        var smpPlayer = new SMPPlayerImpl(uuid, true, Instant.now(), Instant.now(), name, null);
+        return playerDatabase.createPlayer(smpPlayer);
     }
 
 }

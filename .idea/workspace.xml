@@ -4,36 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e2fd8748-7d16-4071-9cc9-0e06debd456f" name="Changes" comment="grrr">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/MaintenanceConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/MessagesConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/listener/ConnectionListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/PlaceholderValue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/messages.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f98be2de-b8af-4675-aa65-cc785c20ccab.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f98be2de-b8af-4675-aa65-cc785c20ccab.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f98be2de-b8af-4675-aa65-cc785c20ccab/storage_v2/_src_/schema/minecraft.rfltKQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f98be2de-b8af-4675-aa65-cc785c20ccab/storage_v2/_src_/schema/minecraft.rfltKQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="e2fd8748-7d16-4071-9cc9-0e06debd456f" name="Changes" comment="database stuff">
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/player/SMPPlayerImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/DatabaseCredentials.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/DatabaseMigrator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/MessageUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/SQLUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/init_db.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/SMPEnginePlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/SMPEnginePlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/command/Command.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/command/admin/AdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/command/admin/AdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/command/admin/ReloadSubCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/command/admin/ReloadSubCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/Config.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/DatabaseConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/ModuleConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/ModuleConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/player/SMPPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/player/SMPPlayer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/player/SMPPlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/player/SMPPlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/team/TeamManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/team/TeamManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/HikariCP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/HikariCP.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/PlayerDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/PlayerDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/CommandUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/CommandUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/V0__Schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/V1__Test.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V0__Test.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/listener/ConnectionListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/listener/JoinListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/PlaceholderValue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/Placeholder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V0__Test.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,8 +56,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -119,7 +112,14 @@
       <recent name="C:\Users\schlo\IdeaProjects\SMPEngine\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.Docker Image">
+  <component name="RunManager" selected="Gradle.SMPEngine [runServer]">
+    <configuration name="FlywayTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="FlywayTest" />
+      <module name="SMPEngine.test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SMPEngine [runServer]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -201,6 +201,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.SMPEngine [runServer]" />
+        <item itemvalue="Application.FlywayTest" />
         <item itemvalue="Docker.Docker Image" />
         <item itemvalue="Docker.Mysql" />
       </list>
@@ -230,7 +231,8 @@
       <workItem from="1702398370542" duration="277000" />
       <workItem from="1702398666748" duration="3000" />
       <workItem from="1702398932415" duration="6285000" />
-      <workItem from="1702415985403" duration="3881000" />
+      <workItem from="1702415985403" duration="5897000" />
+      <workItem from="1702569991457" duration="12002000" />
     </task>
     <task id="LOCAL-00001" summary="grrr">
       <option name="closed" value="true" />
@@ -240,7 +242,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702238330300</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="configs">
+      <option name="closed" value="true" />
+      <created>1702420126460</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1702420126460</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -248,7 +258,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="grrr" />
-    <option name="LAST_COMMIT_MESSAGE" value="grrr" />
+    <MESSAGE value="configs" />
+    <MESSAGE value="database stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="database stuff" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

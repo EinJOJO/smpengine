@@ -1,10 +1,13 @@
 package it.einjojo.smpengine.config;
 
+import it.einjojo.smpengine.database.DatabaseCredentials;
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 
-public class DatabaseConfig extends Config {
+@Getter
+public class DatabaseConfig extends Config implements DatabaseCredentials {
     private final JavaPlugin plugin;
     private String host;
     private int port;
@@ -41,31 +44,4 @@ public class DatabaseConfig extends Config {
         plugin.getLogger().info("Loaded database config!");
     }
 
-    public JavaPlugin getPlugin() {
-        return plugin;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getDatabase() {
-        return database;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public int getConnectionTimeout() {
-        return connectionTimeout;
-    }
 }

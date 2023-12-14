@@ -2,9 +2,7 @@ package it.einjojo.smpengine.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import it.einjojo.smpengine.config.DatabaseConfig;
 import lombok.Getter;
-import org.flywaydb.core.Flyway;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,9 +11,8 @@ public class HikariCP {
 
     @Getter
     private final HikariDataSource dataSource;
-    private final Flyway flyway;
 
-    public HikariCP(DatabaseConfig config) {
+    public HikariCP(DatabaseCredentials config) {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl("jdbc:mysql://" + config.getHost() + ":" + config.getPort() + "/" + config.getDatabase());
         hikariConfig.setUsername(config.getUsername());
@@ -23,11 +20,6 @@ public class HikariCP {
         hikariConfig.setConnectionTimeout(config.getConnectionTimeout());
         loadMysqlOptimization(hikariConfig);
         dataSource = new HikariDataSource(hikariConfig);
-        flyway = Flyway.configure()
-                .dataSource(dataSource)
-                .locations("classpath:db/migration")
-                .load();
-        flyway.migrate();
     }
 
     private void loadMysqlOptimization(HikariConfig config) {
