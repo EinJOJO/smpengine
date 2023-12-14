@@ -1,5 +1,7 @@
 package it.einjojo.smpengine.core.player;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.database.PlayerDatabase;
 
@@ -12,42 +14,36 @@ public class SMPPlayerManager {
     private final SMPEnginePlugin plugin;
     private final PlayerDatabase playerDatabase;
 
+    LoadingCache<UUID, SMPPlayer> playerCache;
+
+
     public SMPPlayerManager(SMPEnginePlugin plugin) {
         this.plugin = plugin;
         this.playerDatabase = new PlayerDatabase(plugin.getHikariCP());
+        this.playerCache = Caffeine.newBuilder()
+                .build(playerDatabase::get);
     }
 
     public Optional<SMPPlayer> getPlayer(UUID uuid) {
         if (uuid == null) return Optional.empty();
-        return playerDatabase.get(uuid);
+        return Optional.ofNullable(playerCache.get(uuid));
     }
 
     public Optional<SMPPlayer> getPlayer(String name) {
-        //TODO: Implement
         return Optional.empty();
     }
 
-    public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> getPlayer(uuid));
-    }
-
-    public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(String name) {
-        return CompletableFuture.supplyAsync(() -> getPlayer(name));
-    }
 
     public void updatePlayer(SMPPlayer smpPlayer) {
         plugin.getLogger().info("Updating player " + smpPlayer.getName() + " (" + smpPlayer.getUuid() + ")");
         //TODO: Implement
     }
 
-    public CompletableFuture<Void> updatePlayerAsync(SMPPlayer smpPlayer) {
-        return CompletableFuture.runAsync(() -> updatePlayer(smpPlayer));
-    }
-
 
     public Optional<SMPPlayer> createPlayer(UUID uuid, String name) {
+        plugin.getLogger().info("Creating player " + name + " (" + uuid + ")");
         var smpPlayer = new SMPPlayerImpl(uuid, true, Instant.now(), Instant.now(), name, null);
-        return playerDatabase.createPlayer(smpPlayer);
+        return Optional.ofNullable(playerDatabase.createPlayer(smpPlayer));
     }
 
 }

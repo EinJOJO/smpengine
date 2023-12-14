@@ -4,14 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e2fd8748-7d16-4071-9cc9-0e06debd456f" name="Changes" comment="database stuff">
+    <list default="true" id="e2fd8748-7d16-4071-9cc9-0e06debd456f" name="Changes" comment="player stuff">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/SMPEnginePlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/SMPEnginePlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/MaintenanceConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/MaintenanceConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/MessagesConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/config/MessagesConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/player/SMPPlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/core/player/SMPPlayerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/HikariCP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/HikariCP.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/PlayerDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/database/PlayerDatabase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/listener/JoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/listener/JoinListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/MessageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/einjojo/smpengine/util/MessageUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,7 +219,7 @@
       <workItem from="1702398666748" duration="3000" />
       <workItem from="1702398932415" duration="6285000" />
       <workItem from="1702415985403" duration="5897000" />
-      <workItem from="1702569991457" duration="12839000" />
+      <workItem from="1702569991457" duration="16208000" />
     </task>
     <task id="LOCAL-00001" summary="grrr">
       <option name="closed" value="true" />
@@ -243,7 +245,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702587882173</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="player stuff">
+      <option name="closed" value="true" />
+      <created>1702588633313</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1702588633313</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,7 +263,8 @@
     <MESSAGE value="grrr" />
     <MESSAGE value="configs" />
     <MESSAGE value="database stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="database stuff" />
+    <MESSAGE value="player stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="player stuff" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

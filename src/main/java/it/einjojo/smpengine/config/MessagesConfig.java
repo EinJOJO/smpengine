@@ -1,10 +1,12 @@
 package it.einjojo.smpengine.config;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MessagesConfig extends Config {
     private final Map<String, String> messages = new HashMap<>();
@@ -19,10 +21,18 @@ public class MessagesConfig extends Config {
 
     @Override
     public void load() {
-        for (Map.Entry<String, Object> entry : getConfiguration().getValues(false).entrySet()) {
-            messages.put(entry.getKey(), entry.getValue().toString());
-        }
+        loadMessages(getConfiguration(), "");
         plugin.getLogger().info("Loaded " + messages.size() + "  messages from config!");
+    }
+
+    private void loadMessages(ConfigurationSection section, String prefix) {
+        for (String key : section.getKeys(false)) {
+            if (section.isConfigurationSection(key)) {
+                loadMessages(Objects.requireNonNull(section.getConfigurationSection(key)), prefix + key + ".");
+            } else {
+                messages.put(prefix + key, section.getString(key));
+            }
+        }
     }
 
     public String get(String key) {

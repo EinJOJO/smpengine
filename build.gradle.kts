@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
     implementation("com.zaxxer:HikariCP:5.1.0")
 
     compileOnly("org.projectlombok:lombok:1.18.20")

@@ -60,7 +60,6 @@ public class SMPEnginePlugin extends JavaPlugin {
         if (!startedSuccessfully) {
             return;
         }
-        saveConfigs();
         hikariCP.close();
         clearCache();
     }
@@ -98,13 +97,6 @@ public class SMPEnginePlugin extends JavaPlugin {
         new JoinListener(this);
     }
 
-    public void saveConfigs() {
-        try {
-            maintenanceConfig.save();
-        } catch (IOException e) {
-            getLogger().severe("Failed to save maintenance config! \n" + e.getMessage());
-        }
-    }
 
     /**
      * Loads all configs (1st step of onEnable)

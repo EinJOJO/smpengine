@@ -21,6 +21,7 @@ public class MaintenanceConfig extends Config {
         getConfiguration().addDefault("enabled", false);
         getConfiguration().addDefault("bypass-permission", "smpengine.maintenance.bypass");
         getConfiguration().addDefault("kick-message", "&cThe server is currently in maintenance mode.");
+        getConfiguration().options().copyDefaults(true);
     }
 
     @Override

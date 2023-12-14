@@ -10,6 +10,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 @UtilityClass
 public class MessageUtil {
     public static final MiniMessage miniMessage = MiniMessage.miniMessage();
+
     public static Component format(String message, TextColor primaryColor, Component prefix) {
         message = legacyFormat(message);
         return miniMessage.deserialize(
