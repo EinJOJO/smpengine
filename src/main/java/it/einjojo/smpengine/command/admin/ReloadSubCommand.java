@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ReloadSubCommand implements Command {
 
-    private SMPEnginePlugin plugin;
+    private final SMPEnginePlugin plugin;
 
     public ReloadSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;

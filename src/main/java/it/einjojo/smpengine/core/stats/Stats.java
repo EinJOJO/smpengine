@@ -1,4 +1,4 @@
 package it.einjojo.smpengine.core.stats;
 
-public class Stats {
+public interface Stats {
 }

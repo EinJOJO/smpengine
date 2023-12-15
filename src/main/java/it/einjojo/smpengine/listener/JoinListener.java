@@ -26,7 +26,6 @@ public class JoinListener implements Listener {
     // First check
     @EventHandler()
     public void maintenanceCheck(PlayerJoinEvent event) {
-        System.out.println("JoinListener.maintenanceCheck");
         MaintenanceConfig maintenanceConfig = plugin.getMaintenanceConfig();
         if (maintenanceConfig.isEnabled() && !event.getPlayer().hasPermission(maintenanceConfig.getBypassPermission())) {
             syncKick(event, MessageUtil.format(maintenanceConfig.getKickMessage(), plugin.getPrimaryColor(), plugin.getPrefix()));
@@ -35,7 +34,6 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void loadPlayer(PlayerJoinEvent event) {
-        System.out.println("JoinListener.loadPlayer");
         CompletableFuture.supplyAsync(() -> plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId())).thenAccept(smpPlayer -> {
             if (smpPlayer.isEmpty()) {
                 var optionalPlayer = plugin.getPlayerManager().createPlayer(event.getPlayer().getUniqueId(), event.getPlayer().getName());

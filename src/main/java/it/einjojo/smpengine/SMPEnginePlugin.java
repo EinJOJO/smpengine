@@ -6,6 +6,9 @@ import it.einjojo.smpengine.config.MaintenanceConfig;
 import it.einjojo.smpengine.config.MessagesConfig;
 import it.einjojo.smpengine.config.ModuleConfig;
 import it.einjojo.smpengine.core.player.SMPPlayerManager;
+import it.einjojo.smpengine.core.session.SessionManager;
+import it.einjojo.smpengine.core.stats.StatsManager;
+import it.einjojo.smpengine.core.team.TeamManager;
 import it.einjojo.smpengine.database.DatabaseMigrator;
 import it.einjojo.smpengine.database.HikariCP;
 import it.einjojo.smpengine.listener.JoinListener;
@@ -36,6 +39,12 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     @Getter
     SMPPlayerManager playerManager;
+    @Getter
+    SessionManager sessionManager;
+    @Getter
+    TeamManager teamManager;
+    @Getter
+    StatsManager manager;
 
     @Override
     public void onEnable() {
@@ -80,6 +89,9 @@ public class SMPEnginePlugin extends JavaPlugin {
         }
 
         playerManager = new SMPPlayerManager(this);
+        sessionManager = new SessionManager(this);
+        teamManager = new TeamManager(this);
+        manager = new StatsManager(this);
 
         return true;
     }
