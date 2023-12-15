@@ -14,7 +14,7 @@ CREATE TABLE `team`
     `name`        varchar(32)     NOT NULL,
     `displayName` text            NOT NULL,
     `owner_uuid`  varchar(36)     NOT NULL,
-    `created_at`  TIMESTAMP
+    `created_at`  TIMESTAMP NULL
 );
 
 CREATE TABLE `sessions`
@@ -22,8 +22,8 @@ CREATE TABLE `sessions`
     `id`                 int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `session_owner_uuid` varchar(36)     NOT NULL,
     `ip_address`         varchar(255)    NOT NULL,
-    `login_at`           TIMESTAMP,
-    `logout_at`          TIMESTAMP
+    `login_at`           TIMESTAMP NULL,
+    `logout_at`          TIMESTAMP NULL
 );
 
 CREATE TABLE `stats`
