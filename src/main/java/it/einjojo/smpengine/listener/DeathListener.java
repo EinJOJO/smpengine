@@ -10,7 +10,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class DeathListener implements Listener {
 
-    private SMPEnginePlugin plugin;
+    private final SMPEnginePlugin plugin;
 
     public DeathListener(SMPEnginePlugin plugin){
         this.plugin = plugin;
@@ -19,9 +19,17 @@ public class DeathListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event){
-        Component component = plugin.getMessage("death.message.global");
+        int x = (int) event.getPlayer().getX();
+        int y = (int) event.getPlayer().getY();
+        int z = (int) event.getPlayer().getZ();
+        Placeholder x1 = new Placeholder("x", Integer.toString(x));
+        Placeholder y1 = new Placeholder("y", Integer.toString(y));
+        Placeholder z1 = new Placeholder("z", Integer.toString(z));
+        Component component = plugin.getMessage("death.global");
         Player p = event.getPlayer();
         event.deathMessage(Placeholder.applyPlaceholders(component, Placeholder.player(p.getName())));
+        Component component1 = plugin.getMessage("death.player");
+        p.sendMessage(Placeholder.applyPlaceholders(component1, x1, y1, z1));
 
     }
 }
