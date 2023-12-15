@@ -8,6 +8,7 @@ import it.einjojo.smpengine.config.ModuleConfig;
 import it.einjojo.smpengine.core.player.SMPPlayerManager;
 import it.einjojo.smpengine.database.DatabaseMigrator;
 import it.einjojo.smpengine.database.HikariCP;
+import it.einjojo.smpengine.listener.DeathListener;
 import it.einjojo.smpengine.listener.JoinListener;
 import it.einjojo.smpengine.util.MessageUtil;
 import lombok.Getter;
@@ -94,6 +95,7 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     private void loadListener() {
         new JoinListener(this);
+        new DeathListener(this);
     }
 
 
