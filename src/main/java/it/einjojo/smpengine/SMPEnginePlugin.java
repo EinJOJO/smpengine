@@ -21,9 +21,8 @@ import java.util.WeakHashMap;
 
 public class SMPEnginePlugin extends JavaPlugin {
 
-    private final Map<String, Component> cachedMessages = new WeakHashMap<>();
+    private static final Map<String, Component> cachedMessages = new WeakHashMap<>();
 
-    private DatabaseMigrator databaseMigrator;
     private boolean startedSuccessfully = false;
     private DatabaseConfig databaseConfig;
     private MessagesConfig messagesConfig;
@@ -72,7 +71,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         // Create database connection pool
         try {
             hikariCP = new HikariCP(databaseConfig);
-            databaseMigrator = new DatabaseMigrator(hikariCP.getDataSource());
+            DatabaseMigrator databaseMigrator = new DatabaseMigrator(hikariCP.getDataSource());
             databaseMigrator.migrate();
         } catch (Exception e) {
             getLogger().severe("Failed to initialize Database!");

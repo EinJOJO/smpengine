@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -23,7 +24,7 @@ public class CommandUtil {
         return Optional.of((Player) sender);
     }
 
-    public static List<String> tabCompleteSubCommands(List<Command> subCommands, CommandSender sender, String[] args) {
+    public static List<String> tabCompleteSubCommands(Collection<Command> subCommands, CommandSender sender, String[] args) {
         if (args.length == 0 || args.length == 1) {
             return subCommands.stream()
                     .filter(command -> command.getPermission() == null || sender.hasPermission(command.getPermission()))

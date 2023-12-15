@@ -2,6 +2,7 @@ package it.einjojo.smpengine.command.admin;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
+import it.einjojo.smpengine.util.CommandUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandExecutor;
@@ -61,7 +62,7 @@ public class AdminCommand implements TabCompleter, CommandExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return null;
+        return CommandUtil.tabCompleteSubCommands(subCommands.values(), sender, args);
     }
 
     private void registerSubCommand(Command command) {
