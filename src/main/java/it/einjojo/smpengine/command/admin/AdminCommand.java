@@ -27,6 +27,7 @@ public class AdminCommand implements TabCompleter, CommandExecutor {
         this.plugin.getCommand("smpengine").setExecutor(this);
         this.plugin.getCommand("smpengine").setTabCompleter(this);
         registerSubCommand(new ReloadSubCommand(plugin));
+        registerSubCommand(new MaintenanceSubCommand(plugin));
     }
 
 

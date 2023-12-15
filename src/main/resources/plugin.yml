@@ -8,4 +8,4 @@ website: einjojo.it
 commands:
   smpengine:
     description: SMP ENGINE Admin Command
-    aliases: [ smpe, smp ]
+    aliases: [ smpe, smp , admin]
