@@ -13,12 +13,12 @@ import java.util.logging.Logger;
 
 /**
  * This class is responsible for migrating the database to the latest schema version.
+ *
  * @author EinJOJO
- * @since 1.0
  * @version 1.0 - 14.12.2023
  * @see DataSource
  * @see SQLUtil
- *
+ * @since 1.0
  */
 public class DatabaseMigrator {
     private final DataSource cp;
@@ -33,21 +33,22 @@ public class DatabaseMigrator {
 
     /**
      * Migrates the database to the latest schema version.
+     *
      * @throws MigrationException if the migration fails.
      */
     public void migrate() {
-        try (Connection connection = cp.getConnection();) {
+        try (Connection connection = cp.getConnection()) {
             createSchemaTracker(connection);
             int currentVersion = getSchemaVersion(connection);
             int latestVersion = currentVersion;
             if (latestVersion == 0) {
                 logger.info("Migration: V0 - Initializing database...");
-                executeFile("db/v1.sql", connection);
+                executeFile("db/init_db.sql", connection);
                 latestVersion = 1;
             }
             if (latestVersion == 1) {
                 logger.info("Migration: V1 - Adding indexes...");
-                executeFile("db/migrations/v1.sql", connection);
+                executeFile("db/v1.sql", connection);
                 latestVersion = 2;
             }
             if (latestVersion != currentVersion) { // Has Updated version
