@@ -27,7 +27,7 @@ public class SessionManager {
     }
 
     private Session getSessionByUUID(UUID uuid) {
-
+        return null;
     }
 
     public Optional<Session> getSession(UUID uuid) {

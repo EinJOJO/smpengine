@@ -16,23 +16,27 @@ public class SessionDatabase {
         this.hikariCP = hikariCP;
     }
 
+
+    public Session getSession(String uuid) {
+        return null; // TODO: 12/16/2023
+    }
+
     /**
      * Creates a session in the database
+     *
      * @param session The session to be saved
      * @return The session that was saved in the database or null if an error occurred
      */
     public Session createSession(SessionImpl session) {
-        try {
-            try (Connection connection = hikariCP.getConnection()) {
-                try (PreparedStatement ps = connection.prepareStatement("INSERT INTO sessions (session_owner_uuid, ip_address, login_at ,logout_at) VALUES (?, ?, ?, ?)")) {
-                    ps.setString(1, session.getUuid().toString());
-                    ps.setString(2, session.getIp());
-                    ps.setTimestamp(3, Timestamp.from(session.getStartTime()));
-                    ps.setTimestamp(4, Timestamp.from(session.getEndTime()));
-                    ps.executeUpdate();
-                }
-                return session;
+        try (Connection connection = hikariCP.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO sessions (session_owner_uuid, ip_address, login_at ,logout_at) VALUES (?, ?, ?, ?)")) {
+                ps.setString(1, session.getUuid().toString());
+                ps.setString(2, session.getIp());
+                ps.setTimestamp(3, Timestamp.from(session.getStartTime()));
+                ps.setTimestamp(4, Timestamp.from(session.getEndTime()));
+                ps.executeUpdate();
             }
+            return session;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
