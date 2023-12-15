@@ -5,6 +5,7 @@ import it.einjojo.smpengine.command.Command;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,6 +25,8 @@ public class CommandUtil {
         return Optional.of((Player) sender);
     }
 
+
+
     public static List<String> tabCompleteSubCommands(Collection<Command> subCommands, CommandSender sender, String[] args) {
         if (args.length == 0 || args.length == 1) {
             return subCommands.stream()
@@ -31,7 +34,13 @@ public class CommandUtil {
                     .map(Command::getCommand)
                     .filter(command -> command.startsWith(args[0])).toList();
         }
-        return null;
+        if (args.length > 2) {
+            Command command = subCommands.stream().filter(subCommand -> subCommand.getCommand().equalsIgnoreCase(args[0])).findFirst().orElse(null);
+            if (command != null) {
+                return command.tabComplete(sender, removeFirst(args));
+            }
+        }
+        return List.of("");
     }
 
     public static String[] removeFirst(String[] args) {

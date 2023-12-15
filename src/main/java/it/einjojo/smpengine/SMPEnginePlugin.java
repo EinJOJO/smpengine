@@ -134,12 +134,20 @@ public class SMPEnginePlugin extends JavaPlugin {
         String toBeConverted = messagesConfig.get(key);
         if (toBeConverted == null) {
             getLogger().warning("Failed to get message with key '" + key + "'!");
-            return Component.empty();
+            return Component.text(key);
         }
         Component converted = MessageUtil.format(toBeConverted, getPrimaryColor(), getPrefix());
         cachedMessages.put(key, converted);
         return converted;
     }
+
+    public void reloadConfigs() {
+        databaseConfig.load();
+        moduleConfig.load();
+        maintenanceConfig.load();
+        messagesConfig.load();
+    }
+
 
     public TextColor getPrimaryColor() {
         return moduleConfig.getColor();

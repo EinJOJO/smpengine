@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class ReloadSubCommand implements Command {
-
     private final SMPEnginePlugin plugin;
 
     public ReloadSubCommand(SMPEnginePlugin plugin) {
@@ -15,18 +14,19 @@ public class ReloadSubCommand implements Command {
     }
 
     @Override
-    public CommandResult execute(CommandSender sender, String[] args) {
-        return null;
+    public void execute(CommandSender sender, String[] args) {
+        plugin.reloadConfigs();
+        sender.sendMessage(plugin.getMessage("command.reload.reloaded"));
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return null;
+        return List.of();
     }
 
     @Override
     public String getPermission() {
-        return null;
+        return "smpengine.admin.reload";
     }
 
     @Override

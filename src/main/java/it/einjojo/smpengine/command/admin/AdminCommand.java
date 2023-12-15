@@ -3,7 +3,10 @@ package it.einjojo.smpengine.command.admin;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.util.CommandUtil;
+import it.einjojo.smpengine.util.MessageUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,21 +42,28 @@ public class AdminCommand implements TabCompleter, CommandExecutor {
         }
         Command subCommand = subCommands.get(args[0]);
         if (subCommand == null) {
+            sender.sendMessage(plugin.getMessage("command.unknown"));
             return true;
         }
-        Command.CommandResult result = subCommand.execute(sender, args);
+        if (!sender.hasPermission(subCommand.getPermission())) {
+            sender.sendMessage(plugin.getMessage("no-permission"));
+            return true;
+        }
+        subCommand.execute(sender, CommandUtil.removeFirst(args));
         return true;
     }
 
     private void showHelp(CommandSender sender) {
-        Component component = plugin.getPrefix().append(
-                Component.text("Hilfe").color(NamedTextColor.GRAY)
-                        .append(Component.newline()));
+        // <prefix> Admin Commands
+        Component component = plugin.getPrefix().append(MessageUtil.format(" <gray>Admin Commands <newline>"));
         for (Command command : subCommands.values()) {
+            // ⋆ <command> - <description>  // (hover: /smp <command> ausführen) (click: /smp <command> )
             component = component
                     .append(Component.text(" ⋆ ").color(NamedTextColor.DARK_GRAY)
-                            .append(Component.text(command.getCommand()).color(plugin.getPrimaryColor()))
-                            .append(Component.text(" - ").color(NamedTextColor.DARK_GRAY))
+                            .append(MessageUtil.format("<pkr>" + command.getCommand(), plugin.getPrimaryColor())
+                                    .hoverEvent(HoverEvent.showText(MessageUtil.format("<gray>/smp <pkr>" + command.getCommand() + " <white>ausführen.", plugin.getPrimaryColor())))
+                                    .clickEvent(ClickEvent.suggestCommand("/smp " + command.getCommand() + " "))
+                            ).append(Component.text(" - ").color(NamedTextColor.DARK_GRAY))
                             .append(Component.text(command.getDescription()).color(NamedTextColor.GRAY)))
                     .append(Component.newline());
         }
