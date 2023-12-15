@@ -1,5 +1,12 @@
 # messages
 prefix: "<pkr><bold>System <dark_gray>•<reset>"
 no-permission: "<prefix> <red>Dazu hast du keine Berechtigung!"
-error.player-creation-failed: "<prefix> <red>Der Spieler konnte nicht erstellt werden!"
-command.reload.reloaded: "<prefix> <green>Die Konfiguration wurde neu geladen!"
+
+# Error Alarm
+error:
+  player-creation-failed: "<prefix> <red>Der Spieler konnte nicht erstellt werden!"
+
+# Commands
+command:
+  reload:
+    reloaded: "<prefix> <green>Die Konfiguration wurde neu geladen!"
