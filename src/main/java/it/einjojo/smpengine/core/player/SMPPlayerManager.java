@@ -1,5 +1,6 @@
 package it.einjojo.smpengine.core.player;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
@@ -8,13 +9,13 @@ import it.einjojo.smpengine.database.PlayerDatabase;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public class SMPPlayerManager {
     private final SMPEnginePlugin plugin;
     private final PlayerDatabase playerDatabase;
 
     LoadingCache<UUID, SMPPlayer> playerCache;
+
 
 
     public SMPPlayerManager(SMPEnginePlugin plugin) {
