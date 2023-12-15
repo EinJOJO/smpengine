@@ -8,10 +8,10 @@ import it.einjojo.smpengine.util.MessageUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 
 public class JoinListener implements Listener {
@@ -46,7 +46,7 @@ public class JoinListener implements Listener {
             }
             var smpPlayerImpl = (SMPPlayerImpl) smpPlayer.get();
             smpPlayerImpl.setOnline(true);
-            smpPlayerImpl.setLastJoin(smpPlayerImpl.getLastJoin());
+            smpPlayerImpl.setLastJoin(Instant.now());
             smpPlayerImpl.setName(event.getPlayer().getName());
             CompletableFuture.runAsync(() -> plugin.getPlayerManager().updatePlayer(smpPlayerImpl));
         });
