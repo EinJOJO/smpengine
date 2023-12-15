@@ -10,3 +10,5 @@ error:
 command:
   reload:
     reloaded: "<prefix> <green>Die Konfiguration wurde neu geladen!"
+
+death.global: "Der Spieler {player} ist gestorben!"

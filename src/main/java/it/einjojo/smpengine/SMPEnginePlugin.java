@@ -12,7 +12,6 @@ import it.einjojo.smpengine.core.team.TeamManager;
 import it.einjojo.smpengine.database.DatabaseMigrator;
 import it.einjojo.smpengine.database.HikariCP;
 import it.einjojo.smpengine.listener.JoinListener;
-import it.einjojo.smpengine.listener.PlayerQuitListener;
 import it.einjojo.smpengine.util.MessageUtil;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -107,6 +106,7 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     private void loadListener() {
         new JoinListener(this);
+        new DeathListener(this);
         new PlayerQuitListener(this);
     }
 
@@ -148,7 +148,6 @@ public class SMPEnginePlugin extends JavaPlugin {
         moduleConfig.load();
         maintenanceConfig.load();
         messagesConfig.load();
-        cachedMessages.clear();
     }
 
 
