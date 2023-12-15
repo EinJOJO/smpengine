@@ -8,8 +8,10 @@ import net.kyori.adventure.text.TextReplacementConfig;
 @AllArgsConstructor
 @Getter
 public class Placeholder {
+
     private final String key;
     private final String value;
+
 
     public static Component applyPlaceholders(Component component, Placeholder... placeholders) {
         TextReplacementConfig.Builder configBuilder = TextReplacementConfig.builder();
@@ -17,15 +19,14 @@ public class Placeholder {
             configBuilder.matchLiteral("{" + placeholder.getKey() + "}")
                     .replacement(placeholder.getValue());
         }
-
         return component.replaceText(configBuilder.build());
     }
 
     public static Placeholder player(String value) {
-        return new Placeholder("%player%", value);
+        return new Placeholder("player", value);
     }
 
     public static Placeholder world(String value) {
-        return new Placeholder("%world%", value);
+        return new Placeholder("world", value);
     }
 }
