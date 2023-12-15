@@ -3,9 +3,9 @@ CREATE TABLE `spieler`
     `uuid`       VARCHAR(36) PRIMARY KEY NOT NULL,
     `name`       VARCHAR(16)             NOT NULL,
     `team_id`    INT                     NULL,
-    `online`     BOOLEAN                 NOT NULL,
-    `first_join` TIMESTAMP               NOT NULL,
-    `last_join`  TIMESTAMP               NOT NULL
+    `online`     BOOLEAN                 NOT NULL DEFAULT FALSE,
+    `first_join` TIMESTAMP               NULL,
+    `last_join`  TIMESTAMP               NULL
 );
 
 CREATE TABLE `team`
@@ -14,7 +14,7 @@ CREATE TABLE `team`
     `name`        varchar(32)     NOT NULL,
     `displayName` text            NOT NULL,
     `owner_uuid`  varchar(36)     NOT NULL,
-    `created_at`  TIMESTAMP       NOT NULL
+    `created_at`  TIMESTAMP
 );
 
 CREATE TABLE `sessions`
@@ -22,8 +22,8 @@ CREATE TABLE `sessions`
     `id`                 int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `session_owner_uuid` varchar(36)     NOT NULL,
     `ip_address`         varchar(255)    NOT NULL,
-    `login_at`           TIMESTAMP       NOT NULL,
-    `logout_at`          TIMESTAMP       NOT NULL
+    `login_at`           TIMESTAMP,
+    `logout_at`          TIMESTAMP
 );
 
 CREATE TABLE `stats`
