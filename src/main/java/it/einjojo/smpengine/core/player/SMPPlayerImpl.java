@@ -46,4 +46,18 @@ public class SMPPlayerImpl implements SMPPlayer {
     public Player getPlayer() {
         return plugin.getServer().getPlayer(uuid);
     }
+
+
+    @Override
+    public String toString() {
+        return "SMPPlayerImpl{" +
+                "uuid=" + uuid +
+                ", online=" + online +
+                ", firstJoin=" + firstJoin +
+                ", lastJoin=" + lastJoin +
+                ", name='" + name + '\'' +
+                ", teamId=" + teamId +
+                ", plugin=" + plugin +
+                '}';
+    }
 }

@@ -42,8 +42,13 @@ public class DatabaseMigrator {
             int latestVersion = currentVersion;
             if (latestVersion == 0) {
                 logger.info("Migration: V0 - Initializing database...");
-                executeFile("db/init_db.sql", connection);
+                executeFile("db/v1.sql", connection);
                 latestVersion = 1;
+            }
+            if (latestVersion == 1) {
+                logger.info("Migration: V1 - Adding indexes...");
+                executeFile("db/migrations/v1.sql", connection);
+                latestVersion = 2;
             }
             if (latestVersion != currentVersion) { // Has Updated version
                 logger.info("Migration complete from " + currentVersion + " to " + latestVersion);

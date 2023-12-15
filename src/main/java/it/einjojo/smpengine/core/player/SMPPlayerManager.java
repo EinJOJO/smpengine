@@ -48,13 +48,14 @@ public class SMPPlayerManager {
      */
     public Optional<SMPPlayer> getPlayer(String name) {
         UUID uuid = NameUUIDCache.getUUID(name);
-        if (uuid != null) return getPlayer(uuid);
-        return Optional.empty();
+        if (uuid == null) return Optional.empty();
+        return getPlayer(uuid);
     }
 
 
     /**
      * Invalidates the cache and updates the player in the database.
+     *
      * @param smpPlayer {@link SMPPlayer}
      */
     public void updatePlayer(SMPPlayer smpPlayer) {
@@ -66,6 +67,7 @@ public class SMPPlayerManager {
 
     /**
      * Creates a new player in the database.
+     *
      * @param uuid UUID of Player
      * @param name Name of Player
      * @return {@link SMPPlayer}
@@ -73,6 +75,7 @@ public class SMPPlayerManager {
     public Optional<SMPPlayer> createPlayer(UUID uuid, String name) {
         plugin.getLogger().info("Creating player " + name + " (" + uuid + ")");
         var smpPlayer = new SMPPlayerImpl(uuid, true, Instant.now(), Instant.now(), name, null);
+        smpPlayer.setPlugin(plugin);
         return Optional.ofNullable(playerDatabase.createPlayer(smpPlayer));
     }
 

@@ -18,7 +18,9 @@ import it.einjojo.smpengine.util.MessageUtil;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -155,6 +157,19 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     public TextColor getPrimaryColor() {
         return moduleConfig.getColor();
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return "SMPEnginePlugin{" +
+                "startedSuccessfully=" + startedSuccessfully +
+                '}';
+    }
+
+    public void syncKick(Player player, Component message) {
+        getServer().getScheduler().runTask(this, () -> {
+            player.kick(message);
+        });
     }
 
     public Component getPrefix() {
