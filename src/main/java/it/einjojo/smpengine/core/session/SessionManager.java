@@ -7,6 +7,7 @@ public class SessionManager {
 
     private final SMPEnginePlugin plugin;
 
+
     public SessionManager(SMPEnginePlugin plugin) {
         this.plugin = plugin;
     }
