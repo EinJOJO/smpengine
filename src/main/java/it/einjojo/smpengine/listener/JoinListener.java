@@ -17,18 +17,20 @@ import java.util.concurrent.CompletableFuture;
 public class JoinListener implements Listener {
 
     private final SMPEnginePlugin plugin;
+    private final MaintenanceConfig maintenanceConfig;
 
     public JoinListener(SMPEnginePlugin plugin) {
         this.plugin = plugin;
+        this.maintenanceConfig = plugin.getMaintenanceConfig();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    // First check
     @EventHandler()
     public void maintenanceCheck(PlayerJoinEvent event) {
-        MaintenanceConfig maintenanceConfig = plugin.getMaintenanceConfig();
         if (maintenanceConfig.isEnabled() && !event.getPlayer().hasPermission(maintenanceConfig.getBypassPermission())) {
-            syncKick(event, MessageUtil.format(maintenanceConfig.getKickMessage(), plugin.getPrimaryColor(), plugin.getPrefix()));
+            syncKick(event, MessageUtil.format(
+                    maintenanceConfig.getKickMessage(), plugin.getPrimaryColor(), plugin.getPrefix())
+            );
         }
     }
 

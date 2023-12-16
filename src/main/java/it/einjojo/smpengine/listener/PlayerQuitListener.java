@@ -18,14 +18,19 @@ public class PlayerQuitListener implements Listener {
     }
 
     @EventHandler
-    public void updateOnline(PlayerQuitEvent event) {
+    public void onPlayerQuitDataHandler(PlayerQuitEvent event) {
         CompletableFuture.supplyAsync(() -> plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId()))
                 .thenAccept((optionalPlayer) -> {
-                    if (optionalPlayer.isPresent()) {
-                        SMPPlayerImpl smpPlayer = (SMPPlayerImpl) optionalPlayer.get();
-                        smpPlayer.setOnline(false);
-                        CompletableFuture.runAsync(() -> plugin.getPlayerManager().updatePlayer(smpPlayer));
+                    if (optionalPlayer.isEmpty()) {
+                        throw new IllegalStateException("SMPPlayer " + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ") is empty!");
                     }
+                    SMPPlayerImpl smpPlayer = (SMPPlayerImpl) optionalPlayer.get();
+                    smpPlayer.setOnline(false);
+
+                    CompletableFuture.runAsync(() -> {
+                        plugin.getSessionManager().endSession(smpPlayer);
+                        plugin.getPlayerManager().updatePlayer(smpPlayer);
+                    });
                 });
     }
 }
