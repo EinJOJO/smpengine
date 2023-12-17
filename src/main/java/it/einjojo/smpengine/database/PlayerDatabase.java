@@ -6,6 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerDatabase {
@@ -73,6 +77,46 @@ public class PlayerDatabase {
                 return player;
             }
         } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public Collection<SMPPlayer> getPlayersByUUIDs(Collection<UUID> uuids) {
+        List<SMPPlayer> players = new ArrayList<>();
+        if (uuids.isEmpty()) {
+            return players;
+        }
+        String query = "SELECT uuid, name, teamId, online, firstJoin, lastJoin FROM spieler WHERE uuid IN (";
+        query += "?,".repeat(uuids.size() - 1) + "?)";
+        try (Connection connection = hikariCP.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                int index = 1;
+                for (UUID uuid : uuids) {
+                    ps.setString(index++, uuid.toString());
+                }
+                try (ResultSet resultSet = ps.executeQuery()) {
+                    while (resultSet.next()) {
+                        players.add(rsToSMPPlayer(resultSet));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return players;
+    }
+
+    public SMPPlayer rsToSMPPlayer(ResultSet rs) {
+        try {
+            UUID uuid = UUID.fromString(rs.getString("uuid"));
+            String name = rs.getString("name");
+            Integer teamId = rs.getInt("teamId");
+            boolean online = rs.getBoolean("online");
+            Instant firstJoin = rs.getTimestamp("firstJoin").toInstant();
+            Instant lastJoin = rs.getTimestamp("lastJoin").toInstant();
+            return new SMPPlayerImpl(uuid, online, firstJoin, lastJoin, name, teamId);
+        } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
