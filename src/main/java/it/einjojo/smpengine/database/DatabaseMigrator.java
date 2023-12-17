@@ -46,11 +46,7 @@ public class DatabaseMigrator {
                 executeFile("db/init_db.sql", connection);
                 latestVersion = 1;
             }
-            if (latestVersion == 1) {
-                logger.info("Migration: V1 - Adding indexes...");
-                executeFile("db/v1.sql", connection);
-                latestVersion = 2;
-            }
+
             if (latestVersion != currentVersion) { // Has Updated version
                 logger.info("Migration complete from " + currentVersion + " to " + latestVersion);
                 setSchemaVersion(connection, latestVersion);
