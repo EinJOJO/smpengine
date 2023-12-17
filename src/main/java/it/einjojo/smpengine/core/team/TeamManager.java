@@ -17,8 +17,14 @@ public class TeamManager {
     public static void create(String name, UUID owner_uuid) {
     }
 
-    public Optional<Team> getTeam(int teamId) {
+    public Optional<Team> getTeamById(int teamId) {
         return Optional.empty();
     }
+
+    public Optional<Team> getTeam(String teamName) {
+        return Optional.empty();
+    }
+
+
 
 }

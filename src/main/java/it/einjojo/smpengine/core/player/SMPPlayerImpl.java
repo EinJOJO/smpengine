@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Getter
 @Setter
@@ -31,18 +32,16 @@ public class SMPPlayerImpl implements SMPPlayer {
         this.teamId = teamId;
     }
 
-    /**
-     * @return {@link Team} or null if player is not in a team.
-     */
     public Optional<Team> getTeam() {
         if (teamId == null) return Optional.empty();
-        return plugin.getTeamManager().getTeam(teamId);
+        return plugin.getTeamManager().getTeamById(teamId);
     }
 
+    @Override
+    public CompletableFuture<Optional<Team>> getTeamAsync() {
+        return CompletableFuture.supplyAsync(this::getTeam);
+    }
 
-    /**
-     * @return {@link Player} or null if player is offline.
-     */
     public Player getPlayer() {
         return plugin.getServer().getPlayer(uuid);
     }

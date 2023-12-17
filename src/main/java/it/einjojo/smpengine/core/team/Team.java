@@ -9,9 +9,19 @@ import java.util.List;
 public interface Team {
 
     String getName();
+    void setName(String name);
+
     String getDisplayName();
+    void setDisplayName(String displayName);
+
     SMPPlayer getOwner();
 
-    Collection<SMPPlayer> getMembers();
+    List<SMPPlayer> getMembers();
+
     Instant getCreated_at();
+
+    void addMember(SMPPlayer player);
+
+    void removeMember(SMPPlayer player);
+
 }

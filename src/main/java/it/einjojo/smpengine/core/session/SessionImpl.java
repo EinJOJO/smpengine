@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Getter
 @Setter
@@ -46,6 +47,11 @@ public class SessionImpl implements Session {
             throw new IllegalStateException("Player { " + uuid + " } is not loaded");
         }
         return player.get();
+    }
+
+    @Override
+    public CompletableFuture<SMPPlayer> getPlayerAsync() {
+        return CompletableFuture.supplyAsync(this::getPlayer);
     }
 
     @Override

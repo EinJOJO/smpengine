@@ -10,11 +10,11 @@ CREATE TABLE `spieler`
 
 CREATE TABLE `team`
 (
-    `id`          int PRIMARY KEY NOT NULL,
-    `name`        varchar(32)     NOT NULL,
+    `id`          int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `name`        varchar(32)     NOT NULL UNIQUE,
     `displayName` text            NOT NULL,
     `owner_uuid`  varchar(36)     NOT NULL,
-    `created_at`  TIMESTAMP NULL
+    `created_at`  TIMESTAMP       NULL
 );
 
 CREATE TABLE `sessions`
@@ -22,8 +22,8 @@ CREATE TABLE `sessions`
     `id`                 int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `session_owner_uuid` varchar(36)     NOT NULL,
     `ip_address`         varchar(255)    NOT NULL,
-    `login_at`           TIMESTAMP NULL,
-    `logout_at`          TIMESTAMP NULL
+    `login_at`           TIMESTAMP       NULL,
+    `logout_at`          TIMESTAMP       NULL
 );
 
 CREATE TABLE `stats`
@@ -52,3 +52,4 @@ ALTER TABLE `sessions`
 
 ALTER TABLE `sessions`
     ADD FOREIGN KEY (`session_owner_uuid`) REFERENCES `spieler` (`uuid`);
+ALTER TABLE sessions ADD INDEX (session_owner_uuid);

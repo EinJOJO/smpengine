@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 @UtilityClass
 public class CommandUtil {
 
-    public static Optional<Player> isPlayer(CommandSender sender, Consumer<Player> playerConsumer) {
+    public static Optional<Player> isPlayer(CommandSender sender, @Nullable Consumer<Player> playerConsumer) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("§cOnly players can execute this command!");
             return Optional.empty();
