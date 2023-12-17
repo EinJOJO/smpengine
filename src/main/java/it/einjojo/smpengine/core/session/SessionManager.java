@@ -8,22 +8,21 @@ import it.einjojo.smpengine.database.SessionDatabase;
 import org.bukkit.entity.Player;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 public class SessionManager {
 
     private final SMPEnginePlugin plugin;
-    private final LoadingCache<UUID, Session> sessions;
+    private final Map<UUID, Session> sessions;
     private final SessionDatabase sessionDatabase;
 
     public SessionManager(SMPEnginePlugin plugin) {
         this.plugin = plugin;
         this.sessionDatabase = new SessionDatabase(plugin.getHikariCP());
-        sessions = Caffeine.newBuilder()
-                .build(this::getSessionByUUID);
-
-
+        sessions = new HashMap<>();
     }
 
     private Session getSessionByUUID(UUID uuid) {
@@ -46,6 +45,10 @@ public class SessionManager {
 
     public void endSession(SMPPlayer player) {
         return;
+    }
+
+    public void closeSessions() {
+
     }
 
 }

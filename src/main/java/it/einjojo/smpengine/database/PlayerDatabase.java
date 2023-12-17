@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,14 +28,7 @@ public class PlayerDatabase {
                     if (!rs.next()) {
                         return null;
                     }
-                    return new SMPPlayerImpl(
-                            UUID.fromString(rs.getString("uuid")),
-                            rs.getBoolean("online"),
-                            rs.getTimestamp("first_join").toInstant(),
-                            rs.getTimestamp("last_join").toInstant(),
-                            rs.getString("name"),
-                            rs.getObject("team_id", Integer.class)
-                    );
+                    return rsToSMPPlayer(rs);
                 }
             }
         } catch (SQLException e) {
@@ -81,18 +74,18 @@ public class PlayerDatabase {
         }
     }
 
-    public Collection<SMPPlayer> getPlayersByUUIDs(Collection<UUID> uuids) {
+    public List<SMPPlayer> getPlayersByUUIDs(List<UUID> uuids) {
         List<SMPPlayer> players = new ArrayList<>();
         if (uuids.isEmpty()) {
             return players;
         }
-        String query = "SELECT uuid, name, teamId, online, firstJoin, lastJoin FROM spieler WHERE uuid IN (";
-        query += "?,".repeat(uuids.size() - 1) + "?)";
+        String placeholders = String.join(",", Collections.nCopies(uuids.size(), "?"));
+        String query = "SELECT uuid, name, teamId, online, firstJoin, lastJoin FROM spieler WHERE uuid IN (" + placeholders + ")";
+
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(query)) {
-                int index = 1;
-                for (UUID uuid : uuids) {
-                    ps.setString(index++, uuid.toString());
+                for (int i = 1; i <= uuids.size(); i++) {
+                    ps.setString(i, uuids.get(i).toString());
                 }
                 try (ResultSet resultSet = ps.executeQuery()) {
                     while (resultSet.next()) {

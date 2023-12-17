@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -38,7 +37,7 @@ public class TeamImpl implements Team {
     }
 
     @Override
-    public List<SMPPlayer> getMembers() {
-        return null; // TODO: 12/17/2023
+    public Collection<SMPPlayer> getMembers() {
+        return plugin.getPlayerManager().getPlayers(members);
     }
 }

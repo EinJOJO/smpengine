@@ -8,11 +8,7 @@ import it.einjojo.smpengine.util.NameUUIDCache;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class SMPPlayerManager {
     private final SMPEnginePlugin plugin;
@@ -82,20 +78,21 @@ public class SMPPlayerManager {
         return Optional.ofNullable(playerDatabase.createPlayer(smpPlayer));
     }
 
-    public Collection<SMPPlayer> getUUIDSFromCache(Collection<UUID> uuids){
-        Collection<SMPPlayer> cachedPlayers = new ArrayList<>();
-        Collection<UUID> missingUUIDS = getMissingUUIDsInCache(uuids);
-        if(uuids.isEmpty()){
-            return cachedPlayers;
+    public List<SMPPlayer> getPlayers(Collection<UUID> uuids) {
+        Map<UUID, SMPPlayer> cached = playerCache.getAllPresent(uuids);
+        ArrayList<UUID> toBeFetched = new ArrayList<>();
+        for (UUID uuid : uuids) {
+            if (!cached.containsKey(uuid)) {
+                toBeFetched.add(uuid);
+            }
         }
-        if(playerCache.)
-        return null;
+        if (toBeFetched.isEmpty()) { // Wenn alles im Cache ist
+            return new ArrayList<>(cached.values());
+        }
+        List<SMPPlayer> fetched = playerDatabase.getPlayersByUUIDs(toBeFetched);
+        fetched.addAll(cached.values());
+        return fetched;
     }
 
-    public Collection<UUID> getMissingUUIDsInCache(Collection<UUID> uuids) {
-        return uuids.stream()
-                .filter(uuid -> playerCache.getIfPresent(uuid) == null)
-                .collect(Collectors.toList());
-    }
 
 }

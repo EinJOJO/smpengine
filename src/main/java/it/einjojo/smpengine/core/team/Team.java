@@ -3,6 +3,7 @@ package it.einjojo.smpengine.core.team;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 
 public interface Team {
@@ -11,6 +12,6 @@ public interface Team {
     String getDisplayName();
     SMPPlayer getOwner();
 
-    List<SMPPlayer> getMembers();
+    Collection<SMPPlayer> getMembers();
     Instant getCreated_at();
 }

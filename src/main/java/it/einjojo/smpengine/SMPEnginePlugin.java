@@ -72,6 +72,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         if (!startedSuccessfully) {
             return;
         }
+        sessionManager.closeSessions();
         hikariCP.close();
         clearCache();
     }
