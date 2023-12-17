@@ -1,9 +1,11 @@
 package it.einjojo.smpengine.core.team;
 
+import it.einjojo.smpengine.core.player.SMPPlayer;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,9 +25,8 @@ public class TeamImpl implements Team {
         this.created_at = created_at;
     }
 
-    public void getMembers() {
-
+    @Override
+    public List<SMPPlayer> getMembers() {
+        return null;
     }
-
-
 }
