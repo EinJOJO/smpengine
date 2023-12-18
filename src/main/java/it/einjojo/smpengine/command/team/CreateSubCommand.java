@@ -26,7 +26,7 @@ public class CreateSubCommand implements Command {
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, (player -> {
             if (args.length != 1) {
-                player.sendMessage(plugin.getMessage("commend.team.create.usage"));
+                player.sendMessage(plugin.getMessage("command.team.create.usage"));
                 return;
             }
             if (plugin.getTeamManager().getTeamByName(args[0]).isEmpty()) {
