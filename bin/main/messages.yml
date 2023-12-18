@@ -1,0 +1,15 @@
+# messages
+prefix: "<pkr><bold>System <dark_gray>•<reset>"
+no-permission: "<prefix> <red>Dazu hast du keine Berechtigung!"
+
+# Error Alarm
+error:
+  player-creation-failed: "<prefix> <red>Der Spieler konnte nicht erstellt werden!"
+
+# Commands
+command:
+  reload:
+    reloaded: "<prefix> <green>Die Konfiguration wurde neu geladen!"
+
+death.global: "<prefix> Der Spieler {player} ist gestorben!"
+death.player: "<prefix> Du bist an den Koordinaten x:{x} y:{y} z:{z}"

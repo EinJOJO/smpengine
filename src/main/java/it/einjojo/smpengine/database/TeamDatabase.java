@@ -2,6 +2,7 @@ package it.einjojo.smpengine.database;
 
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.core.team.TeamImpl;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.sql.*;
 import java.time.Instant;
@@ -12,6 +13,7 @@ import java.util.UUID;
 public class TeamDatabase {
 
     private final HikariCP hikariCP;
+    private MiniMessage miniMessage = MiniMessage.miniMessage();
 
     public TeamDatabase(HikariCP hikariCP) {
         this.hikariCP = hikariCP;
@@ -21,7 +23,7 @@ public class TeamDatabase {
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement("INSERT INTO team (name, displayName, owner_uuid, created_at) VALUES (?, ?, ?, ?)")) {
                 ps.setString(1, team.getName());
-                ps.setString(2, team.getDisplayName());
+                ps.setString(2, miniMessage.serialize(team.getDisplayName()));
                 ps.setString(3, team.getOwner_uuid().toString());
                 ps.setTimestamp(4, Timestamp.from(team.getCreated_at()));
                 ps.executeUpdate();
@@ -75,7 +77,7 @@ public class TeamDatabase {
             UUID owner_uuid = UUID.fromString(rs.getString("owner_uuid"));
             String displayName = rs.getString("displayName");
             Instant created_at = rs.getTimestamp("created_at").toInstant();
-            return new TeamImpl(id, name, displayName, owner_uuid, created_at, members);
+            return new TeamImpl(id, name, miniMessage.deserialize(displayName), owner_uuid, created_at, members);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

@@ -1,18 +1,20 @@
 package it.einjojo.smpengine.core.team;
 
 import it.einjojo.smpengine.core.player.SMPPlayer;
+import net.kyori.adventure.text.Component;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
 
 public interface Team {
 
     String getName();
+
     void setName(String name);
 
-    String getDisplayName();
-    void setDisplayName(String displayName);
+    Component getDisplayName();
+
+    void setDisplayName(Component displayName);
 
     SMPPlayer getOwner();
 
