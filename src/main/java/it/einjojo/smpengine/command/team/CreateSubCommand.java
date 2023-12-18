@@ -20,30 +20,31 @@ public class CreateSubCommand implements Command {
     }
 
     @Override
-    /**
+    /*
      * /team create [name]
      */
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, (player -> {
             if (args.length != 1) {
-                player.sendMessage(plugin.getMessage("commend.team.createWrong"));
+                player.sendMessage(plugin.getMessage("commend.team.create.usage"));
                 return;
             }
             if (plugin.getTeamManager().getTeamByName(args[0]).isEmpty()) {
-                player.sendMessage(plugin.getMessage("command.team.alreadyExisting"));
+                player.sendMessage(plugin.getMessage("command.team.create.alreadyExists"));
                 return;
             }
-            Optional<SMPPlayer> optional = plugin.getPlayerManager().getPlayer(player.getUniqueId());
-            optional.ifPresent(smpPlayer -> {
+            Optional<SMPPlayer> oSender = plugin.getPlayerManager().getPlayer(player.getUniqueId());
+            oSender.ifPresent(smpPlayer -> {
                 if (smpPlayer.isInsideTeam()) {
-                    player.sendMessage(plugin.getMessage("command.team.alreadyMember"));
+                    player.sendMessage(plugin.getMessage("command.team.create.alreadyInTeam"));
                     return;
                 }
-
-                for (int i = 0; i < 10 ; i++) {
-                    Team team = plugin.getTeamManager().createTeam(args[0]+i, smpPlayer);
+                Team team = plugin.getTeamManager().createTeam(args[0], smpPlayer);
+                if (team == null) {
+                    player.sendMessage(plugin.getMessage("general-error"));
+                    return;
                 }
-
+                player.sendMessage(plugin.getMessage("command.team.create.success"));
             });
         }));
 
@@ -56,7 +57,7 @@ public class CreateSubCommand implements Command {
 
     @Override
     public String getPermission() {
-        return "";
+        return null;
     }
 
     @Override

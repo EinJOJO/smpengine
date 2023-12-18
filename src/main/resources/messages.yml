@@ -6,6 +6,7 @@ no-permission: "<prefix> <red>Dazu hast du keine Berechtigung!"
 error:
   player-creation-failed: "<prefix> <red>Der Spieler konnte nicht erstellt werden!"
 
+general-error: "<red>Es ist ein Fehler aufgetreten!"
 # Commands
 command:
   team:
@@ -15,6 +16,8 @@ command:
     create:
       usage: "<prefix> <red>Bitte benutze /team create <name>"
       success: "<prefix> <green>Das Team wurde erfolgreich erstellt!"
+      alreadyExists: "<prefix> <red>Das Team existiert bereits!"
+      alreadyInTeam: "<prefix> <red>Du bist bereits in einem Team!"
     members:
     delete:
       usage: "<prefix> <red>Bitte benutze /team delete [name]"
