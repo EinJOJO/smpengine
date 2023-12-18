@@ -9,6 +9,7 @@ error:
 general-error: "<red>Es ist ein Fehler aufgetreten!"
 # Commands
 command:
+  unknown: "<prefix> <red>Unbekannter Befehl!"
   target-not-found: "<prefix> <red>Der Spieler wurde nicht gefunden!"
   team:
     notOwner: "<prefix> <red>Du bist nicht der Ersteller der Teams!"
@@ -21,8 +22,10 @@ command:
       success: "<prefix> <green>Das Team wurde erfolgreich erstellt!"
       alreadyExists: "<prefix> <red>Das Team existiert bereits!"
       alreadyInTeam: "<prefix> <red>Du bist bereits in einem Team!"
-    members:
-      leave: "<prefix> <green>Du hast dein Team verlassen!"
+    leave:
+        success: "<prefix> <green>Du hast dein Team verlassen!"
+        owner: "<prefix> <red>Der Ersteller des Teams kann das Team nicht verlassen!"
+        notification: "<prefix> <red>Der Spieler {player} hat das Team verlassen!"
     kick:
       usage: "<prefix> <red>Bitte benutze /team kick [name]"
       global-info: "<prefix> <red>Der Spieler {player} wurde aus dem Team entfernt!"
