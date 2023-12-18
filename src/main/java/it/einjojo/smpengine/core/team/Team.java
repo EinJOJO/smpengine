@@ -39,8 +39,16 @@ public interface Team {
      */
     boolean removeMember(SMPPlayer player);
 
+    /**
+     * @param player {@link SMPPlayer} to check if he is in team
+     * @return true if player is in team, false if player is not in team
+     */
     boolean isMember(SMPPlayer player);
 
+    /**
+     * @param player {@link SMPPlayer} to check if he is owner of team
+     * @return true if player is owner of team, false if player is not owner of team
+     */
     boolean isOwner(SMPPlayer player);
 
 }
