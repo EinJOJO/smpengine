@@ -2,10 +2,14 @@ package it.einjojo.smpengine.command.team;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
+import it.einjojo.smpengine.core.player.SMPPlayer;
+import it.einjojo.smpengine.core.team.TeamManager;
 import it.einjojo.smpengine.util.CommandUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CreateSubCommand implements Command {
 
@@ -21,14 +25,21 @@ public class CreateSubCommand implements Command {
      */
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, (player -> {
-
-            // 1. Gucken, ob die Argumente stimmen
             if (args.length == 1) {
-                // 2 a. Überprüfen, ob das Team schon existiert.
-
-                // 2 b .TeamManager.create(args[0], player.getUniqueId()); // TODO: plugin.getTeamManager.create!
+                if (plugin.getTeamManager().getTeamByName(args[0]).isEmpty()) {
+                    Optional<SMPPlayer> player1 = plugin.getPlayerManager().getPlayer(player.getUniqueId());
+                    player1.ifPresent(smpPlayer -> {
+                        if (smpPlayer.isInsideTeam()) {
+                            player.sendMessage(plugin.getMessage("command.team.alreadyMember"));
+                        } else {
+                            plugin.getTeamManager().createTeam(args[0], smpPlayer);
+                        }
+                    });
+                } else{
+                    player.sendMessage(plugin.getMessage("command.team.alreadyExisting"));
+                }
             } else {
-                // send /team create <name>
+                player.sendMessage(plugin.getMessage("commend.team.createWrong"));
             }
         }));
 

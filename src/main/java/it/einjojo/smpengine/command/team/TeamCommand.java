@@ -28,6 +28,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
     public TeamCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
         registerSubCommand(new CreateSubCommand(plugin));
+        registerSubCommand(new InfoSubCommand(plugin));
     }
 
     @Override
