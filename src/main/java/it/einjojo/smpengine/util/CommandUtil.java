@@ -46,7 +46,7 @@ public class CommandUtil {
             sender.sendMessage(plugin.getMessage("command.unknown"));
             return;
         }
-        if (!sender.hasPermission(subCommand.getPermission())) {
+        if (subCommand.getPermission() != null && !sender.hasPermission(subCommand.getPermission())) {
             sender.sendMessage(plugin.getMessage("no-permission"));
             return;
         }
