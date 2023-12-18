@@ -25,7 +25,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
 
     private final Map<String, Command> subCommands = new HashMap<>();
 
-    public TeamCommand(SMPEnginePlugin plugin){
+    public TeamCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
         registerSubCommand(new CreateSubCommand(plugin));
     }
@@ -37,16 +37,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
             showHelp(sender);
             return true;
         }
-        Command subCommand = subCommands.get(args[0]);
-        if (subCommand == null) {
-            sender.sendMessage(plugin.getMessage("command.unknown"));
-            return true;
-        }
-        if (!sender.hasPermission(subCommand.getPermission())) {
-            sender.sendMessage(plugin.getMessage("no-permission"));
-            return true;
-        }
-        subCommand.execute(sender, CommandUtil.removeFirst(args));
+        CommandUtil.executeSubCommand(subCommands, sender, args, plugin);
         return true;
     }
 
@@ -58,7 +49,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
             component = component
                     .append(Component.text(" ⋆ ").color(NamedTextColor.DARK_GRAY)
                             .append(MessageUtil.format("<pkr>" + command.getCommand(), plugin.getPrimaryColor())
-                                    .hoverEvent(HoverEvent.showText(MessageUtil.format("<gray>/team <pkr>" + command.getCommand() + " <white>ausführen.", plugin.getPrimaryColor())))
+                                    .hoverEvent(HoverEvent.showText(MessageUtil.format("<red>/team <pkr>" + command.getCommand() + " <white>ausführen.", plugin.getPrimaryColor())))
                                     .clickEvent(ClickEvent.suggestCommand("/team " + command.getCommand() + " "))
                             ).append(Component.text(" - ").color(NamedTextColor.DARK_GRAY))
                             .append(Component.text(command.getDescription()).color(NamedTextColor.GRAY)))

@@ -14,6 +14,7 @@ public class TeamDatabase {
 
     private final HikariCP hikariCP;
     private MiniMessage miniMessage = MiniMessage.miniMessage();
+    private static final String TEAM_SELECT = "SELECT id, team.name AS team_name, displayName, owner_uuid, created_at, uuid AS member_uuid FROM team INNER JOIN spieler ON spieler.team_id = team.id";
 
     public TeamDatabase(HikariCP hikariCP) {
         this.hikariCP = hikariCP;
@@ -38,7 +39,7 @@ public class TeamDatabase {
 
     public Team getTeamByName(String name) {
         try (Connection connection = hikariCP.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement("SELECT id, team.name AS team_name, displayName, owner_uuid, created_at, uuid AS member_uuid FROM team INNER JOIN spieler ON spieler.team_id = team.id WHERE team.name = ?")) {
+            try (PreparedStatement ps = connection.prepareStatement(TEAM_SELECT + " WHERE team.name = ?")) {
                 ps.setString(1, name);
                 try (ResultSet rs = ps.executeQuery()) {
                     return rsToTeam(rs);
@@ -52,7 +53,7 @@ public class TeamDatabase {
 
     public Team getTeam(int id) {
         try (Connection connection = hikariCP.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement("SELECT id, team.name AS team_name, displayName, owner_uuid, created_at, uuid AS member_uuid FROM team INNER JOIN spieler ON spieler.team_id = team.id WHERE team.id = ?")) {
+            try (PreparedStatement ps = connection.prepareStatement(TEAM_SELECT + " WHERE team.id = ?")) {
                 ps.setInt(1, id);
                 try (ResultSet rs = ps.executeQuery()) {
                     return rsToTeam(rs);
@@ -70,18 +71,18 @@ public class TeamDatabase {
             while (rs.next()) {
                 members.add(UUID.fromString(rs.getString("member_uuid")));
             }
-            if (members.isEmpty()) return null;
-            rs.last();
-            int id = rs.getInt("id");
-            String name = rs.getString("team_name");
-            UUID owner_uuid = UUID.fromString(rs.getString("owner_uuid"));
-            String displayName = rs.getString("displayName");
-            Instant created_at = rs.getTimestamp("created_at").toInstant();
-            return new TeamImpl(id, name, miniMessage.deserialize(displayName), owner_uuid, created_at, members);
+            if (rs.last()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("team_name");
+                UUID owner_uuid = UUID.fromString(rs.getString("owner_uuid"));
+                String displayName = rs.getString("displayName");
+                Instant created_at = rs.getTimestamp("created_at").toInstant();
+                return new TeamImpl(id, name, miniMessage.deserialize(displayName), owner_uuid, created_at, members);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
 

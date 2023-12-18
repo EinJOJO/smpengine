@@ -9,28 +9,27 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public class InfoSubCommand implements Command {
 
     private final SMPEnginePlugin plugin;
 
-    public InfoSubCommand(SMPEnginePlugin plugin){
+    public InfoSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        CommandUtil.isPlayer(sender, player -> {
+        CommandUtil.requirePlayer(sender, player -> {
             Optional<Team> team = plugin.getPlayerManager().getPlayer(player.getUniqueId()).get().getTeam();
-            if(team.isPresent()){
+            if (team.isPresent()) {
                 Team team1 = team.get();
 
             }
         });
     }
 
-    public void printTeamInfo(Team team, CommandSender sender){
+    public void printTeamInfo(Team team, CommandSender sender) {
         sender.sendMessage(Component.text(""));
     }
 

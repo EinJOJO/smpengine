@@ -41,16 +41,7 @@ public class AdminCommand implements TabCompleter, CommandExecutor {
             }
             return true;
         }
-        Command subCommand = subCommands.get(args[0]);
-        if (subCommand == null) {
-            sender.sendMessage(plugin.getMessage("command.unknown"));
-            return true;
-        }
-        if (!sender.hasPermission(subCommand.getPermission())) {
-            sender.sendMessage(plugin.getMessage("no-permission"));
-            return true;
-        }
-        subCommand.execute(sender, CommandUtil.removeFirst(args));
+        CommandUtil.executeSubCommand(subCommands, sender, args, plugin);
         return true;
     }
 

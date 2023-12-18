@@ -2,7 +2,6 @@ package it.einjojo.smpengine.command.team;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
-import it.einjojo.smpengine.core.team.TeamManager;
 import it.einjojo.smpengine.util.CommandUtil;
 import org.bukkit.command.CommandSender;
 
@@ -17,10 +16,19 @@ public class CreateSubCommand implements Command {
     }
 
     @Override
+    /**
+     * /team create [name]
+     */
     public void execute(CommandSender sender, String[] args) {
-        CommandUtil.isPlayer(sender, (player -> {
+        CommandUtil.requirePlayer(sender, (player -> {
+
+            // 1. Gucken, ob die Argumente stimmen
             if (args.length == 1) {
-                TeamManager.create(args[0], player.getUniqueId());
+                // 2 a. Überprüfen, ob das Team schon existiert.
+
+                // 2 b .TeamManager.create(args[0], player.getUniqueId()); // TODO: plugin.getTeamManager.create!
+            } else {
+                // send /team create <name>
             }
         }));
 
