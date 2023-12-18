@@ -36,43 +36,52 @@ public class TeamImpl implements Team {
     }
 
     @Override
-    /**
-     * WARNING: This method might do database calls.
-     * @return {@link SMPPlayer} or throw {@link IllegalStateException} if owner is not in database.
-     */
     public SMPPlayer getOwner() {
         return plugin.getPlayerManager().getPlayer(owner_uuid).orElseThrow(() -> new IllegalStateException("Owner is not in database"));
     }
+
 
     public CompletableFuture<SMPPlayer> getOwnerAsync() {
         return CompletableFuture.supplyAsync(() -> getOwner());
     }
 
-    /**
-     * WARNING: This method might do database calls.
-     * @return {@link Collection<SMPPlayer>} of members
-     */
     @Override
     public List<SMPPlayer> getMembers() {
         return Collections.unmodifiableList(plugin.getPlayerManager().getPlayers(members));
     }
 
     public CompletableFuture<List<SMPPlayer>> getMembersAsync() {
-        return CompletableFuture.supplyAsync(() -> getMembers());
+        return CompletableFuture.supplyAsync(this::getMembers);
     }
 
 
     @Override
-    public void addMember(SMPPlayer player) {
+    public boolean addMember(SMPPlayer player) {
+        boolean isInTeam = members.contains(player.getUuid());
+        if (isInTeam) {
+            return false;
+        }
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(id);
-        members.add(player.getUuid());
+        return members.add(player.getUuid());
     }
 
     @Override
-    public void removeMember(SMPPlayer player) {
+    public boolean removeMember(SMPPlayer player) {
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(null);
-        members.remove(player.getUuid());
+        return members.remove(player.getUuid());
     }
+
+    @Override
+    public boolean isMember(SMPPlayer player) {
+        return members.contains(player.getUuid());
+    }
+
+    @Override
+    public boolean isOwner(SMPPlayer player) {
+        return owner_uuid.equals(player.getUuid());
+    }
+
+
 }

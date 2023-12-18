@@ -49,6 +49,12 @@ public interface SMPPlayer {
     Optional<Team> getTeam();
 
     /**
+     * @return true if player is in a team
+     */
+    boolean isInsideTeam();
+
+
+    /**
      * @return {@link CompletableFuture} with {@link Optional<Team>} or {@link Optional#empty()} if player is not in a team.
      */
     CompletableFuture<Optional<Team>> getTeamAsync();

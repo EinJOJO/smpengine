@@ -38,6 +38,11 @@ public class SMPPlayerImpl implements SMPPlayer {
     }
 
     @Override
+    public boolean isInsideTeam() {
+        return teamId != null;
+    }
+
+    @Override
     public CompletableFuture<Optional<Team>> getTeamAsync() {
         return CompletableFuture.supplyAsync(this::getTeam);
     }
