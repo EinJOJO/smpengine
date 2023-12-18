@@ -94,17 +94,24 @@ public class TeamDatabase {
     private Team rsToTeam(ResultSet rs) {
         try {
             List<UUID> members = new ArrayList<>();
+            int id = -1;
+            String name = null;
+            UUID owner_uuid = null;
+            String displayName = null;
+            Instant created_at = null;
             while (rs.next()) {
                 members.add(UUID.fromString(rs.getString("member_uuid")));
+                id = rs.getInt("id");
+                name = rs.getString("team_name");
+                owner_uuid = UUID.fromString(rs.getString("owner_uuid"));
+                displayName = rs.getString("displayName");
+                created_at = rs.getTimestamp("created_at").toInstant();
+
             }
-            if (rs.last()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("team_name");
-                UUID owner_uuid = UUID.fromString(rs.getString("owner_uuid"));
-                String displayName = rs.getString("displayName");
-                Instant created_at = rs.getTimestamp("created_at").toInstant();
-                return new TeamImpl(id, name, miniMessage.deserialize(displayName), owner_uuid, created_at, members);
+            if (members.isEmpty()) {
+                return null;
             }
+            return new TeamImpl(id, name, miniMessage.deserialize(displayName), owner_uuid, created_at, members);
         } catch (SQLException e) {
             e.printStackTrace();
         }
