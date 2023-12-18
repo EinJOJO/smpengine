@@ -103,10 +103,10 @@ public class PlayerDatabase {
         try {
             UUID uuid = UUID.fromString(rs.getString("uuid"));
             String name = rs.getString("name");
-            Integer teamId = rs.getInt("teamId");
+            Integer teamId = rs.getInt("team_Id");
             boolean online = rs.getBoolean("online");
-            Instant firstJoin = rs.getTimestamp("firstJoin").toInstant();
-            Instant lastJoin = rs.getTimestamp("lastJoin").toInstant();
+            Instant firstJoin = rs.getTimestamp("first_join").toInstant();
+            Instant lastJoin = rs.getTimestamp("last_join").toInstant();
             return new SMPPlayerImpl(uuid, online, firstJoin, lastJoin, name, teamId);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -14,6 +14,10 @@ command:
       createWrong: "<prefix> Bitte benutze /team create <name>"
       alreadyMember: "<prefix> <red>Du befindest dich bereits in einem Team!"
       alreadyExisting: "<prefix> <red>Dieses Team existiert bereits!"
+      deleteWrong: "<prefix> <red>Bitte benutze /team delete!"
+      notOwner: "<prefix> <red>Du bist nicht der Ersteller der Teams!"
+      ExecutorNotInTeam: "<prefix> <red>Du bist kein Mitglied eines Teams!"
+      notInTeam: "<prefix> <red>Dieser Spieler ist nicht in deinem Team!"
 
 death.global: "<prefix> Der Spieler {player} ist gestorben!"
 death.player: "<prefix> Du bist an den Koordinaten x:{x} y:{y} z:{z}"
