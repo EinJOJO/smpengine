@@ -13,7 +13,7 @@ import java.util.UUID;
 public class TeamDatabase {
 
     private final HikariCP hikariCP;
-    private MiniMessage miniMessage = MiniMessage.miniMessage();
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private static final String TEAM_SELECT = "SELECT id, team.name AS team_name, displayName, owner_uuid, created_at, uuid AS member_uuid FROM team INNER JOIN spieler ON spieler.team_id = team.id";
 
     public TeamDatabase(HikariCP hikariCP) {
@@ -62,6 +62,19 @@ public class TeamDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public boolean deleteTeam(Team team) {
+        try (Connection connection = hikariCP.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM team WHERE id = ?")) {
+                ps.setInt(1, team.getId());
+                ps.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

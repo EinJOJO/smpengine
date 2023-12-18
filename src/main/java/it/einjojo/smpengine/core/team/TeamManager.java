@@ -27,11 +27,26 @@ public class TeamManager {
     }
 
     public Optional<Team> getTeamById(int teamId) {
-        return Optional.empty();
+        var team = teamDatabase.getTeam(teamId);
+        applyPlugin(team);
+        return Optional.of(team);
     }
 
-    public Optional<Team> getTeam(String teamName) {
-        return Optional.empty();
+    public Optional<Team> getTeamByName(String teamName) {
+        var team = teamDatabase.getTeamByName(teamName);
+        applyPlugin(team);
+        return Optional.of(team);
+    }
+
+    public boolean deleteTeam(Team team) {
+        if (team instanceof TeamImpl teamImpl) {
+            for (SMPPlayer member : team.getMembers()) {
+                teamImpl.removeMember(member, true);
+                plugin.getPlayerManager().updatePlayer(member);
+            }
+            return teamDatabase.deleteTeam((TeamImpl) team);
+        }
+        return false;
     }
 
     private void applyPlugin(Team team) {

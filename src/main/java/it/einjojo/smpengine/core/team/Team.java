@@ -9,6 +9,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface Team {
 
+    int getId();
+
     String getName();
 
     void setName(String name);

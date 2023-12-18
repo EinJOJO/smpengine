@@ -68,6 +68,18 @@ public class TeamImpl implements Team {
 
     @Override
     public boolean removeMember(SMPPlayer player) {
+        return removeMember(player, false);
+    }
+
+    /**
+     * @param player    {@link SMPPlayer} to remove from team
+     * @param withOwner if true, owner can be removed from team
+     * @return true if player was removed from team, false if player was not in team
+     */
+    public boolean removeMember(SMPPlayer player, boolean withOwner) {
+        if (!withOwner && isOwner(player)) {
+            throw new IllegalStateException("Owner cannot be removed from team");
+        }
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(null);
         return members.remove(player.getUuid());
