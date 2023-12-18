@@ -9,3 +9,5 @@ commands:
   smpengine:
     description: SMP ENGINE Admin Command
     aliases: [ smpe, smp , admin]
+  team:
+    description: Team Commands
