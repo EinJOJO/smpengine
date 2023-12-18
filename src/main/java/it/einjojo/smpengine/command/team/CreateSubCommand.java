@@ -29,7 +29,7 @@ public class CreateSubCommand implements Command {
                 player.sendMessage(plugin.getMessage("command.team.create.usage"));
                 return;
             }
-            if (plugin.getTeamManager().getTeamByName(args[0]).isEmpty()) {
+            if (plugin.getTeamManager().getTeamByName(args[0]).isPresent()) {
                 player.sendMessage(plugin.getMessage("command.team.create.alreadyExists"));
                 return;
             }
