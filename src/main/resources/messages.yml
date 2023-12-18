@@ -22,6 +22,7 @@ command:
       alreadyExists: "<prefix> <red>Das Team existiert bereits!"
       alreadyInTeam: "<prefix> <red>Du bist bereits in einem Team!"
     members:
+      leave: "<prefix> <green>Du hast dein Team verlassen!"
     kick:
       usage: "<prefix> <red>Bitte benutze /team kick [name]"
       global-info: "<prefix> <red>Der Spieler {player} wurde aus dem Team entfernt!"

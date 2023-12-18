@@ -52,7 +52,7 @@ public class CreateSubCommand implements Command {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return null;
+        return List.of();
     }
 
     @Override
