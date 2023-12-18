@@ -103,7 +103,7 @@ public class PlayerDatabase {
         try {
             UUID uuid = UUID.fromString(rs.getString("uuid"));
             String name = rs.getString("name");
-            Integer teamId = rs.getInt("team_Id");
+            Integer teamId = rs.getObject("team_Id", Integer.class);
             boolean online = rs.getBoolean("online");
             Instant firstJoin = rs.getTimestamp("first_join").toInstant();
             Instant lastJoin = rs.getTimestamp("last_join").toInstant();

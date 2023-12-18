@@ -47,8 +47,7 @@ tasks {
     }
 
     processResources {
-
-        filesMatching("plugin.yml") {
+        filesMatching("**/*.yml") {
             expand("version" to project.version)
         }
 
