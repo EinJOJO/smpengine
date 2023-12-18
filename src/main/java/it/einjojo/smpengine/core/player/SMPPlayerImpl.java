@@ -51,6 +51,9 @@ public class SMPPlayerImpl implements SMPPlayer {
         return plugin.getServer().getPlayer(uuid);
     }
 
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
 
     @Override
     public String toString() {

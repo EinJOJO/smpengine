@@ -80,7 +80,7 @@ public class PlayerDatabase {
             return players;
         }
         String placeholders = String.join(",", Collections.nCopies(uuids.size(), "?"));
-        String query = "SELECT uuid, name, teamId, online, firstJoin, lastJoin FROM spieler WHERE uuid IN (" + placeholders + ")";
+        String query = "SELECT uuid, name, team_id, online, first_join, last_join FROM spieler WHERE uuid IN (" + placeholders + ")";
 
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -103,7 +103,7 @@ public class PlayerDatabase {
         try {
             UUID uuid = UUID.fromString(rs.getString("uuid"));
             String name = rs.getString("name");
-            Integer teamId = rs.getObject("team_Id", Integer.class);
+            Integer teamId = rs.getObject("team_id", Integer.class);
             boolean online = rs.getBoolean("online");
             Instant firstJoin = rs.getTimestamp("first_join").toInstant();
             Instant lastJoin = rs.getTimestamp("last_join").toInstant();

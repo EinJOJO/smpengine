@@ -84,7 +84,6 @@ public class TeamManager {
                 if (player != null) {
                     player.sendMessage(plugin.getMessage("command.team.delete.member-info"));
                 }
-                plugin.getPlayerManager().updatePlayer(member); // Update player in database
             }
             plugin.getLogger().info("Deleted team " + team.getName() + " (" + team.getId() + ")");
             return teamDatabase.deleteTeam((TeamImpl) team);

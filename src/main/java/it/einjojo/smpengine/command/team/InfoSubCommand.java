@@ -24,7 +24,7 @@ public class InfoSubCommand implements Command {
             Optional<Team> team = plugin.getPlayerManager().getPlayer(player.getUniqueId()).get().getTeam();
             if (team.isPresent()) {
                 Team team1 = team.get();
-
+                printTeamInfo(team1, sender);
             }
         });
     }

@@ -14,7 +14,7 @@ public class TeamDatabase {
 
     private final HikariCP hikariCP;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
-    private static final String TEAM_SELECT = "SELECT id, team.name AS team_name, displayName, owner_uuid, created_at, uuid AS member_uuid FROM team INNER JOIN spieler ON spieler.team_id = team.id";
+    private static final String TEAM_SELECT = "SELECT id, team.name AS team_name, displayName, owner_uuid, created_at, uuid AS member_uuid FROM team LEFT JOIN spieler ON spieler.team_id = team.id";
 
     public TeamDatabase(HikariCP hikariCP) {
         this.hikariCP = hikariCP;
@@ -97,17 +97,17 @@ public class TeamDatabase {
             String displayName = null;
             Instant created_at = null;
             while (rs.next()) {
-                members.add(UUID.fromString(rs.getString("member_uuid")));
+                String uuidString = rs.getString("member_uuid");
+                if (uuidString != null) {
+                    members.add(UUID.fromString(uuidString));
+                }
                 id = rs.getInt("id");
                 name = rs.getString("team_name");
                 owner_uuid = UUID.fromString(rs.getString("owner_uuid"));
                 displayName = rs.getString("displayName");
                 created_at = rs.getTimestamp("created_at").toInstant();
-
             }
-            if (members.isEmpty()) {
-                return null;
-            }
+            if (id == -1) return null;
             return new TeamImpl(id, name, miniMessage.deserialize(displayName), owner_uuid, created_at, members);
         } catch (SQLException e) {
             e.printStackTrace();
