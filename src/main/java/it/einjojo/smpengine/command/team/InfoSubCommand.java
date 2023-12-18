@@ -40,16 +40,16 @@ public class InfoSubCommand implements Command {
 
     @Override
     public String getPermission() {
-        return null;
+        return "team.info";
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return "Erhalte Informationen über dein Team!";
     }
 
     @Override
     public String getCommand() {
-        return null;
+        return "info";
     }
 }

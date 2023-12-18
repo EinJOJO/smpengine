@@ -15,20 +15,23 @@ public class KickSubCommand implements Command {
 
     private final SMPEnginePlugin plugin;
 
-    public KickSubCommand(SMPEnginePlugin plugin){
+    public KickSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, player -> {
-            if (args.length != 1) {
+            if (args.length > 2 || args.length == 0) {
                 player.sendMessage(plugin.getMessage("commend.team.removeWrong"));
                 return;
             }
             Optional<SMPPlayer> optionalSMPPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId());
             Optional<SMPPlayer> kicked = plugin.getPlayerManager().getPlayer(args[0]);
-            optionalSMPPlayer.ifPresent(smpPlayer -> {
+            if(optionalSMPPlayer.isEmpty()){
+                return;
+            }
+            if(args.length == 1) {
                 if (optionalSMPPlayer.get().getTeam().isPresent()) {
                     SMPPlayer executor = optionalSMPPlayer.get();
                     Optional<Team> optionalTeam = executor.getTeam();
@@ -46,12 +49,24 @@ public class KickSubCommand implements Command {
                     }
                     team.removeMember(executedOn);
                 }
-                if(player.hasPermission(plugin.getMaintenanceConfig().getBypassPermission())){
-
+            } else{
+                if (!player.hasPermission("team.kick.others")) {
+                    return;
                 }
+                if (kicked.isEmpty()) {
+                    return;
+                }
+                SMPPlayer executedOn = kicked.get();
+                Optional<Team> team = plugin.getTeamManager().getTeamByName(args[1]);
+                if(team.isEmpty()){
+                    return;
+                }
+                Team existingTeam = team.get();
+                existingTeam.removeMember(executedOn);
+            }
 
 
-            });
+
         });
     }
 
@@ -62,16 +77,16 @@ public class KickSubCommand implements Command {
 
     @Override
     public String getPermission() {
-        return null;
+        return "team.kick";
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return "Entferne einen Spieler aus deinem Team!";
     }
 
     @Override
     public String getCommand() {
-        return null;
+        return "kick";
     }
 }

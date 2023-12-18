@@ -29,7 +29,7 @@ public class DeleteSubCommand implements Command {
             optional.ifPresent(smpPlayer -> {
                 if(optional.get().getTeam().isPresent()){
                     Optional<Team> team = optional.get().getTeam();
-                    if(team.get().isOwner(optional.get()) || player.hasPermission(plugin.getMaintenanceConfig().getBypassPermission())){
+                    if(team.get().isOwner(optional.get()) || player.hasPermission("team.delete.others")){
                         plugin.getTeamManager().deleteTeam(team.get());
                     } else {
                         player.sendMessage(plugin.getMessage("command.team.notOwner"));

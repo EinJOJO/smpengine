@@ -76,4 +76,8 @@ public class TeamManager {
         }
     }
 
+    public ArrayList<String> getTeams(){
+        return teamDatabase.getTeams();
+    }
+
 }
