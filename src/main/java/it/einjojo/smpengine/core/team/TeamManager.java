@@ -54,7 +54,7 @@ public class TeamManager {
     public Optional<Team> getTeamById(int teamId) {
         var team = teamDatabase.getTeam(teamId);
         applyPlugin(team);
-        return Optional.of(team);
+        return Optional.ofNullable(team);
     }
 
     /**
@@ -66,7 +66,7 @@ public class TeamManager {
     public Optional<Team> getTeamByName(String teamName) {
         var team = teamDatabase.getTeamByName(teamName);
         applyPlugin(team);
-        return Optional.of(team);
+        return Optional.ofNullable(team);
     }
 
     /**
