@@ -6,46 +6,95 @@ import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class DeleteSubCommand implements Command {
 
     private final SMPEnginePlugin plugin;
 
-    public DeleteSubCommand(SMPEnginePlugin plugin){
+    public DeleteSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, player -> {
-            if (args.length > 0) {
-                player.sendMessage(plugin.getMessage("commend.team.removeWrong"));
-                return;
+
+            Optional<SMPPlayer> oSenderSmp = plugin.getPlayerManager().getPlayer(player.getUniqueId());
+            if (oSenderSmp.isEmpty()) {
+                return; // Not possible.
             }
-            Optional<SMPPlayer> optional = plugin.getPlayerManager().getPlayer(player.getUniqueId());
-            optional.ifPresent(smpPlayer -> {
-                if(optional.get().getTeam().isPresent()){
-                    Optional<Team> team = optional.get().getTeam();
-                    if(team.get().isOwner(optional.get()) || player.hasPermission("team.delete.others")){
-                        plugin.getTeamManager().deleteTeam(team.get());
-                    } else {
-                        player.sendMessage(plugin.getMessage("command.team.notOwner"));
-                    }
-                } else{
-                    player.sendMessage(plugin.getMessage("command.team.ExecutorNotInTeam"));
+            SMPPlayer smpSender = oSenderSmp.get();
+
+            if (args.length == 0) {
+                deleteOwnTeam(smpSender);
+            } else if (args.length == 1) {
+                Optional<Team> oTeam = plugin.getTeamManager().getTeamByName(args[0]);
+                if (oTeam.isEmpty()) {
+                    player.sendMessage(plugin.getMessage("command.team.notExisting"));
+                    return;
                 }
+                Team team = oTeam.get();
+                deleteOtherTeam(smpSender, team);
+            } else {
+                player.sendMessage(plugin.getMessage("commend.team.delete.usage"));
+            }
 
-            });
+        });
+    }
 
+    private void deleteOwnTeam(SMPPlayer smpSender) {
+        Player player = smpSender.getPlayer();
+        if (player == null) {
+            return;
+        }
+        Optional<Team> oSenderTeam = smpSender.getTeam();
+        if (oSenderTeam.isEmpty()) {
+            player.sendMessage(plugin.getMessage("command.team.notInTeam"));
+            return;
+        }
+        Team team = oSenderTeam.get();
+        if (!team.isOwner(smpSender)) {
+            player.sendMessage(plugin.getMessage("command.team.notOwner"));
+            return;
+        }
+        deleteTeam(player, team);
+    }
+
+    private void deleteOtherTeam(SMPPlayer player, Team team) {
+        Player player1 = player.getPlayer();
+        if (player1 == null) {
+            return;
+        }
+        if (player1.hasPermission("team.delete.other")) {
+            deleteTeam(player1, team);
+        } else {
+            player1.sendMessage(plugin.getMessage("no-permission"));
+        }
+    }
+
+    private void deleteTeam(Player player, Team team) {
+        CompletableFuture.runAsync(() -> {
+            if (plugin.getTeamManager().deleteTeam(team)) {
+                player.sendMessage(plugin.getMessage("command.team.delete.success"));
+            } else {
+                player.sendMessage(plugin.getMessage("command.team.delete.error"));
+            }
         });
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return null;
+        if (args.length <= 1) {
+            return plugin.getTeamManager().getTeams().stream()
+                    .filter(name -> name.startsWith(args[0]))
+                    .toList();
+        }
+        return List.of();
     }
 
     @Override
@@ -60,6 +109,6 @@ public class DeleteSubCommand implements Command {
 
     @Override
     public String getCommand() {
-        return null;
+        return "delete";
     }
 }

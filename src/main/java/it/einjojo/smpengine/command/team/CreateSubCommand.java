@@ -40,10 +40,10 @@ public class CreateSubCommand implements Command {
                     return;
                 }
 
-                Team team = plugin.getTeamManager().createTeam(args[0], smpPlayer);
-                if (team == null) {
-                    // TODO: 12/18/2023 Error occurred
+                for (int i = 0; i < 10 ; i++) {
+                    Team team = plugin.getTeamManager().createTeam(args[0]+i, smpPlayer);
                 }
+
             });
         }));
 

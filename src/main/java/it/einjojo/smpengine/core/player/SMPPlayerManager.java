@@ -20,7 +20,16 @@ public class SMPPlayerManager {
         this.playerDatabase = new PlayerDatabase(plugin.getHikariCP());
         this.playerCache = Caffeine.newBuilder()
                 .maximumSize(1000)
-                .expireAfterAccess(Duration.ofMinutes(10))
+                .evictionListener((uuid, smpPlayerObject, cause) -> {
+                    if (!cause.wasEvicted()) {
+                        return;
+                    }
+                    if (smpPlayerObject instanceof SMPPlayer smpPlayer) {
+                        plugin.getLogger().info("Evicting player " + smpPlayer.getName() + " (" + smpPlayer.getUuid() + ")");
+                        playerDatabase.updatePlayer(smpPlayer);
+                    }
+                })
+                .expireAfterAccess(Duration.ofMinutes(5))
                 .build(this::getByUUIDUncached);
     }
 

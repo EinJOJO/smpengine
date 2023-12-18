@@ -8,6 +8,22 @@ error:
 
 # Commands
 command:
+  team:
+    notOwner: "<prefix> <red>Du bist nicht der Ersteller der Teams!"
+    notInTeam: "<prefix> <red>Du bist nicht in einem Team!"
+    notExist: "<prefix> <red>Das Team existiert nicht!"
+    create:
+      usage: "<prefix> <red>Bitte benutze /team create <name>"
+      success: "<prefix> <green>Das Team wurde erfolgreich erstellt!"
+    members:
+    delete:
+      usage: "<prefix> <red>Bitte benutze /team delete [name]"
+      member-info: "<prefix> <gray>Dein Team wurde gelöscht und du wurdest aus dem Team entfernt!"
+      success: "<prefix> <green>Das Team wurde erfolgreich gelöscht!"
+      error: "<prefix> <red>Das Team konnte nicht gelöscht werden!"
+    join:
+
+
   reload:
     reloaded: "<prefix> <green>Die Konfiguration wurde neu geladen!"
 

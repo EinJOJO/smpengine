@@ -7,7 +7,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,6 +62,19 @@ public class TeamDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void updateTeam(Team team) {
+        TeamImpl teamImpl = (TeamImpl) team;
+        try (Connection connection = hikariCP.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("UPDATE team SET displayName = ? WHERE id = ?")) {
+                ps.setString(1, miniMessage.serialize(teamImpl.getDisplayName()));
+                ps.setInt(2, teamImpl.getId());
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
