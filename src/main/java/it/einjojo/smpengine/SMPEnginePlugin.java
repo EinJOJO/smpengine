@@ -13,6 +13,7 @@ import it.einjojo.smpengine.core.team.TeamManager;
 import it.einjojo.smpengine.database.DatabaseMigrator;
 import it.einjojo.smpengine.database.HikariCP;
 import it.einjojo.smpengine.listener.DeathListener;
+import it.einjojo.smpengine.listener.Fun;
 import it.einjojo.smpengine.listener.JoinListener;
 import it.einjojo.smpengine.listener.PlayerQuitListener;
 import it.einjojo.smpengine.util.MessageUtil;
@@ -115,6 +116,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         new JoinListener(this);
         new DeathListener(this);
         new PlayerQuitListener(this);
+        new Fun(this);
     }
 
 

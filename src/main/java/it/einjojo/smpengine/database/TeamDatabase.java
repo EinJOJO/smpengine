@@ -14,7 +14,6 @@ public class TeamDatabase {
 
     private final HikariCP hikariCP;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
-    private static final String TEAM_SELECT = "SELECT id, team.name AS team_name, displayName, owner_uuid, created_at, uuid AS member_uuid FROM team LEFT JOIN spieler ON spieler.team_id = team.id";
 
     public TeamDatabase(HikariCP hikariCP) {
         this.hikariCP = hikariCP;
@@ -34,23 +33,25 @@ public class TeamDatabase {
         }
     }
 
-    public Team getTeamByName(String name) {
+    public int getTeamIdByName(String name) {
         try (Connection connection = hikariCP.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(TEAM_SELECT + " WHERE team.name = ?")) {
+            try (PreparedStatement ps = connection.prepareStatement(" SELECT id FROM team WHERE team.name = ?")) {
                 ps.setString(1, name);
                 try (ResultSet rs = ps.executeQuery()) {
-                    return rsToTeam(rs);
+                    if (rs.next()) {
+                        return rs.getInt("id");
+                    }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return -1;
     }
 
     public Team getTeam(int id) {
         try (Connection connection = hikariCP.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(TEAM_SELECT + " WHERE team.id = ?")) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT id, team.name AS team_name, displayName, owner_uuid, created_at, uuid AS member_uuid FROM team LEFT JOIN spieler ON spieler.team_id = team.id WHERE team.id = ?")) {
                 ps.setInt(1, id);
                 try (ResultSet rs = ps.executeQuery()) {
                     return rsToTeam(rs);

@@ -2,6 +2,7 @@ package it.einjojo.smpengine.core.team;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.database.TeamDatabase;
@@ -18,13 +19,20 @@ public class TeamManager {
 
     private final SMPEnginePlugin plugin;
     private final TeamDatabase teamDatabase;
-
+    private final LoadingCache<Integer, Team> teamCache;
+    private final Cache<String, Integer> teamIds;
     private final Cache<UUID, Integer> teamInvites;
 
     public TeamManager(SMPEnginePlugin plugin) {
         this.plugin = plugin;
         this.teamDatabase = new TeamDatabase(plugin.getHikariCP());
         teamInvites = Caffeine.newBuilder().expireAfterWrite(Duration.ofMinutes(5)).build();
+        teamIds = Caffeine.newBuilder()
+                .expireAfterAccess(Duration.ofMinutes(5))
+                .build();
+        teamCache = Caffeine.newBuilder()
+                .expireAfterAccess(Duration.ofMinutes(5))
+                .build(this::getTeam);
     }
 
     /**
@@ -38,12 +46,18 @@ public class TeamManager {
         teamDatabase.createTeam(new TeamImpl(-1, teamName, Component.text(teamName).color(TeamColor.DEFAULT), owner.getUuid(), Instant.now(), new ArrayList<>()));
         Team result = getTeamByName(teamName).orElse(null);
         if (result != null) {
-            plugin.getLogger().info("Created team " + teamName + " (" + result.getId() + ")");
             applyPlugin(result);
+            plugin.getLogger().info("Created team " + teamName + " (" + result.getId() + ")");
             result.addMember(owner);
         }
 
         return result;
+    }
+
+    private Team getTeam(int teamId) {
+        var team = teamDatabase.getTeam(teamId);
+        applyPlugin(team);
+        return team;
     }
 
     /**
@@ -53,9 +67,7 @@ public class TeamManager {
      * @return {@link Optional} of {@link Team} if team exists, {@link Optional#empty()} if team does not exist
      */
     public Optional<Team> getTeamById(int teamId) {
-        var team = teamDatabase.getTeam(teamId);
-        applyPlugin(team);
-        return Optional.ofNullable(team);
+        return Optional.ofNullable(teamCache.get(teamId));
     }
 
     /**
@@ -65,9 +77,15 @@ public class TeamManager {
      * @return {@link Optional} of {@link Team} if team exists, {@link Optional#empty()} if team does not exist
      */
     public Optional<Team> getTeamByName(String teamName) {
-        var team = teamDatabase.getTeamByName(teamName);
-        applyPlugin(team);
-        return Optional.ofNullable(team);
+        if (teamName == null) return Optional.empty();
+        Integer teamId = teamIds.get(teamName, s -> {
+            int id = teamDatabase.getTeamIdByName(s);
+            if (id == -1) return null;
+            return id;
+        });
+        if (teamId == null) return Optional.empty();
+        teamIds.put(teamName, teamId);
+        return getTeamById(teamId);
     }
 
     /**
@@ -80,14 +98,16 @@ public class TeamManager {
         if (team instanceof TeamImpl teamImpl) {
             for (SMPPlayer member : team.getMembers()) {
                 teamImpl.removeMember(member, true);
+                plugin.getPlayerManager().updatePlayer(member);
                 Player player = member.getPlayer();
                 if (player != null) {
                     player.sendMessage(plugin.getMessage("command.team.delete.member-info"));
                 }
             }
             plugin.getLogger().info("Deleted team " + team.getName() + " (" + team.getId() + ")");
+            teamIds.invalidate(team.getName());
+            teamCache.invalidate(team.getId());
             return teamDatabase.deleteTeam((TeamImpl) team);
-
         }
         return false;
     }
@@ -95,6 +115,7 @@ public class TeamManager {
     public void updateTeam(Team team) {
         if (team == null) return;
         teamDatabase.updateTeam(team);
+        teamCache.invalidate(team.getId());
     }
 
     public void createInvite(UUID uuid, int teamId) {

@@ -30,7 +30,14 @@ public class InfoSubCommand implements Command {
     }
 
     public void printTeamInfo(Team team, CommandSender sender) {
-        sender.sendMessage(Component.text(""));
+        Component message = Component.text()
+                .append(Component.text("§8[§6Team§8] §7Team-Info"))
+                .append(Component.text("§8» §7Name: §6" + team.getName()))
+                .append(Component.text("§8» §7Owner: §6" + team.getOwner().getName()))
+                .append(Component.text("§8» §7Mitglieder: §6" + team.getMembers().size()))
+                .build();
+        sender.sendMessage(message);
+
     }
 
     @Override
