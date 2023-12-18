@@ -1,6 +1,7 @@
 package it.einjojo.smpengine;
 
 import it.einjojo.smpengine.command.admin.AdminCommand;
+import it.einjojo.smpengine.command.team.TeamCommand;
 import it.einjojo.smpengine.config.DatabaseConfig;
 import it.einjojo.smpengine.config.MaintenanceConfig;
 import it.einjojo.smpengine.config.MessagesConfig;
@@ -107,6 +108,7 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     private void loadCommands() {
         new AdminCommand(this);
+        new TeamCommand(this);
     }
 
     private void loadListener() {

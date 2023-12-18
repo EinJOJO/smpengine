@@ -3,9 +3,8 @@ package it.einjojo.smpengine.command.team;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
-import it.einjojo.smpengine.core.team.TeamManager;
+import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -17,6 +16,7 @@ public class CreateSubCommand implements Command {
 
     public CreateSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
+
     }
 
     @Override
@@ -25,22 +25,26 @@ public class CreateSubCommand implements Command {
      */
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, (player -> {
-            if (args.length == 1) {
-                if (plugin.getTeamManager().getTeamByName(args[0]).isEmpty()) {
-                    Optional<SMPPlayer> player1 = plugin.getPlayerManager().getPlayer(player.getUniqueId());
-                    player1.ifPresent(smpPlayer -> {
-                        if (smpPlayer.isInsideTeam()) {
-                            player.sendMessage(plugin.getMessage("command.team.alreadyMember"));
-                        } else {
-                            plugin.getTeamManager().createTeam(args[0], smpPlayer);
-                        }
-                    });
-                } else{
-                    player.sendMessage(plugin.getMessage("command.team.alreadyExisting"));
-                }
-            } else {
+            if (args.length != 1) {
                 player.sendMessage(plugin.getMessage("commend.team.createWrong"));
+                return;
             }
+            if (plugin.getTeamManager().getTeamByName(args[0]).isEmpty()) {
+                player.sendMessage(plugin.getMessage("command.team.alreadyExisting"));
+                return;
+            }
+            Optional<SMPPlayer> optional = plugin.getPlayerManager().getPlayer(player.getUniqueId());
+            optional.ifPresent(smpPlayer -> {
+                if (smpPlayer.isInsideTeam()) {
+                    player.sendMessage(plugin.getMessage("command.team.alreadyMember"));
+                    return;
+                }
+
+                Team team = plugin.getTeamManager().createTeam(args[0], smpPlayer);
+                if (team == null) {
+                    // TODO: 12/18/2023 Error occurred
+                }
+            });
         }));
 
     }
