@@ -96,4 +96,11 @@ public class TeamImpl implements Team {
     }
 
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Team team)) {
+            return false;
+        }
+        return team.getId() == id;
+    }
 }

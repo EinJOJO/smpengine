@@ -4,9 +4,10 @@ import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.team.Team;
-import it.einjojo.smpengine.core.team.TeamManager;
 import it.einjojo.smpengine.util.CommandUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,61 +24,78 @@ public class KickSubCommand implements Command {
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, player -> {
             if (args.length > 2 || args.length == 0) {
-                player.sendMessage(plugin.getMessage("commend.team.removeWrong"));
+                player.sendMessage(plugin.getMessage("command.team.kick.usage"));
                 return;
             }
-            Optional<SMPPlayer> optionalSMPPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId());
-            Optional<SMPPlayer> kicked = plugin.getPlayerManager().getPlayer(args[0]);
-            if(optionalSMPPlayer.isEmpty()){
+            SMPPlayer senderSMPPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
+            Optional<SMPPlayer> _oTarget = plugin.getPlayerManager().getPlayer(args[0]);
+            if (_oTarget.isEmpty()) {
+                player.sendMessage(plugin.getMessage("command.target-not-found"));
                 return;
             }
-            if(args.length == 1) {
-                if (optionalSMPPlayer.get().getTeam().isPresent()) {
-                    SMPPlayer executor = optionalSMPPlayer.get();
-                    Optional<Team> optionalTeam = executor.getTeam();
-                    Team team = optionalTeam.get();
-                    if (!team.isOwner(executor)) {
+            SMPPlayer target = _oTarget.get();
+            if (args.length == 1) {
+                if (senderSMPPlayer.getTeam().isPresent()) {
+                    Team team = senderSMPPlayer.getTeam().get();
+                    if (!team.isOwner(senderSMPPlayer)) {
+                        player.sendMessage(plugin.getMessage("command.team.notOwner"));
                         return;
                     }
-                    if (kicked.isEmpty()) {
-                        return;
-                    }
-                    SMPPlayer executedOn = kicked.get();
-                    if (!team.isMember(executedOn)) {
-                        player.sendMessage(plugin.getMessage("command.team.notInTeam"));
-                        return;
-                    }
-                    team.removeMember(executedOn);
+                    kick(player, target, team);
                 }
-            } else{
+            } else {
                 if (!player.hasPermission("team.kick.others")) {
+                    player.sendMessage(plugin.getMessage("no-permission"));
                     return;
                 }
-                if (kicked.isEmpty()) {
+                Optional<Team> _team = plugin.getTeamManager().getTeamByName(args[1]);
+                if (_team.isEmpty()) {
+                    player.sendMessage(plugin.getMessage("command.team.notExist"));
                     return;
                 }
-                SMPPlayer executedOn = kicked.get();
-                Optional<Team> team = plugin.getTeamManager().getTeamByName(args[1]);
-                if(team.isEmpty()){
-                    return;
-                }
-                Team existingTeam = team.get();
-                existingTeam.removeMember(executedOn);
+                Team targetTeam = _team.get();
+                kick(player, target, targetTeam);
             }
-
-
-
         });
+    }
+
+    private void kick(Player executor, SMPPlayer target, Team team) {
+        if (team.isMember(target)) {
+            team.removeMember(target);
+            Player player = target.getPlayer();
+            sendKickNotification(player, team);
+        } else {
+            executor.sendMessage(plugin.getMessage("command.team.targetNotInTeam"));
+        }
+    }
+
+    private void sendKickNotification(Player kicked, Team team) {
+        if (kicked != null) {
+            kicked.sendMessage(plugin.getMessage("command.team.kick.target-info"));
+        }
+        for (Player globalPlayer : Bukkit.getOnlinePlayers()) {
+            plugin.getPlayerManager().getPlayer(globalPlayer.getUniqueId()).ifPresent((smpPlayer -> {
+                if (smpPlayer.getTeam().isPresent() && smpPlayer.getTeam().get().equals(team)) {
+                    globalPlayer.sendMessage(plugin.getMessage("command.team.kick.global-info"));
+                }
+            }));
+
+        }
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return null;
+        if (sender instanceof Player _player) {
+            if (args.length <= 1) {
+                SMPPlayer smpPlayer = plugin.getPlayerManager().getPlayer(_player.getUniqueId()).orElseThrow();
+
+            }
+        }
     }
 
     @Override
     public String getPermission() {
-        return "team.kick";
+        return null;
     }
 
     @Override

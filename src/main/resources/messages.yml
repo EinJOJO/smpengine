@@ -9,16 +9,25 @@ error:
 general-error: "<red>Es ist ein Fehler aufgetreten!"
 # Commands
 command:
+  target-not-found: "<prefix> <red>Der Spieler wurde nicht gefunden!"
   team:
     notOwner: "<prefix> <red>Du bist nicht der Ersteller der Teams!"
     notInTeam: "<prefix> <red>Du bist nicht in einem Team!"
+    targetNotInTeam: "<prefix> <red>Dieser Spieler ist nicht in deinem Team!"
     notExist: "<prefix> <red>Das Team existiert nicht!"
+    # spezifisch
     create:
       usage: "<prefix> <red>Bitte benutze /team create <name>"
       success: "<prefix> <green>Das Team wurde erfolgreich erstellt!"
       alreadyExists: "<prefix> <red>Das Team existiert bereits!"
       alreadyInTeam: "<prefix> <red>Du bist bereits in einem Team!"
     members:
+    kick:
+      usage: "<prefix> <red>Bitte benutze /team kick [name]"
+      global-info: "<prefix> <red>Der Spieler {player} wurde aus dem Team entfernt!"
+      target-info: "<prefix> <red>Du wurdest aus dem Team entfernt!"
+      success: "<prefix> <green>Der Spieler wurde erfolgreich aus dem Team entfernt!"
+      error: "<prefix> <red>Der Spieler konnte nicht aus dem Team entfernt werden!"
     delete:
       usage: "<prefix> <red>Bitte benutze /team delete [name]"
       member-info: "<prefix> <gray>Dein Team wurde gelöscht und du wurdest aus dem Team entfernt!"
