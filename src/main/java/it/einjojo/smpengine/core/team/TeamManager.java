@@ -35,13 +35,14 @@ public class TeamManager {
      * @return {@link Team} if team was created, null if team was not created (probably because team name already exists)
      */
     public Team createTeam(String teamName, SMPPlayer owner) {
-        TeamImpl team = new TeamImpl(-1, teamName, Component.text(teamName).color(TeamColor.DEFAULT), owner.getUuid(), Instant.now(), new ArrayList<>());
-        applyPlugin(team);
-        team.addMember(owner);
-        Team result = teamDatabase.createTeam((TeamImpl) team);
+        teamDatabase.createTeam(new TeamImpl(-1, teamName, Component.text(teamName).color(TeamColor.DEFAULT), owner.getUuid(), Instant.now(), new ArrayList<>()));
+        Team result = getTeamByName(teamName).orElse(null);
         if (result != null) {
-            plugin.getLogger().info("Created team " + teamName + " (" + team.getId() + ")");
+            plugin.getLogger().info("Created team " + teamName + " (" + result.getId() + ")");
+            applyPlugin(result);
+            result.addMember(owner);
         }
+
         return result;
     }
 
@@ -116,7 +117,7 @@ public class TeamManager {
         }
     }
 
-    public ArrayList<String> getTeams(){
+    public ArrayList<String> getTeams() {
         return teamDatabase.getTeams();
     }
 

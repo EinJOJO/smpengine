@@ -20,7 +20,7 @@ public class TeamDatabase {
         this.hikariCP = hikariCP;
     }
 
-    public Team createTeam(TeamImpl team) {
+    public void createTeam(TeamImpl team) {
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement("INSERT INTO team (name, displayName, owner_uuid, created_at) VALUES (?, ?, ?, ?)")) {
                 ps.setString(1, team.getName());
@@ -29,11 +29,8 @@ public class TeamDatabase {
                 ps.setTimestamp(4, Timestamp.from(team.getCreated_at()));
                 ps.executeUpdate();
             }
-            return team;
-
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
     }
 

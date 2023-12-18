@@ -26,7 +26,6 @@ public class PlayerQuitListener implements Listener {
                     }
                     SMPPlayerImpl smpPlayer = (SMPPlayerImpl) optionalPlayer.get();
                     smpPlayer.setOnline(false);
-
                     CompletableFuture.runAsync(() -> {
                         plugin.getSessionManager().endSession(smpPlayer);
                         plugin.getPlayerManager().updatePlayer(smpPlayer);

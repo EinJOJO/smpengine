@@ -8,7 +8,7 @@ import it.einjojo.smpengine.util.CommandUtil;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class CreateSubCommand implements Command {
 
@@ -29,12 +29,12 @@ public class CreateSubCommand implements Command {
                 player.sendMessage(plugin.getMessage("command.team.create.usage"));
                 return;
             }
-            if (plugin.getTeamManager().getTeamByName(args[0]).isPresent()) {
-                player.sendMessage(plugin.getMessage("command.team.create.alreadyExists"));
-                return;
-            }
-            Optional<SMPPlayer> oSender = plugin.getPlayerManager().getPlayer(player.getUniqueId());
-            oSender.ifPresent(smpPlayer -> {
+            CompletableFuture.runAsync(() -> {
+                if (plugin.getTeamManager().getTeamByName(args[0]).isPresent()) {
+                    player.sendMessage(plugin.getMessage("command.team.create.alreadyExists"));
+                    return;
+                }
+                SMPPlayer smpPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
                 if (smpPlayer.isInsideTeam()) {
                     player.sendMessage(plugin.getMessage("command.team.create.alreadyInTeam"));
                     return;

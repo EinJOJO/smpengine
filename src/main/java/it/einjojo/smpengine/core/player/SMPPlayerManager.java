@@ -68,8 +68,8 @@ public class SMPPlayerManager {
      */
     public void updatePlayer(SMPPlayer smpPlayer) {
         plugin.getLogger().info("Updating player " + smpPlayer.getName() + " (" + smpPlayer.getUuid() + ")");
-        playerCache.invalidate(smpPlayer.getUuid());
         playerDatabase.updatePlayer(smpPlayer);
+        playerCache.invalidate(smpPlayer.getUuid());
     }
 
 
