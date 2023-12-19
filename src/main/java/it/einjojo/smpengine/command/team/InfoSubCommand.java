@@ -96,12 +96,12 @@ public class InfoSubCommand implements Command {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return null;
+        return List.of("");
     }
 
     @Override
     public String getPermission() {
-        return "team.info";
+        return null;
     }
 
     @Override

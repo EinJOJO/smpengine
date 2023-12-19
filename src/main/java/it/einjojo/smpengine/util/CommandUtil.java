@@ -40,11 +40,9 @@ public class CommandUtil {
                     .map(Command::getCommand)
                     .filter(command -> command.startsWith(args[0])).toList();
         }
-        if (args.length > 2) {
-            Command command = subCommands.stream().filter(subCommand -> subCommand.getCommand().equalsIgnoreCase(args[0])).findFirst().orElse(null);
-            if (command != null) {
-                return command.tabComplete(sender, removeFirst(args));
-            }
+        Command command = subCommands.stream().filter(subCommand -> subCommand.getCommand().equalsIgnoreCase(args[0])).findFirst().orElse(null);
+        if (command != null) {
+            return command.tabComplete(sender, removeFirst(args));
         }
         return List.of("");
     }

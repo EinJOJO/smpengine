@@ -46,7 +46,9 @@ command:
       noInvites: "<prefix> <red>Du hast keine Einladungen!"
       playerOffline: "<prefix> <red>Der Spieler ist nicht online!"
       info: "<prefix> <green><underlined>Du wurdest in das Team {team} eingeladen!"
+      accepted: "<prefix> <green>Du bist dem Team {team} beigetreten!"
       alreadyInTeam: "<prefix> <red>Dieser Spieler ist bereits in einem Team!"
+      acceptAlreadyInTeam: "<prefix> <red>Du bist bereits in einem Team!"
       success: "<prefix> <green>Der Spieler wurde erfolgreich eingeladen!"
       expired: "<prefix> <red>Die Einladung ist abgelaufen!"
     join:

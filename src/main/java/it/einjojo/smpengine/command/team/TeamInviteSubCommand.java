@@ -82,9 +82,15 @@ public class TeamInviteSubCommand implements Command {
 
 
     private void joinTeam(int teamID, SMPPlayer player) {
+        if (player.getPlayer() == null) return;
         plugin.getTeamManager().getTeamById(teamID).ifPresentOrElse((team) -> {
+            Placeholder teamPlaceholder = new Placeholder("team", team.getDisplayName());
+            if (player.isInsideTeam()) {
+                player.getPlayer().sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("command.team.invite.acceptAlreadyInTeam"), teamPlaceholder));
+                return;
+            }
             team.addMember(player);
-            player.getPlayer().sendMessage(plugin.getMessage("command.team.invite.accepted"));
+            player.getPlayer().sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("command.team.invite.accepted"), teamPlaceholder));
         }, () -> {
             player.getPlayer().sendMessage(plugin.getMessage("command.team.invite.expired"));
         });
@@ -97,6 +103,7 @@ public class TeamInviteSubCommand implements Command {
         if (!(sender instanceof Player player)) {
             return result;
         }
+        plugin.getLogger().info(String.valueOf(args.length));
         if (args.length <= 1) {
             SMPPlayer smpPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
             if (!smpPlayer.isInsideTeam()) {
