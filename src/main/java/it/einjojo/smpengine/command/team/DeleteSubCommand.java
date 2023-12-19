@@ -29,7 +29,7 @@ public class DeleteSubCommand implements Command {
             } else if (args.length == 1) {
                 Optional<Team> oTeam = plugin.getTeamManager().getTeamByName(args[0]);
                 if (oTeam.isEmpty()) {
-                    player.sendMessage(plugin.getMessage("command.team.notExisting"));
+                    player.sendMessage(plugin.getMessage("command.team.notExist"));
                     return;
                 }
                 Team team = oTeam.get();

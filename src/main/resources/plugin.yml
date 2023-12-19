@@ -11,3 +11,5 @@ commands:
     aliases: [ smpe, smp , admin]
   team:
     description: Team Commands
+  difficulty:
+    description: Difficulty Commands
