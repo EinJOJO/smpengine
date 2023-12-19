@@ -27,6 +27,16 @@
 			"version": "latest"
 		}
 		*/
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vscjava.vscode-gradle",
+				"vscjava.vscode-java-pack",
+				"ms-azuretools.vscode-docker",
+				"GitHub.copilot"
+			]
+		}
 	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
