@@ -5,6 +5,8 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.database.PlayerDatabase;
 import it.einjojo.smpengine.util.NameUUIDCache;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -104,8 +106,14 @@ public class SMPPlayerManager {
     }
 
     public void closePlayers() {
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            getPlayer(onlinePlayer.getUniqueId()).ifPresentOrElse(this::updatePlayer,
+                    () -> {
+                        plugin.getLogger().warning("Player " + onlinePlayer.getName() + " (" + onlinePlayer.getUniqueId() + ") is empty!");
+                        plugin.getLogger().warning("This player will not be saved!");
+                    });
+        }
+
 
     }
-
-
 }

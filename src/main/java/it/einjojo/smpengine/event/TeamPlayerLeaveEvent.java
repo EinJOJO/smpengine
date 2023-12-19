@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
 public class TeamPlayerLeaveEvent extends Event {
 
 
-    @Getter
     private static final HandlerList handlers = new HandlerList();
 
     private final SMPPlayer player;
@@ -21,5 +21,10 @@ public class TeamPlayerLeaveEvent extends Event {
     public TeamPlayerLeaveEvent(SMPPlayer player, Team team) {
         this.player = player;
         this.team = team;
+    }
+
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return handlers;
     }
 }
