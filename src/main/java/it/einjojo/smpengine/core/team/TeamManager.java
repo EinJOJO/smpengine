@@ -141,6 +141,7 @@ public class TeamManager {
     }
 
 
+
     private void applyPlugin(Team team) {
         if (team instanceof TeamImpl) {
             ((TeamImpl) team).setPlugin(plugin);

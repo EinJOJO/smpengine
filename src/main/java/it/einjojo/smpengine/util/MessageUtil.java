@@ -11,6 +11,20 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 public class MessageUtil {
     public static final MiniMessage miniMessage = MiniMessage.miniMessage();
 
+    public enum KEY {
+        GENERAL_ERROR("general-error");
+
+        private final String key;
+
+        KEY(String key) {
+            this.key = key;
+        }
+
+        public String getKey() {
+            return key;
+        }
+    }
+
     public static Component format(String message, TextColor primaryColor, Component prefix) {
         message = legacyFormat(message);
         return miniMessage.deserialize(

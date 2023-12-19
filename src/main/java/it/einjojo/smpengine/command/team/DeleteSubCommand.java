@@ -5,6 +5,7 @@ import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
+import it.einjojo.smpengine.util.MessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -72,13 +73,21 @@ public class DeleteSubCommand implements Command {
     }
 
     private void deleteTeam(Player player, Team team) {
-        CompletableFuture.runAsync(() -> {
-            if (plugin.getTeamManager().deleteTeam(team)) {
-                player.sendMessage(plugin.getMessage("command.team.delete.success"));
-            } else {
-                player.sendMessage(plugin.getMessage("command.team.delete.error"));
-            }
-        });
+        CompletableFuture
+                .supplyAsync(() -> plugin.getTeamManager().deleteTeam(team))
+                .handle((deleted, exception) -> {
+                    if (exception != null) {
+                        exception.printStackTrace();
+                        player.sendMessage(plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                        return false;
+                    }
+                    if (deleted) {
+                        player.sendMessage(plugin.getMessage("command.team.delete.success"));
+                    } else {
+                        player.sendMessage(plugin.getMessage("command.team.delete.error"));
+                    }
+                    return null;
+                });
     }
 
     @Override

@@ -4,7 +4,9 @@ import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
+import it.einjojo.smpengine.util.MessageUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -90,6 +92,9 @@ public class InfoSubCommand implements Command {
                     .appendNewline()
                     .append(border)
                     .build();
+        }).exceptionally(throwable -> {
+            throwable.printStackTrace();
+            return (TextComponent) plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR);
         }).thenAccept(sender::sendMessage);
 
     }

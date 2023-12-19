@@ -101,6 +101,10 @@ public class SMPPlayerManager {
             return new ArrayList<>(cached.values());
         }
         List<SMPPlayer> fetched = playerDatabase.getPlayersByUUIDs(toBeFetched);
+        fetched.forEach(smpPlayer -> {
+            ((SMPPlayerImpl) smpPlayer).setPlugin(plugin);
+            playerCache.put(smpPlayer.getUuid(), smpPlayer);
+        });
         fetched.addAll(cached.values());
         return fetched;
     }

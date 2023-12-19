@@ -71,20 +71,19 @@ public class KickSubCommand implements Command {
             if (!team.removeMember(target)) {
                 executor.sendMessage(plugin.getMessage("general-error"));
             }
-            Player player = target.getPlayer();
-            sendKickNotification(player, team);
+            sendKickNotification(target, team);
         } else {
             executor.sendMessage(plugin.getMessage("command.team.targetNotInTeam"));
         }
     }
 
-    private void sendKickNotification(Player kicked, Team team) {
-        if (kicked != null) {
-            kicked.sendMessage(plugin.getMessage("command.team.kick.target-info"));
+    private void sendKickNotification(SMPPlayer kicked, Team team) {
+        if (kicked.getPlayer() != null) {
+            kicked.getPlayer().sendMessage(plugin.getMessage("command.team.kick.target-info"));
+            return;
         }
         for (Player globalPlayer : team.getOnlineMembers()) {
-            globalPlayer.sendMessage(
-                    Placeholder.applyPlaceholders(plugin.getMessage("command.team.kick.global-info"), new Placeholder("player", kicked.getName())));
+            globalPlayer.sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("command.team.kick.global-info"), new Placeholder("player", kicked.getName())));
         }
     }
 
