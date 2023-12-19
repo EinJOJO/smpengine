@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 @Setter
 public class TeamPlayerLeaveEvent extends Event {
 
-
-    private static final HandlerList handlers = new HandlerList();
+    @Getter
+    private static final HandlerList handlerList = new HandlerList();
 
     private final SMPPlayer player;
     private final Team team;
@@ -23,8 +23,7 @@ public class TeamPlayerLeaveEvent extends Event {
         this.team = team;
     }
 
-    @Override
     public @NotNull HandlerList getHandlers() {
-        return handlers;
+        return handlerList;
     }
 }
