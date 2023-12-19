@@ -61,7 +61,9 @@ public class KickSubCommand implements Command {
 
     private void kick(Player executor, SMPPlayer target, Team team) {
         if (team.isMember(target)) {
-            team.removeMember(target);
+            if (!team.removeMember(target)) {
+                executor.sendMessage(plugin.getMessage("general-error"));
+            }
             Player player = target.getPlayer();
             sendKickNotification(player, team);
         } else {
