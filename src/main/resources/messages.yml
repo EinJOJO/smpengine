@@ -32,6 +32,7 @@ command:
       target-info: "<prefix> <red>Du wurdest aus dem Team entfernt!"
       success: "<prefix> <green>Der Spieler wurde erfolgreich aus dem Team entfernt!"
       error: "<prefix> <red>Der Spieler konnte nicht aus dem Team entfernt werden!"
+      owner: "<prefix> <red>Der Ersteller des Teams kann nicht gekickt werden!"
     delete:
       usage: "<prefix> <red>Bitte benutze /team delete [name]"
       member-info: "<prefix> <gray>Dein Team wurde gelöscht und du wurdest aus dem Team entfernt!"

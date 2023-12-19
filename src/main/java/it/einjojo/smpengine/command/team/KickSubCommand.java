@@ -35,14 +35,17 @@ public class KickSubCommand implements Command {
             }
             SMPPlayer target = _oTarget.get();
             if (args.length == 1) {
-                if (senderSMPPlayer.getTeam().isPresent()) {
-                    Team team = senderSMPPlayer.getTeam().get();
-                    if (!team.isOwner(senderSMPPlayer)) {
-                        player.sendMessage(plugin.getMessage("command.team.notOwner"));
-                        return;
-                    }
-                    kick(player, target, team);
+                if (senderSMPPlayer.getTeam().isEmpty()) {
+                    player.sendMessage(plugin.getMessage("command.team.notInTeam"));
+                    return;
                 }
+                Team team = senderSMPPlayer.getTeam().get();
+                if (!team.isOwner(senderSMPPlayer)) {
+                    player.sendMessage(plugin.getMessage("command.team.notOwner"));
+                    return;
+                }
+                kick(player, target, team);
+
             } else {
                 if (!player.hasPermission("team.kick.others")) {
                     player.sendMessage(plugin.getMessage("no-permission"));
@@ -60,6 +63,10 @@ public class KickSubCommand implements Command {
     }
 
     private void kick(Player executor, SMPPlayer target, Team team) {
+        if (team.isOwner(target)) {
+            executor.sendMessage(plugin.getMessage("command.team.kick.owner"));
+            return;
+        }
         if (team.isMember(target)) {
             if (!team.removeMember(target)) {
                 executor.sendMessage(plugin.getMessage("general-error"));

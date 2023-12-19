@@ -15,5 +15,9 @@ public class Fun implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    public void kacke(PlayerMoveEvent event){
+
+    }
+
 
 }

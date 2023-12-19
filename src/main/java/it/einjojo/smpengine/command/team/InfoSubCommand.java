@@ -10,6 +10,9 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +20,7 @@ import java.util.Optional;
 public class InfoSubCommand implements Command {
 
     private final SMPEnginePlugin plugin;
+
 
     public InfoSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
@@ -27,15 +31,22 @@ public class InfoSubCommand implements Command {
         if (args.length == 0) {
             CommandUtil.requirePlayer(sender, player -> {
                 Optional<Team> team = plugin.getPlayerManager().getPlayer(player.getUniqueId()).get().getTeam();
-                if (team.isPresent()) {
-                    Team team1 = team.get();
-                    printTeamInfo(team1, sender);
+                if (team.isEmpty()) {
+                    player.sendMessage(plugin.getMessage("command.team.notInTeam"));
+                    return;
                 }
+                Team team1 = team.get();
+                printTeamInfo(team1, sender);
             });
         }
         if (args.length == 1) {
             // team info <team> (kann auch von der Konsole ausgeführt werden)
             Optional<Team> team = plugin.getTeamManager().getTeamByName(args[0]);
+            if(team.isEmpty()){
+                sender.sendMessage(plugin.getMessage("command.team.notExist"));
+                return;
+            }
+            printTeamInfo(team.get(), sender);
             // TODO: 12/19/2023  continue info message
         }
 
@@ -59,8 +70,10 @@ public class InfoSubCommand implements Command {
         Component line3_2 = Component.text(team.getMembers().size()).color(primary);
 
         Component line4_1 = Component.text("Erstellt am").color(muted);
-        String date = DateTimeFormatter.ofPattern("dd.MM.yyyy").format(team.getCreated_at());
-        Component line4_2 = Component.text(date).color(primary);
+        Instant created_at = team.getCreated_at();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(created_at, ZoneId.systemDefault());
+        String formattedDate = DateTimeFormatter.ofPattern("dd.MM.yyyy").format(localDateTime);
+        Component line4_2 = Component.text(formattedDate).color(primary);
 
         Component message = Component.text()
                 .appendNewline()
