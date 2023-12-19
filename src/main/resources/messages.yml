@@ -48,6 +48,15 @@ command:
       expired: "<prefix> <red>Die Einladung ist abgelaufen!"
     join:
       notification: "<prefix> <green>Der Spieler {player} ist dem Team beigetreten!"
+  difficulty:
+    usage: "<prefix> <red>Bitte benutze /difficulty <Schwierigkeit> <Zeit in Minuten>"
+    maxTime: "<prefix> <red>Die maximale Zeit beträgt 1 Stunde!"
+    cooldown: "<prefix> <red>Oh nein! Ein Cooldown..."
+    remainingTimeCooldown: "<prefix> <red>Verbleibende Zeit: {time}!"
+    reset: "<prefix> <green>Die Schwierigkeit wurde zurückgesetzt!"
+    change: "<prefix> <green>Die Schwierigkeit wurde von {player} auf {difficulty} geändert!"
+    length: "Länge: {time}"
+
 
 
 
@@ -56,3 +65,4 @@ command:
 
 death.global: "<prefix> Der Spieler {player} ist gestorben!"
 death.player: "<prefix> Du bist an den Koordinaten x:{x} y:{y} z:{z}"
+message: "<prefix> "

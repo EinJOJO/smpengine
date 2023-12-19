@@ -33,13 +33,13 @@ public class LeaveSubCommand implements Command {
             Team team = optionalTeam.get();
 
             if (team.isOwner(senderSMP)) {
-                player.sendMessage(plugin.getMessage("command.team.members.leave.owner"));
+                player.sendMessage(plugin.getMessage("command.team.leave.owner"));
                 return;
             }
             if (!team.removeMember(senderSMP)) {
                 player.sendMessage("general-error");
             }
-            player.sendMessage(plugin.getMessage("command.team.members.leave.success"));
+            player.sendMessage(plugin.getMessage("command.team.leave.success"));
             sendLeaveNotification(senderSMP);
         });
     }
