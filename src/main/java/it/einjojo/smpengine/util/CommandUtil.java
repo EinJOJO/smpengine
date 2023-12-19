@@ -4,6 +4,7 @@ package it.einjojo.smpengine.util;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +14,14 @@ import java.util.function.Consumer;
 
 @UtilityClass
 public class CommandUtil {
+
+    public static List<String> getOnlinePlayerNames() {
+        List<String> names = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            names.add(player.getName());
+        }
+        return names;
+    }
 
     public static Optional<Player> requirePlayer(CommandSender sender, @Nullable Consumer<Player> playerConsumer) {
         if (!(sender instanceof Player)) {

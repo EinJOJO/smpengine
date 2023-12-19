@@ -97,16 +97,7 @@ public class KickSubCommand implements Command {
     public List<String> tabComplete(CommandSender _sender, String[] args) {
         if (_sender instanceof Player _player) {
             if (args.length <= 1) {
-                SMPPlayer sender = plugin.getPlayerManager().getPlayer(_player.getUniqueId()).orElseThrow();
-                if (sender.getTeam().isEmpty()) {
-                    return List.of("");
-                }
-                Team team = sender.getTeam().get();
-                return team.getMembers().stream()
-                        .filter(smpPlayer -> !smpPlayer.equals(sender))
-                        .map(SMPPlayer::getName)
-                        .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
-                        .toList();
+                return CommandUtil.getOnlinePlayerNames().stream().filter(name -> name.startsWith(args[0])).toList();
             }
         }
         return List.of("");

@@ -107,13 +107,17 @@ public class SMPPlayerManager {
 
     public void closePlayers() {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            getPlayer(onlinePlayer.getUniqueId()).ifPresentOrElse(this::updatePlayer,
+            getPlayer(onlinePlayer.getUniqueId()).ifPresentOrElse(smpPlayer -> {
+                        SMPPlayerImpl impl = (SMPPlayerImpl) smpPlayer;
+                        impl.setOnline(false);
+                        updatePlayer(impl);
+                    },
                     () -> {
                         plugin.getLogger().warning("Player " + onlinePlayer.getName() + " (" + onlinePlayer.getUniqueId() + ") is empty!");
                         plugin.getLogger().warning("This player will not be saved!");
                     });
         }
-
-
     }
+
+
 }

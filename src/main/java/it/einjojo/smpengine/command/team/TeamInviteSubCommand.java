@@ -8,7 +8,6 @@ import it.einjojo.smpengine.util.Placeholder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -93,25 +92,18 @@ public class TeamInviteSubCommand implements Command {
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
         ArrayList<String> result = new ArrayList<>();
-        if (!(sender instanceof org.bukkit.entity.Player player)) {
+        result.add("accept");
+        if (!(sender instanceof Player player)) {
             return result;
         }
         if (args.length <= 1) {
             SMPPlayer smpPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
-            smpPlayer.getTeam().ifPresentOrElse((team) -> {
-                if (!team.isOwner(smpPlayer)) {
-                    return;
-                }
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if (onlinePlayer.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-                        result.add(onlinePlayer.getName());
-                    }
-                }
-            }, () -> {
-                result.add("accept");
-            });
+            if (!smpPlayer.isInsideTeam()) {
+                return result;
+            }
+            return CommandUtil.getOnlinePlayerNames().stream().filter(name -> name.startsWith(args[0])).toList();
         }
-        return result;
+        return List.of("");
     }
 
     @Override

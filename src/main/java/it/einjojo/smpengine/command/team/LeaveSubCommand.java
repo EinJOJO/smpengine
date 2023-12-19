@@ -5,10 +5,7 @@ import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
-import it.einjojo.smpengine.util.Placeholder;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,22 +37,9 @@ public class LeaveSubCommand implements Command {
                 player.sendMessage("general-error");
             }
             player.sendMessage(plugin.getMessage("command.team.leave.success"));
-            sendLeaveNotification(senderSMP);
         });
     }
 
-    private void sendLeaveNotification(SMPPlayer quitter) {
-        quitter.getTeam().ifPresent((team) -> {
-            team.getMembersAsync().thenAccept((members) -> {
-                for (SMPPlayer member : members) {
-                    Player memberPlayer = member.getPlayer();
-                    if (memberPlayer != null) {
-                        Component message = Placeholder.applyPlaceholders(plugin.getMessage("command.team.members.leave.notification"), Placeholder.player(quitter.getName()));
-                    }
-                }
-            });
-        });
-    }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {

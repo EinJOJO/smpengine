@@ -23,13 +23,7 @@ public class DeleteSubCommand implements Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, player -> {
-
-            Optional<SMPPlayer> oSenderSmp = plugin.getPlayerManager().getPlayer(player.getUniqueId());
-            if (oSenderSmp.isEmpty()) {
-                return; // Not possible.
-            }
-            SMPPlayer smpSender = oSenderSmp.get();
-
+            SMPPlayer smpSender = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
             if (args.length == 0) {
                 deleteOwnTeam(smpSender);
             } else if (args.length == 1) {
@@ -90,6 +84,7 @@ public class DeleteSubCommand implements Command {
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
         if (args.length <= 1) {
+            if (!sender.hasPermission("team.delete.other")) return List.of();
             return plugin.getTeamManager().getTeams().stream()
                     .filter(name -> name.startsWith(args[0]))
                     .toList();
