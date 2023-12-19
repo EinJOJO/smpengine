@@ -6,8 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.concurrent.CompletableFuture;
-
 public class PlayerQuitListener implements Listener {
 
     private final SMPEnginePlugin plugin;
@@ -19,17 +17,10 @@ public class PlayerQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerQuitDataHandler(PlayerQuitEvent event) {
-        CompletableFuture.supplyAsync(() -> plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId()))
-                .thenAccept((optionalPlayer) -> {
-                    if (optionalPlayer.isEmpty()) {
-                        throw new IllegalStateException("SMPPlayer " + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ") is empty!");
-                    }
-                    SMPPlayerImpl smpPlayer = (SMPPlayerImpl) optionalPlayer.get();
-                    smpPlayer.setOnline(false);
-                    CompletableFuture.runAsync(() -> {
-                        plugin.getSessionManager().endSession(smpPlayer);
-                        plugin.getPlayerManager().updatePlayer(smpPlayer);
-                    });
-                });
+        // synchronously update player data because when server shuts down, it will not save player data
+        SMPPlayerImpl smpPlayer = (SMPPlayerImpl) plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId()).orElseThrow();
+        smpPlayer.setOnline(false);
+        plugin.getSessionManager().endSession(smpPlayer);
+        plugin.getPlayerManager().updatePlayer(smpPlayer);
     }
 }

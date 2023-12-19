@@ -16,6 +16,7 @@ import it.einjojo.smpengine.listener.DeathListener;
 import it.einjojo.smpengine.listener.Fun;
 import it.einjojo.smpengine.listener.JoinListener;
 import it.einjojo.smpengine.listener.PlayerQuitListener;
+import it.einjojo.smpengine.scoreboard.TablistManager;
 import it.einjojo.smpengine.util.MessageUtil;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -44,13 +45,16 @@ public class SMPEnginePlugin extends JavaPlugin {
     private HikariCP hikariCP;
 
     @Getter
-    SMPPlayerManager playerManager;
+    private TablistManager tablistManager;
+
     @Getter
-    SessionManager sessionManager;
+    private SMPPlayerManager playerManager;
     @Getter
-    TeamManager teamManager;
+    private SessionManager sessionManager;
     @Getter
-    StatsManager manager;
+    private TeamManager teamManager;
+    @Getter
+    private StatsManager statsManager;
 
     @Override
     public void onEnable() {
@@ -74,6 +78,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         if (!startedSuccessfully) {
             return;
         }
+        playerManager.closePlayers();
         sessionManager.closeSessions();
         hikariCP.close();
         clearCache();
@@ -98,7 +103,9 @@ public class SMPEnginePlugin extends JavaPlugin {
         playerManager = new SMPPlayerManager(this);
         sessionManager = new SessionManager(this);
         teamManager = new TeamManager(this);
-        manager = new StatsManager(this);
+        statsManager = new StatsManager(this);
+        tablistManager = new TablistManager(this);
+
 
         return true;
     }

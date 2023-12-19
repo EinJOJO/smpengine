@@ -23,9 +23,9 @@ command:
       alreadyExists: "<prefix> <red>Das Team existiert bereits!"
       alreadyInTeam: "<prefix> <red>Du bist bereits in einem Team!"
     leave:
-        success: "<prefix> <green>Du hast dein Team verlassen!"
-        owner: "<prefix> <red>Der Ersteller des Teams kann das Team nicht verlassen!"
-        notification: "<prefix> <red>Der Spieler {player} hat das Team verlassen!"
+      success: "<prefix> <green>Du hast dein Team verlassen!"
+      owner: "<prefix> <red>Der Ersteller des Teams kann das Team nicht verlassen!"
+      notification: "<prefix> <red>Der Spieler {player} hat das Team verlassen!"
     kick:
       usage: "<prefix> <red>Bitte benutze /team kick [name]"
       global-info: "<prefix> <red>Der Spieler {player} wurde aus dem Team entfernt!"
@@ -38,7 +38,17 @@ command:
       member-info: "<prefix> <gray>Dein Team wurde gelöscht und du wurdest aus dem Team entfernt!"
       success: "<prefix> <green>Das Team wurde erfolgreich gelöscht!"
       error: "<prefix> <red>Das Team konnte nicht gelöscht werden!"
+    invite:
+      usage: "<prefix> <red>Bitte benutze /team invite [name]"
+      noInvites: "<prefix> <red>Du hast keine Einladungen!"
+      playerOffline: "<prefix> <red>Der Spieler ist nicht online!"
+      info: "<prefix> <green><underline>Du wurdest in das Team {team} eingeladen!"
+      alreadyInTeam: "<prefix> <red>Dieser Spieler ist bereits in einem Team!"
+      success: "<prefix> <green>Der Spieler wurde erfolgreich eingeladen!"
+      expired: "<prefix> <red>Die Einladung ist abgelaufen!"
     join:
+      notification: "<prefix> <green>Der Spieler {player} ist dem Team beigetreten!"
+
 
 
   reload:

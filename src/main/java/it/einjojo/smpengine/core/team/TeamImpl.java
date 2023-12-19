@@ -3,6 +3,8 @@ package it.einjojo.smpengine.core.team;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.player.SMPPlayerImpl;
+import it.einjojo.smpengine.event.TeamPlayerJoinEvent;
+import it.einjojo.smpengine.event.TeamPlayerLeaveEvent;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -61,6 +63,7 @@ public class TeamImpl implements Team {
         if (isInTeam) {
             return false;
         }
+        plugin.getServer().getPluginManager().callEvent(new TeamPlayerJoinEvent(player, this));
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(id);
         plugin.getPlayerManager().updatePlayer(impl);
@@ -73,6 +76,8 @@ public class TeamImpl implements Team {
     }
 
     /**
+     * Bypasses {@link TeamPlayerLeaveEvent}
+     *
      * @param player    {@link SMPPlayer} to remove from team
      * @param withOwner if true, owner can be removed from team
      * @return true if player was removed from team, false if player was not in team
@@ -81,6 +86,7 @@ public class TeamImpl implements Team {
         if (!withOwner && isOwner(player)) {
             throw new IllegalStateException("Owner cannot be removed from team");
         }
+        plugin.getServer().getPluginManager().callEvent(new TeamPlayerLeaveEvent(player, this));
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(null);
         plugin.getPlayerManager().updatePlayer(impl);

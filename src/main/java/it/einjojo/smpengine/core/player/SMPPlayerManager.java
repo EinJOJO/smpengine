@@ -103,5 +103,9 @@ public class SMPPlayerManager {
         return fetched;
     }
 
+    public void closePlayers() {
+
+    }
+
 
 }

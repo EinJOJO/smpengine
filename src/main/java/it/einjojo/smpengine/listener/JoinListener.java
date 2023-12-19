@@ -7,6 +7,7 @@ import it.einjojo.smpengine.core.player.SMPPlayerImpl;
 import it.einjojo.smpengine.util.MessageUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -34,6 +35,16 @@ public class JoinListener implements Listener {
         }
     }
 
+    public void applyTablist(PlayerJoinEvent event) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            plugin.getTablistManager().update(player);
+        }
+    }
+
+    public void joinMessage(PlayerJoinEvent event) {
+        event.joinMessage(plugin.getPrefix().appendSpace().append(event.joinMessage()));
+    }
+
     @EventHandler
     public void loadPlayer(PlayerJoinEvent event) {
         CompletableFuture.supplyAsync(() -> plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId())).thenAccept(smpPlayer -> {
@@ -50,7 +61,11 @@ public class JoinListener implements Listener {
             smpPlayerImpl.setOnline(true);
             smpPlayerImpl.setLastJoin(Instant.now());
             smpPlayerImpl.setName(event.getPlayer().getName());
-            CompletableFuture.runAsync(() -> plugin.getPlayerManager().updatePlayer(smpPlayerImpl));
+            CompletableFuture
+                    .runAsync(() -> plugin.getPlayerManager().updatePlayer(smpPlayerImpl))
+                    .thenRun(() -> applyTablist(event))
+                    .thenRun(() -> joinMessage(event));
+            ;
         });
     }
 

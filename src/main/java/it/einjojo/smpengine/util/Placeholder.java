@@ -10,7 +10,12 @@ import net.kyori.adventure.text.TextReplacementConfig;
 public class Placeholder {
 
     private final String key;
-    private final String value;
+    private final Component value;
+
+    public Placeholder(String key, String value) {
+        this.key = key;
+        this.value = Component.text(value);
+    }
 
     public static Component applyPlaceholders(Component component, Placeholder... placeholders) {
         for (var placeholder : placeholders) {

@@ -7,6 +7,7 @@ import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.database.TeamDatabase;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
@@ -26,13 +27,23 @@ public class TeamManager {
     public TeamManager(SMPEnginePlugin plugin) {
         this.plugin = plugin;
         this.teamDatabase = new TeamDatabase(plugin.getHikariCP());
-        teamInvites = Caffeine.newBuilder().expireAfterWrite(Duration.ofMinutes(5)).build();
+        teamInvites = Caffeine.newBuilder()
+                .evictionListener((key, value, cause) -> {
+                    if (key == null) return;
+                    Player player = Bukkit.getPlayer((UUID) key);
+                    if (player != null) {
+                        player.sendMessage(plugin.getMessage("command.team.invite.expired"));
+                    }
+                })
+                .expireAfterWrite(Duration.ofMinutes(5))
+                .build();
         teamIds = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofMinutes(5))
                 .build();
         teamCache = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofMinutes(5))
                 .build(this::getTeam);
+
     }
 
     /**
@@ -98,7 +109,6 @@ public class TeamManager {
         if (team instanceof TeamImpl teamImpl) {
             for (SMPPlayer member : team.getMembers()) {
                 teamImpl.removeMember(member, true);
-                plugin.getPlayerManager().updatePlayer(member);
                 Player player = member.getPlayer();
                 if (player != null) {
                     player.sendMessage(plugin.getMessage("command.team.delete.member-info"));
@@ -118,16 +128,16 @@ public class TeamManager {
         teamCache.invalidate(team.getId());
     }
 
-    public void createInvite(UUID uuid, int teamId) {
-        teamInvites.put(uuid, teamId);
+    public void createInvite(UUID player, Team team) {
+        teamInvites.put(player, team.getId());
     }
 
-    public Optional<Integer> getInvite(UUID uuid) {
-        return Optional.ofNullable(teamInvites.getIfPresent(uuid));
+    public Optional<Integer> getInvite(UUID player) {
+        return Optional.ofNullable(teamInvites.getIfPresent(player));
     }
 
-    public void removeInvite(UUID uuid) {
-        teamInvites.invalidate(uuid);
+    public void removeInvite(UUID player) {
+        teamInvites.invalidate(player);
     }
 
 

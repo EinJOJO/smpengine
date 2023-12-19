@@ -8,7 +8,7 @@ import net.kyori.adventure.text.format.TextColor;
 @AllArgsConstructor
 public class TeamColor implements TextColor {
 
-    public static final TeamColor DEFAULT = new TeamColor(TextColor.color(0xAAAAAA));
+    public static final TeamColor DEFAULT = new TeamColor(TextColor.color(0xFF8527));
     public static final TeamColor RED = new TeamColor(TextColor.color(0xFF4B52));
     public static final TeamColor BLUE = new TeamColor(TextColor.color(0x5555FF));
     public static final TeamColor GREEN = new TeamColor(TextColor.color(0x55FF55));

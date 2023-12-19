@@ -3,6 +3,7 @@ package it.einjojo.smpengine.scoreboard;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -16,51 +17,41 @@ public class TablistManager {
         this.plugin = plugin;
     }
 
-    public void updateTablist(Player player) {
+    public void update(Player player) {
         player.sendPlayerListHeaderAndFooter(getHeader(), getFooter());
+        applyTeam(player);
     }
 
     public void applyTeam(Player player) {
-        Scoreboard scoreboard = player.getScoreboard();
         SMPPlayer smpPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
-
-        // NoTeam erstellen
-        Team noTeam = scoreboard.getTeam(NO_TEAM);
-        if (noTeam == null) {
-            noTeam = scoreboard.registerNewTeam(NO_TEAM);
-        }
-        String currentTeam;
-        if (smpPlayer.getTeam().isPresent()) {
-            currentTeam = "100_" + smpPlayer.getTeam().get().getName();
-        } else {
-            currentTeam = NO_TEAM;
-        }
-
-        // Alle anderen Teams registrieren
-        plugin.getTeamManager().getTeams().forEach(teamName -> {
-            teamName = "100_" + teamName;
-            Team bukkitTeam = scoreboard.getTeam(teamName);
+        Scoreboard scoreboard = player.getScoreboard();
+        smpPlayer.getTeam().ifPresentOrElse(team -> {
+            String key = team.getId() + "_" + team.getName() + "_" + player.getName();
+            Team bukkitTeam = scoreboard.getTeam(key);
             if (bukkitTeam == null) {
-                bukkitTeam = scoreboard.registerNewTeam(teamName);
+                bukkitTeam = scoreboard.registerNewTeam(key);
             }
-
-            if (teamName.equals(currentTeam)) {
-                bukkitTeam.addEntry(player.getName());
-            } else {
-                bukkitTeam.removeEntry(player.getName());
+            bukkitTeam.prefix(team.getDisplayName());
+            bukkitTeam.color(NamedTextColor.GRAY);
+            bukkitTeam.addEntry(player.getName());
+        }, () -> {
+            Team bukkitTeam = scoreboard.getTeam(NO_TEAM);
+            if (bukkitTeam == null) {
+                bukkitTeam = scoreboard.registerNewTeam(NO_TEAM);
             }
+            bukkitTeam.color(NamedTextColor.GREEN);
+            bukkitTeam.addEntry(player.getName());
         });
-
 
     }
 
 
     private Component getHeader() {
-        return plugin.getPrefix().append(Component.text("Header"));
+        return plugin.getPrefix().append(Component.text( " Header"));
     }
 
     private Component getFooter() {
-        return plugin.getPrefix().append(Component.text("Footer"));
+        return plugin.getPrefix().append(Component.text(" Footer"));
     }
 
 }
