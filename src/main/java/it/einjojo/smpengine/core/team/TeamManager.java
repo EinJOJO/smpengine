@@ -147,7 +147,7 @@ public class TeamManager {
         }
     }
 
-    public ArrayList<String> getTeams() {
+    public ArrayList<String> getTeamNames() {
         return teamDatabase.getTeams();
     }
 

@@ -85,7 +85,7 @@ public class DeleteSubCommand implements Command {
     public List<String> tabComplete(CommandSender sender, String[] args) {
         if (args.length <= 1) {
             if (!sender.hasPermission("team.delete.other")) return List.of();
-            return plugin.getTeamManager().getTeams().stream()
+            return plugin.getTeamManager().getTeamNames().stream()
                     .filter(name -> name.startsWith(args[0]))
                     .toList();
         }
