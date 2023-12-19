@@ -7,25 +7,26 @@
 
 	"features": {
 		"ghcr.io/devcontainers/features/java:1": {
-			"installGradle": true,
+
 			"version": "17",
 			"jdkDistro": "oracle",
 			"gradleVersion": "latest",
 			"mavenVersion": "latest",
 			"antVersion": "latest"
 		},
-		/*
+		
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"moby": true,
 			"azureDnsAutoDetection": true,
 			"installDockerBuildx": true,
 			"version": "latest",
 			"dockerDashComposeVersion": "v2"
-		},
-		*/
-		"ghcr.io/devcontainers-contrib/features/mysql-homebrew:1": {
+		}
+		
+		/*"ghcr.io/devcontainers-contrib/features/mysql-homebrew:1": {
 			"version": "latest"
 		}
+		*/
 	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
