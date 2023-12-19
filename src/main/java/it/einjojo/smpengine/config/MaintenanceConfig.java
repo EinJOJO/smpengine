@@ -34,5 +34,10 @@ public class MaintenanceConfig extends Config {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         getConfiguration().set("enabled", enabled);
+        try {
+            save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

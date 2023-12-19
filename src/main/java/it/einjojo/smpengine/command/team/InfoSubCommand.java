@@ -72,7 +72,7 @@ public class InfoSubCommand implements Command {
         Component line4_1 = Component.text("Erstellt am").color(muted);
         Instant created_at = team.getCreated_at();
         LocalDateTime localDateTime = LocalDateTime.ofInstant(created_at, ZoneId.systemDefault());
-        String formattedDate = DateTimeFormatter.ofPattern("dd.MM.yyyy").format(localDateTime);
+        String formattedDate = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(localDateTime);
         Component line4_2 = Component.text(formattedDate).color(primary);
 
         Component message = Component.text()

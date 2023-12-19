@@ -39,6 +39,14 @@ command:
       success: "<prefix> <green>Das Team wurde erfolgreich gelöscht!"
       error: "<prefix> <red>Das Team konnte nicht gelöscht werden!"
     join:
+  difficulty:
+    usage: "<prefix> <red>Bitte benutze /difficulty <Schwierigkeit> <Zeit in Minuten>"
+    maxTime: "<prefix> <red>Die maximale Zeit beträgt 1 Stunde!"
+    cooldown: "<prefix> <red>Oh nein! Ein Cooldown..."
+    remainingTimeCooldown: "<prefix> <red>Verbleibende Zeit: {time}!"
+    reset: "<prefix> <green>Die Schwierigkeit wurde zurückgesetzt!"
+    change: "<prefix> <green>Die Schwierigkeit wurde von {player} auf {difficulty} geändert!"
+    length: "Länge: {time}"
 
 
   reload:
