@@ -97,9 +97,9 @@ public class TeamImpl implements Team {
         plugin.getPlayerManager().updatePlayer(impl);
         boolean success = members.remove(player.getUuid());
         if (success) {
-            plugin.getServer().getScheduler().runTask(plugin, () -> {
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 plugin.getServer().getPluginManager().callEvent(new TeamPlayerLeaveEvent(player, this));
-            });
+            }, 1);
         }
         return success;
     }
