@@ -4,6 +4,7 @@ import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -31,9 +32,15 @@ public class TablistManager {
             if (bukkitTeam == null) {
                 bukkitTeam = scoreboard.registerNewTeam(key);
             }
-            bukkitTeam.prefix(team.getDisplayName());
+            TextColor muted = NamedTextColor.GRAY;
+            Component prefix = Component.text("[").color(muted)
+                    .append(team.getDisplayName())
+                    .append(Component.text("] ").color(muted));
+
+            bukkitTeam.prefix(prefix);
             bukkitTeam.color(NamedTextColor.GRAY);
             bukkitTeam.addEntry(player.getName());
+            bukkitTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
         }, () -> {
             Team bukkitTeam = scoreboard.getTeam(NO_TEAM);
             if (bukkitTeam == null) {
@@ -47,7 +54,7 @@ public class TablistManager {
 
 
     private Component getHeader() {
-        return plugin.getPrefix().append(Component.text( " Header"));
+        return plugin.getPrefix().append(Component.text(" Header"));
     }
 
     private Component getFooter() {
