@@ -64,7 +64,7 @@ command:
     remainingTimeCooldown: "<prefix> <red>Verbleibende Zeit: {time}!"
     reset: "<prefix> <green>Die Schwierigkeit wurde zurückgesetzt!"
     change: "<prefix> <green>Die Schwierigkeit wurde von {player} auf {difficulty} geändert!"
-    length: "Länge: {time}"
+    length: "<prefix> <green>Länge: {time} Minuten!"
   reload:
     reloaded: "<prefix> <green>Die Konfiguration wurde neu geladen!"
 
