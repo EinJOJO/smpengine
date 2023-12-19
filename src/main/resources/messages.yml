@@ -1,5 +1,5 @@
 # messages
-prefix: "<pkr><bold>System <dark_gray>•<reset>"
+prefix: "<pkr><bold>System</bold></pkr> <dark_gray>•</dark_gray><reset>"
 no-permission: "<prefix> <red>Dazu hast du keine Berechtigung!"
 
 # Error Alarm

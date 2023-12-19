@@ -42,7 +42,7 @@ public class TeamImpl implements Team {
 
 
     public CompletableFuture<SMPPlayer> getOwnerAsync() {
-        return CompletableFuture.supplyAsync(() -> getOwner());
+        return CompletableFuture.supplyAsync(this::getOwner);
     }
 
     @Override
@@ -63,6 +63,7 @@ public class TeamImpl implements Team {
         }
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(id);
+        plugin.getPlayerManager().updatePlayer(impl);
         return members.add(player.getUuid());
     }
 
@@ -82,6 +83,7 @@ public class TeamImpl implements Team {
         }
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(null);
+        plugin.getPlayerManager().updatePlayer(impl);
         return members.remove(player.getUuid());
     }
 

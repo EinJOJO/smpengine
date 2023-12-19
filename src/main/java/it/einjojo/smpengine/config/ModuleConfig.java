@@ -8,7 +8,7 @@ import java.io.IOException;
 
 @Getter
 public class ModuleConfig extends Config {
-    static final TextColor DEFAULT_COLOR = TextColor.color(213, 91, 218);
+    static final TextColor DEFAULT_COLOR = TextColor.color(230, 172, 115);
     private TextColor color;
     private boolean joinMessages;
     private String joinMessage;

@@ -19,12 +19,10 @@ public class DeathListener implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         Player p = event.getPlayer();
-        Placeholder x1 = new Placeholder("x", String.valueOf(event.getPlayer().getZ()));
-        Placeholder y1 = new Placeholder("y", String.valueOf(event.getPlayer().getX()));
-        Placeholder z1 = new Placeholder("z", String.valueOf(event.getPlayer().getZ()));
-        event.deathMessage(Placeholder.applyPlaceholders(
-                plugin.getMessage("death.global"), Placeholder.player(p.getName())
-        ));
+        Placeholder x1 = new Placeholder("x", String.valueOf( (int) event.getPlayer().getZ()));
+        Placeholder y1 = new Placeholder("y", String.valueOf( (int) event.getPlayer().getX()));
+        Placeholder z1 = new Placeholder("z", String.valueOf( (int) event.getPlayer().getZ()));
+        event.deathMessage(plugin.getPrefix().appendSpace().append(event.deathMessage()));
         p.sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("death.player"), x1, y1, z1));
     }
 }
