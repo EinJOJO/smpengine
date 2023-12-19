@@ -85,7 +85,7 @@ public class PlayerDatabase {
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(query)) {
                 for (int i = 1; i <= uuids.size(); i++) {
-                    ps.setString(i, uuids.get(i).toString());
+                    ps.setString(i, uuids.get(i-1).toString());
                 }
                 try (ResultSet resultSet = ps.executeQuery()) {
                     while (resultSet.next()) {

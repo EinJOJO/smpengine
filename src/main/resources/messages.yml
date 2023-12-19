@@ -48,6 +48,10 @@ command:
       expired: "<prefix> <red>Die Einladung ist abgelaufen!"
     join:
       notification: "<prefix> <green>Der Spieler {player} ist dem Team beigetreten!"
+    chat:
+      usage: "<prefix> <red>Bitte benutze /teamchat <Nachricht>"
+      notInTeam: "<prefix> <red>Du bist in keinem Team!"
+      toggle: "<prefix> <green>Du hast den Teamchat getoggled!"
   difficulty:
     usage: "<prefix> <red>Bitte benutze /difficulty <Schwierigkeit> <Zeit in Minuten>"
     maxTime: "<prefix> <red>Die maximale Zeit beträgt 1 Stunde!"
@@ -56,8 +60,6 @@ command:
     reset: "<prefix> <green>Die Schwierigkeit wurde zurückgesetzt!"
     change: "<prefix> <green>Die Schwierigkeit wurde von {player} auf {difficulty} geändert!"
     length: "Länge: {time}"
-
-
 
 
   reload:

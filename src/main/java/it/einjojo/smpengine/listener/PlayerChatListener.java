@@ -28,6 +28,7 @@ public class PlayerChatListener implements Listener {
                 Bukkit.broadcast(Component.text(""));
                 return;
             }
+
         }
     }
 
