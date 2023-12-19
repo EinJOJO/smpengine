@@ -8,8 +8,11 @@ import it.einjojo.smpengine.event.TeamPlayerLeaveEvent;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -103,6 +106,16 @@ public class TeamImpl implements Team {
         return owner_uuid.equals(player.getUuid());
     }
 
+    @Override
+    public List<Player> getOnlineMembers() {
+        ArrayList<Player> result = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (members.contains(player.getUniqueId())) {
+                result.add(player);
+            }
+        }
+        return result;
+    }
 
     @Override
     public boolean equals(Object obj) {

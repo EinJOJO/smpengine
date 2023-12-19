@@ -2,6 +2,7 @@ package it.einjojo.smpengine.core.team;
 
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 
 import java.time.Instant;
 import java.util.List;
@@ -50,5 +51,8 @@ public interface Team {
      * @return true if player is owner of team, false if player is not owner of team
      */
     boolean isOwner(SMPPlayer player);
+
+    List<Player> getOnlineMembers();
+
 
 }

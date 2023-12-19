@@ -70,8 +70,7 @@ public class TeamInviteSubCommand implements Command {
                         Component message = plugin.getMessage("command.team.invite.info")
                                 .clickEvent(ClickEvent.runCommand("/team invite accept"))
                                 .hoverEvent(HoverEvent.showText(Component.text("/team invite accept")));
-                        target.getPlayer().sendMessage(Placeholder.applyPlaceholders(message, teamPlaceholder)
-                        );
+                        target.getPlayer().sendMessage(Placeholder.applyPlaceholders(message, teamPlaceholder));
                     },
                     () -> {
                         _player.sendMessage(plugin.getMessage("command.team.notInTeam"));

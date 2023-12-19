@@ -6,7 +6,6 @@ import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
 import it.einjojo.smpengine.util.Placeholder;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -83,13 +82,9 @@ public class KickSubCommand implements Command {
         if (kicked != null) {
             kicked.sendMessage(plugin.getMessage("command.team.kick.target-info"));
         }
-        for (Player globalPlayer : Bukkit.getOnlinePlayers()) {
-            plugin.getPlayerManager().getPlayer(globalPlayer.getUniqueId()).ifPresent((smpPlayer -> {
-                if (smpPlayer.getTeam().isPresent() && smpPlayer.getTeam().get().equals(team)) {
-                    globalPlayer.sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("command.team.kick.global-info"), new Placeholder("player", kicked.getName())));
-                }
-            }));
-
+        for (Player globalPlayer : team.getOnlineMembers()) {
+            globalPlayer.sendMessage(
+                    Placeholder.applyPlaceholders(plugin.getMessage("command.team.kick.global-info"), new Placeholder("player", kicked.getName())));
         }
     }
 

@@ -5,8 +5,11 @@ no-permission: "<prefix> <red>Dazu hast du keine Berechtigung!"
 # Error Alarm
 error:
   player-creation-failed: "<prefix> <red>Der Spieler konnte nicht erstellt werden!"
-
 general-error: "<red>Es ist ein Fehler aufgetreten!"
+
+team:
+  join: "<prefix> <green>{player} ist dem Team beigetreten!"
+  leave: "<prefix> <red>{player} hat das Team verlassen!"
 # Commands
 command:
   unknown: "<prefix> <red>Unbekannter Befehl!"
@@ -42,7 +45,7 @@ command:
       usage: "<prefix> <red>Bitte benutze /team invite [name]"
       noInvites: "<prefix> <red>Du hast keine Einladungen!"
       playerOffline: "<prefix> <red>Der Spieler ist nicht online!"
-      info: "<prefix> <green><underline>Du wurdest in das Team {team} eingeladen!"
+      info: "<prefix> <green><underlined>Du wurdest in das Team {team} eingeladen!"
       alreadyInTeam: "<prefix> <red>Dieser Spieler ist bereits in einem Team!"
       success: "<prefix> <green>Der Spieler wurde erfolgreich eingeladen!"
       expired: "<prefix> <red>Die Einladung ist abgelaufen!"
@@ -60,8 +63,6 @@ command:
     reset: "<prefix> <green>Die Schwierigkeit wurde zurückgesetzt!"
     change: "<prefix> <green>Die Schwierigkeit wurde von {player} auf {difficulty} geändert!"
     length: "Länge: {time}"
-
-
   reload:
     reloaded: "<prefix> <green>Die Konfiguration wurde neu geladen!"
 
