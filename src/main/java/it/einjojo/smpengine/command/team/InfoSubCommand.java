@@ -8,8 +8,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
-
 import org.bukkit.command.CommandSender;
 
 import java.time.format.DateTimeFormatter;
@@ -26,13 +24,21 @@ public class InfoSubCommand implements Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        CommandUtil.requirePlayer(sender, player -> {
-            Optional<Team> team = plugin.getPlayerManager().getPlayer(player.getUniqueId()).get().getTeam();
-            if (team.isPresent()) {
-                Team team1 = team.get();
-                printTeamInfo(team1, sender);
-            }
-        });
+        if (args.length == 0) {
+            CommandUtil.requirePlayer(sender, player -> {
+                Optional<Team> team = plugin.getPlayerManager().getPlayer(player.getUniqueId()).get().getTeam();
+                if (team.isPresent()) {
+                    Team team1 = team.get();
+                    printTeamInfo(team1, sender);
+                }
+            });
+        }
+        if (args.length == 1) {
+            // team info <team> (kann auch von der Konsole ausgeführt werden)
+            Optional<Team> team = plugin.getTeamManager().getTeamByName(args[0]);
+            // TODO: 12/19/2023  continue info message
+        }
+
     }
 
     public void printTeamInfo(Team team, CommandSender sender) {
@@ -53,20 +59,25 @@ public class InfoSubCommand implements Command {
         Component line3_2 = Component.text(team.getMembers().size()).color(primary);
 
         Component line4_1 = Component.text("Erstellt am").color(muted);
-        String date = DateTimeFormatter.ofPattern("").format(null)
+        String date = DateTimeFormatter.ofPattern("dd.MM.yyyy").format(team.getCreated_at());
+        Component line4_2 = Component.text(date).color(primary);
 
-        Component line4_2 = Component.text().color(primary);
+        Component message = Component.text()
+                .appendNewline()
+                .append(border)
+                .appendNewline()
+                .append(line1_1).append(arrow).append(line1_2)
+                .appendNewline()
+                .append(line2_1).append(arrow).append(line2_2)
+                .appendNewline()
+                .append(line3_1).append(arrow).append(line3_2)
+                .appendNewline()
+                .append(line4_1).append(arrow).append(line4_2)
+                .appendNewline()
+                .append(border)
+                .build();
 
-        Component message = Component.join(
-                Component.newline(),
-                border,
-                Component.join(Component.newline(), line1_1, arrow, line1_2),
-                Component.join(Component.newline(), line2_1, arrow, line2_2),
-                Component.join(Component.newline(), line3_1, arrow, line3_2),
-                Component.join(Component.newline(), line4_1, arrow, line4_2),
-
-                Component.newline(),
-                border);
+        sender.sendMessage(message);
 
     }
 
