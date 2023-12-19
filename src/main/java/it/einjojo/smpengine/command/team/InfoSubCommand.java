@@ -5,8 +5,14 @@ import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
+
 import org.bukkit.command.CommandSender;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +36,37 @@ public class InfoSubCommand implements Command {
     }
 
     public void printTeamInfo(Team team, CommandSender sender) {
-        Component message = Component.text()
-                .append(Component.text("§8[§6Team§8] §7Team-Info"))
-                .append(Component.text("§8» §7Name: §6" + team.getName()))
-                .append(Component.text("§8» §7Owner: §6" + team.getOwner().getName()))
-                .append(Component.text("§8» §7Mitglieder: §6" + team.getMembers().size()))
-                .build();
-        sender.sendMessage(message);
+        TextColor primary = plugin.getPrimaryColor();
+        TextColor dark_gray = NamedTextColor.DARK_GRAY;
+        TextColor muted = NamedTextColor.GRAY;
+        Component border = Component.text("-------------------------").color(dark_gray)
+                .decorate(TextDecoration.STRIKETHROUGH);
+        Component arrow = Component.text(" » ").color(dark_gray);
+
+        Component line1_1 = Component.text("Name").color(muted);
+        Component line1_2 = Component.text(team.getName()).color(primary);
+
+        Component line2_1 = Component.text("Leader").color(muted);
+        Component line2_2 = Component.text(team.getOwner().getName()).color(primary);
+
+        Component line3_1 = Component.text("Mitglieder").color(muted);
+        Component line3_2 = Component.text(team.getMembers().size()).color(primary);
+
+        Component line4_1 = Component.text("Erstellt am").color(muted);
+        String date = DateTimeFormatter.ofPattern("").format(null)
+
+        Component line4_2 = Component.text().color(primary);
+
+        Component message = Component.join(
+                Component.newline(),
+                border,
+                Component.join(Component.newline(), line1_1, arrow, line1_2),
+                Component.join(Component.newline(), line2_1, arrow, line2_2),
+                Component.join(Component.newline(), line3_1, arrow, line3_2),
+                Component.join(Component.newline(), line4_1, arrow, line4_2),
+
+                Component.newline(),
+                border);
 
     }
 
