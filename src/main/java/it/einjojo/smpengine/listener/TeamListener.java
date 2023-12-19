@@ -24,7 +24,10 @@ public class TeamListener implements Listener {
             Component message = Placeholder.applyPlaceholders(plugin.getMessage("team.join"), Placeholder.player(event.getPlayer().getName()));
             player.sendMessage(message);
         }
-        delayedUpdate();
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            plugin.getTablistManager().update(player);
+        }
+
     }
 
     @EventHandler
@@ -33,15 +36,8 @@ public class TeamListener implements Listener {
             Component message = Placeholder.applyPlaceholders(plugin.getMessage("team.leave"), Placeholder.player(event.getPlayer().getName()));
             player.sendMessage(message);
         }
-        delayedUpdate();
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            plugin.getTablistManager().update(player);
+        }
     }
-
-    public void delayedUpdate() {
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            for (Player player : plugin.getServer().getOnlinePlayers()) {
-                plugin.getTablistManager().update(player);
-            }
-        }, 10);
-    }
-
 }

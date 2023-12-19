@@ -66,11 +66,14 @@ public class TeamImpl implements Team {
         if (isInTeam) {
             return false;
         }
-        plugin.getServer().getPluginManager().callEvent(new TeamPlayerJoinEvent(player, this));
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(id);
         plugin.getPlayerManager().updatePlayer(impl);
-        return members.add(player.getUuid());
+        members.add(player.getUuid());
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            plugin.getServer().getPluginManager().callEvent(new TeamPlayerJoinEvent(player, this));
+        });
+        return true;
     }
 
     @Override
@@ -89,11 +92,16 @@ public class TeamImpl implements Team {
         if (!withOwner && isOwner(player)) {
             throw new IllegalStateException("Owner cannot be removed from team");
         }
-        plugin.getServer().getPluginManager().callEvent(new TeamPlayerLeaveEvent(player, this));
         SMPPlayerImpl impl = (SMPPlayerImpl) player;
         impl.setTeamId(null);
         plugin.getPlayerManager().updatePlayer(impl);
-        return members.remove(player.getUuid());
+        boolean success = members.remove(player.getUuid());
+        if (success) {
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                plugin.getServer().getPluginManager().callEvent(new TeamPlayerLeaveEvent(player, this));
+            });
+        }
+        return success;
     }
 
     @Override

@@ -43,9 +43,11 @@ public class TeamInviteSubCommand implements Command {
             smpPlayer.getTeam().ifPresentOrElse((team) -> {
                         if (!team.isOwner(smpPlayer)) {
                             sender.sendMessage(plugin.getMessage("command.team.notOwner"));
+                            return;
                         }
                         if (args.length != 1) {
                             sender.sendMessage(plugin.getMessage("command.team.invite.usage"));
+                            return;
                         }
                         Optional<SMPPlayer> oTarget = plugin.getPlayerManager().getPlayer(args[0]);
                         if (oTarget.isEmpty()) {
