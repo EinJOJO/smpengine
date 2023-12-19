@@ -5,7 +5,9 @@ import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
+import it.einjojo.smpengine.util.MessageUtil;
 import it.einjojo.smpengine.util.Placeholder;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -30,7 +32,7 @@ public class KickSubCommand implements Command {
             SMPPlayer senderSMPPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
             Optional<SMPPlayer> _oTarget = plugin.getPlayerManager().getPlayer(args[0]);
             if (_oTarget.isEmpty()) {
-                player.sendMessage(plugin.getMessage("command.target-not-found"));
+                player.sendMessage(plugin.getMessage(MessageUtil.KEY.COMMAND_TARGET_NOT_FOUND));
                 return;
             }
             SMPPlayer target = _oTarget.get();
@@ -48,7 +50,7 @@ public class KickSubCommand implements Command {
 
             } else {
                 if (!player.hasPermission("team.kick.others")) {
-                    player.sendMessage(plugin.getMessage("no-permission"));
+                    player.sendMessage(plugin.getMessage(MessageUtil.KEY.NO_PERMISSION));
                     return;
                 }
                 Optional<Team> _team = plugin.getTeamManager().getTeamByName(args[1]);
@@ -69,11 +71,12 @@ public class KickSubCommand implements Command {
         }
         if (team.isMember(target)) {
             if (!team.removeMember(target)) {
-                executor.sendMessage(plugin.getMessage("general-error"));
+                executor.sendMessage(plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
             }
             sendKickNotification(target, team);
         } else {
-            executor.sendMessage(plugin.getMessage("command.team.targetNotInTeam"));
+            Component message = Placeholder.applyPlaceholders(plugin.getMessage("command.team.targetNotInTeam"), new Placeholder("player", target.getName()));
+            executor.sendMessage(message);
         }
     }
 

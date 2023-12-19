@@ -5,10 +5,12 @@ import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
+import it.einjojo.smpengine.util.MessageUtil;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class LeaveSubCommand implements Command {
 
@@ -33,10 +35,16 @@ public class LeaveSubCommand implements Command {
                 player.sendMessage(plugin.getMessage("command.team.leave.owner"));
                 return;
             }
-            if (!team.removeMember(senderSMP)) {
-                player.sendMessage("general-error");
-            }
-            player.sendMessage(plugin.getMessage("command.team.leave.success"));
+            CompletableFuture.supplyAsync(() -> team.removeMember(senderSMP))
+                    .handle((success, exception) -> {
+                        if (exception != null || !success) {
+                            player.sendMessage(plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                            return null;
+                        } else {
+                            player.sendMessage(plugin.getMessage("command.team.leave.success"));
+                        }
+                        return null;
+                    });
         });
     }
 

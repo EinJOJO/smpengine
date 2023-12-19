@@ -5,7 +5,7 @@ no-permission: "<prefix> <red>Dazu hast du keine Berechtigung!"
 # Error Alarm
 error:
   player-creation-failed: "<prefix> <red>Der Spieler konnte nicht erstellt werden!"
-general-error: "<red>Es ist ein Fehler aufgetreten!"
+general-error: "<red>Es ist ein Fehler aufgetreten! Siehe Konsole."
 
 team:
   join: "<prefix> <green>{player} ist dem Team beigetreten!"
@@ -14,8 +14,11 @@ team:
 command:
   unknown: "<prefix> <red>Unbekannter Befehl!"
   target-not-found: "<prefix> <red>Der Spieler wurde nicht gefunden!"
+  maintenance:
+    enabled: "<prefix> <gray>Der Wartungsmodus wurde <green>aktiviert</green><!"
+    disabled: "<prefix> <gray>Der Wartungsmodus wurde <red>deaktiviert</red><!"
   team:
-    notOwner: "<prefix> <red>Du bist nicht der Ersteller der Teams!"
+    notOwner: "<prefix> <red>Du bist nicht der Ersteller des Teams!"
     notInTeam: "<prefix> <red>Du bist nicht in einem Team!"
     targetNotInTeam: "<prefix> <red>Dieser Spieler ist nicht in deinem Team!"
     notExist: "<prefix> <red>Das Team existiert nicht!"

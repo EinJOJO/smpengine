@@ -8,24 +8,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Optional;
 
 public class MaintenanceSubCommand implements Command {
 
     private final SMPEnginePlugin plugin;
+
     public MaintenanceSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if(!plugin.getMaintenanceConfig().isEnabled()) {
+        if (!plugin.getMaintenanceConfig().isEnabled()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.hasPermission(plugin.getMaintenanceConfig().getBypassPermission())) {
                     player.kick(MessageUtil.format(plugin.getMaintenanceConfig().getKickMessage(), plugin.getPrimaryColor(), plugin.getPrefix()));
                 }
             }
             plugin.getMaintenanceConfig().setEnabled(true);
+
         } else plugin.getMaintenanceConfig().setEnabled(false);
     }
 
@@ -41,7 +42,7 @@ public class MaintenanceSubCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "acitvate maintenance";
+        return "activate maintenance";
     }
 
     @Override

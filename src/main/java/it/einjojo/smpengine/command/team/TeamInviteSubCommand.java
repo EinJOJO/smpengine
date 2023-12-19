@@ -3,7 +3,9 @@ package it.einjojo.smpengine.command.team;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
+import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
+import it.einjojo.smpengine.util.MessageUtil;
 import it.einjojo.smpengine.util.Placeholder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -30,7 +32,7 @@ public class TeamInviteSubCommand implements Command {
             // accept invite
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("accept")) {
-                    plugin.getTeamManager().getInvite(_player.getUniqueId()).ifPresentOrElse(
+                    plugin.getTeamManager().getInvite(smpPlayer.getUuid()).ifPresentOrElse(
                             (teamId) -> joinTeam(teamId, smpPlayer),
                             () -> {
                                 _player.sendMessage(plugin.getMessage("command.team.invite.noInvite"));
@@ -40,44 +42,57 @@ public class TeamInviteSubCommand implements Command {
 
             }
             // Send invite
-            smpPlayer.getTeam().ifPresentOrElse((team) -> {
-                        if (!team.isOwner(smpPlayer)) {
-                            sender.sendMessage(plugin.getMessage("command.team.notOwner"));
-                            return;
-                        }
-                        if (args.length != 1) {
-                            sender.sendMessage(plugin.getMessage("command.team.invite.usage"));
-                            return;
-                        }
-                        Optional<SMPPlayer> oTarget = plugin.getPlayerManager().getPlayer(args[0]);
-                        if (oTarget.isEmpty()) {
-                            sender.sendMessage(plugin.getMessage("command.target-not-found"));
-                            return;
-                        }
-                        SMPPlayer target = oTarget.get();
-                        if (target.getPlayer() == null) {
-                            sender.sendMessage(plugin.getMessage("command.team.invite.playerOffline"));
-                            return;
-                        }
-                        if (target.getTeam().isPresent()) {
-                            sender.sendMessage(plugin.getMessage("command.team.invite.alreadyInTeam"));
-                            return;
-                        }
-                        // Send invite
-                        plugin.getTeamManager().createInvite(target.getUuid(), team);
-                        sender.sendMessage(plugin.getMessage("command.team.invite.success"));
-
-                        // Send notification to target
-                        Placeholder teamPlaceholder = new Placeholder("team", team.getDisplayName());
-                        Component message = plugin.getMessage("command.team.invite.info")
-                                .clickEvent(ClickEvent.runCommand("/team invite accept"))
-                                .hoverEvent(HoverEvent.showText(Component.text("/team invite accept")));
-                        target.getPlayer().sendMessage(Placeholder.applyPlaceholders(message, teamPlaceholder));
-                    },
-                    () -> {
-                        _player.sendMessage(plugin.getMessage("command.team.notInTeam"));
-                    });
+            smpPlayer.getTeamAsync().handle((teamOptional, throwable) -> {
+                if (throwable != null) {
+                    _player.sendMessage(plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                    return null;
+                }
+                sendInvite(teamOptional, smpPlayer, args);
+                return null;
+            });
         }));
+    }
+
+    private void sendInvite(Optional<Team> teamOptional, SMPPlayer player, String[] args) {
+        Player bukkitPlayer = player.getPlayer();
+        if (bukkitPlayer == null) return;
+        teamOptional.ifPresentOrElse((team) -> {
+                    if (!team.isOwner(player)) {
+                        bukkitPlayer.sendMessage(plugin.getMessage("command.team.notOwner"));
+                        return;
+                    }
+                    if (args.length != 1) {
+                        bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.usage"));
+                        return;
+                    }
+                    Optional<SMPPlayer> oTarget = plugin.getPlayerManager().getPlayer(args[0]);
+                    if (oTarget.isEmpty()) {
+                        bukkitPlayer.sendMessage(plugin.getMessage("command.target-not-found"));
+                        return;
+                    }
+                    SMPPlayer target = oTarget.get();
+                    if (target.getPlayer() == null) {
+                        bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.playerOffline"));
+                        return;
+                    }
+                    if (target.getTeam().isPresent()) {
+                        bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.alreadyInTeam"));
+                        return;
+                    }
+                    // Send invite
+                    plugin.getTeamManager().createInvite(target.getUuid(), team);
+                    bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.success"));
+
+                    // Send notification to target
+                    Placeholder teamPlaceholder = new Placeholder("team", team.getDisplayName());
+                    Component message = plugin.getMessage("command.team.invite.info")
+                            .clickEvent(ClickEvent.runCommand("/team invite accept"))
+                            .hoverEvent(HoverEvent.showText(Component.text("/team invite accept")));
+                    target.getPlayer().sendMessage(Placeholder.applyPlaceholders(message, teamPlaceholder));
+                },
+                () -> {
+                    bukkitPlayer.sendMessage(plugin.getMessage("command.team.notInTeam"));
+                });
     }
 
 

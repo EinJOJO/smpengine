@@ -68,7 +68,7 @@ public class DeleteSubCommand implements Command {
         if (player1.hasPermission("team.delete.other")) {
             deleteTeam(player1, team);
         } else {
-            player1.sendMessage(plugin.getMessage("no-permission"));
+            player1.sendMessage(plugin.getMessage(MessageUtil.KEY.NO_PERMISSION));
         }
     }
 

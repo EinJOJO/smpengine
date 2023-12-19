@@ -12,6 +12,8 @@ public class MessageUtil {
     public static final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     public enum KEY {
+        NO_PERMISSION("no-permission"),
+        COMMAND_TARGET_NOT_FOUND("command.target-not-found"),
         GENERAL_ERROR("general-error");
 
         private final String key;
