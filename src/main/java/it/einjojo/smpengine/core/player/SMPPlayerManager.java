@@ -57,15 +57,24 @@ public class SMPPlayerManager {
      * @param name Name of Player
      * @return {@link SMPPlayer}
      */
-    public Optional<SMPPlayer> getPlayer(String name) {
+    public Optional<SMPPlayer> getPlayerByName(String name) {
         UUID uuid = NameUUIDCache.getUUID(name);
         if (uuid == null) return Optional.empty();
         return getPlayer(uuid);
     }
 
+    public CompletableFuture<Optional<SMPPlayer>> getPlayerByNameAsync(String name) {
+        return CompletableFuture.supplyAsync(() -> getPlayerByName(name)).exceptionally(throwable -> {
+            plugin.getLogger().severe("Error while getting player by name " + name);
+            throwable.printStackTrace();
+            return Optional.empty();
+        });
+    }
+
+
     public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> getPlayer(uuid)).exceptionally(throwable -> {
-            plugin.getLogger().severe("Error while getting player " + uuid);
+            plugin.getLogger().severe("Error while getting player by uuid " + uuid);
             throwable.printStackTrace();
             return Optional.empty();
         });

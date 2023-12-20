@@ -72,7 +72,7 @@ public class InviteSubCommand implements Command {
             bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.usage"));
             return;
         }
-        Optional<SMPPlayer> oTarget = playerManager.getPlayer(args[0]);
+        Optional<SMPPlayer> oTarget = playerManager.getPlayerByName(args[0]);
         if (oTarget.isEmpty()) {
             bukkitPlayer.sendMessage(plugin.getMessage("command.target-not-found"));
             return;

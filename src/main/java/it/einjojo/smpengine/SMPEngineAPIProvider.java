@@ -5,6 +5,7 @@ import it.einjojo.smpengine.core.team.Team;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class SMPEngineAPIProvider implements SMPEngineAPI {
 
@@ -20,7 +21,7 @@ public class SMPEngineAPIProvider implements SMPEngineAPI {
 
     @Override
     public Optional<SMPPlayer> getPlayerByName(String name) {
-        return plugin.getPlayerManager().getPlayer(name);
+        return plugin.getPlayerManager().getPlayerByName(name);
     }
 
     @Override
@@ -36,6 +37,26 @@ public class SMPEngineAPIProvider implements SMPEngineAPI {
     @Override
     public Optional<Team> getTeam(int id) {
         return plugin.getTeamManager().getTeamById(id);
+    }
+
+    @Override
+    public CompletableFuture<Optional<SMPPlayer>> getPlayerByNameAsync(String name) {
+        return plugin.getPlayerManager().getPlayerByNameAsync(name);
+    }
+
+    @Override
+    public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(UUID id) {
+        return plugin.getPlayerManager().getPlayerAsync(id);
+    }
+
+    @Override
+    public CompletableFuture<Optional<Team>> getTeamByNameAsync(String name) {
+        return plugin.getTeamManager().getTeamByNameAsync(name);
+    }
+
+    @Override
+    public CompletableFuture<Optional<Team>> getTeamAsync(int id) {
+        return plugin.getTeamManager().getTeamByIdAsync(id);
     }
 
     public static SMPEngineAPI get() {

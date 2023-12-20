@@ -82,6 +82,13 @@ public class TeamManager {
         return Optional.ofNullable(teamCache.get(teamId));
     }
 
+    public CompletableFuture<Optional<Team>> getTeamByIdAsync(int teamId) {
+        return CompletableFuture.supplyAsync(() -> getTeamById(teamId)).exceptionally(e -> {
+            e.printStackTrace();
+            return Optional.empty();
+        });
+    }
+
     /**
      * Gets a team by name.
      *

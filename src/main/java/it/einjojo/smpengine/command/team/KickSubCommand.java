@@ -30,7 +30,7 @@ public class KickSubCommand implements Command {
                 return;
             }
             SMPPlayer senderSMPPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
-            Optional<SMPPlayer> _oTarget = plugin.getPlayerManager().getPlayer(args[0]);
+            Optional<SMPPlayer> _oTarget = plugin.getPlayerManager().getPlayerByName(args[0]);
             if (_oTarget.isEmpty()) {
                 player.sendMessage(plugin.getMessage(MessageUtil.KEY.COMMAND_TARGET_NOT_FOUND));
                 return;
