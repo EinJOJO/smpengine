@@ -1,8 +1,8 @@
 package it.einjojo.smpengine.listener;
 
-
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.config.MaintenanceConfig;
+import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.player.SMPPlayerImpl;
 import it.einjojo.smpengine.util.MessageUtil;
 import net.kyori.adventure.text.Component;
@@ -45,35 +45,35 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
         CompletableFuture.supplyAsync(() -> plugin.getPlayerManager().getPlayer(player.getUniqueId()))
                 .exceptionally((throwable) -> {
-                    plugin.getLogger().warning("Failed to load player " + player.getName() + " (" + player.getUniqueId() + ")");
-                    event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-                    syncKick(player, plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                    handleAsyncException(player, throwable);
                     return Optional.empty();
                 })
-                .thenAccept(smpPlayer -> {
-                    if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
-                        return;
-                    }
-                    if (smpPlayer.isEmpty()) {
-                        smpPlayer = plugin.getPlayerManager().createPlayer(player.getUniqueId(), player.getName());
-                    }
-                    var smpPlayerImpl = (SMPPlayerImpl) smpPlayer.orElseThrow(() -> {
-                        syncKick(player, plugin.getMessage("error.player-creation-failed"));
-                        return new IllegalStateException("Player creation failed");
-                    });
-                    smpPlayerImpl.setOnline(true);
-                    smpPlayerImpl.setName(event.getPlayer().getName());
-                    smpPlayerImpl.setLastJoin(Instant.now());
-                    CompletableFuture
-                            .runAsync(() -> plugin.getPlayerManager().updatePlayer(smpPlayerImpl))
-                            .exceptionally((throwable) -> {
-                                plugin.getLogger().warning("Failed to update player " + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ")");
-                                syncKick(player, plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
-                                return null;
-                            });
-                });
+                .thenAcceptAsync(smpPlayer -> handlePlayerData(player, smpPlayer));
     }
 
+    private void handleAsyncException(Player player, Throwable throwable) {
+        plugin.getLogger().warning("Failed to load player " + player.getName() + " (" + player.getUniqueId() + ")");
+        syncKick(player, plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+    }
+
+    private void handlePlayerData(Player player, Optional<SMPPlayer> playerOptional) {
+        if (playerOptional.isEmpty()) {
+            playerOptional = plugin.getPlayerManager().createPlayer(player.getUniqueId(), player.getName());
+        }
+        SMPPlayerImpl smpPlayerImpl = (SMPPlayerImpl) playerOptional.orElseThrow(() -> {
+            syncKick(player, plugin.getMessage("error.player-creation-failed"));
+            return new IllegalStateException("Player creation failed");
+        });
+        smpPlayerImpl.setOnline(true);
+        smpPlayerImpl.setName(player.getName());
+        smpPlayerImpl.setLastJoin(Instant.now());
+        CompletableFuture.runAsync(() -> plugin.getPlayerManager().updatePlayer(smpPlayerImpl))
+                .exceptionally(throwable -> {
+                    plugin.getLogger().warning("Failed to update player " + player.getName() + " (" + player.getUniqueId() + ")");
+                    syncKick(player, plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                    return null;
+                });
+    }
 
     @EventHandler
     public void joinHandler(PlayerJoinEvent event) {
@@ -87,12 +87,7 @@ public class PlayerJoinListener implements Listener {
         event.joinMessage(plugin.getPrefix().append(joinMessage));
     }
 
-
     private void syncKick(Player player, Component kickMessage) {
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            player.kick(kickMessage);
-        });
+        Bukkit.getScheduler().runTask(plugin, () -> player.kick(kickMessage));
     }
-
-
 }
