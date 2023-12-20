@@ -23,7 +23,7 @@ public class DeathListener implements Listener {
         Placeholder y1 = new Placeholder("y", String.valueOf((int) event.getPlayer().getX()));
         Placeholder z1 = new Placeholder("z", String.valueOf((int) event.getPlayer().getZ()));
         event.deathMessage(plugin.getPrefix().appendSpace().append(event.deathMessage()));
-        p.sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("death.player"), x1, y1, z1));
+        p.sendMessage(plugin.getMessage("death.player", x1, y1, z1));
 
     }
 }

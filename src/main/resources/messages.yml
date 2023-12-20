@@ -22,6 +22,7 @@ command:
     notInTeam: "<prefix> <red>Du bist nicht in einem Team!"
     targetNotInTeam: "<prefix> <red>Dieser Spieler ist nicht in deinem Team!"
     notExist: "<prefix> <red>Das Team existiert nicht!"
+    teamchat: "<prefix> <green>Der Teamchat wurde {state}!"
     # spezifisch
     create:
       usage: "<prefix> <red>Bitte benutze /team create <name>"
