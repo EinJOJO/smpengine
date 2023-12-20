@@ -11,12 +11,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 public class MemberSubCommand implements Command {
 
@@ -29,13 +27,13 @@ public class MemberSubCommand implements Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, player -> {
-            Optional<Team> optionalTeam = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow().getTeam();
-            if (optionalTeam.isEmpty()) {
-                player.sendMessage(plugin.getMessage("command.team.notInTeam"));
-                return;
-            }
-            Team team = optionalTeam.get();
-            player.sendMessage(buildMessage(team.getMembers(), team));
+            plugin.getPlayerManager().getPlayerAsync(player.getUniqueId()).thenAcceptAsync(oSmpPlayer -> {
+                oSmpPlayer.orElseThrow().getTeam().ifPresentOrElse((team) -> {
+                    player.sendMessage(buildMessage(team.getMembers(), team));
+                }, () -> {
+                    player.sendMessage(plugin.getMessage("command.team.notInTeam"));
+                });
+            });
         });
     }
 
@@ -53,10 +51,9 @@ public class MemberSubCommand implements Command {
                 .appendNewline()
                 .append(owner)
                 .append(Component.text(team.getOwner().getName()).color(primary)
-                .appendNewline()
-                .appendNewline()
-                .append(Component.text("Mitglieder: ").color(muted)));
-
+                        .appendNewline()
+                        .appendNewline()
+                        .append(Component.text("Mitglieder: ").color(muted)));
 
 
         Iterator<SMPPlayer> iterator = modifiableMembers.iterator();
@@ -67,12 +64,12 @@ public class MemberSubCommand implements Command {
             }
         }
         iterator = modifiableMembers.iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             SMPPlayer member = iterator.next();
             Component playerName = Component.text(member.getName()).color(primary);
             Component comma = Component.text(", ").color(muted);
             builder.append(playerName);
-            if(iterator.hasNext()){
+            if (iterator.hasNext()) {
                 builder.append(comma);
             }
         }

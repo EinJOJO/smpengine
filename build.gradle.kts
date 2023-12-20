@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.2.2"
+    id("maven-publish")
 }
 
 
@@ -27,8 +28,6 @@ dependencies {
 //utf8
 
 
-
-
 tasks {
 
     //utf 8
@@ -43,6 +42,7 @@ tasks {
 
     shadowJar {
         relocate("com.zaxxer.hikari", "it.einjojo.smpengine.database.hikari")
+        relocate("com.github.benmanes.caffeine", "it.einjojo.smpengine.cache.caffeine")
     }
 
     assemble {
@@ -57,5 +57,22 @@ tasks {
 
     }
 
+}
 
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "Wandoria"
+            url = uri("https://repo.wandoria.net/jojo/")
+            credentials {
+                username = project.findProperty("USERNAME")?.toString() ?: ""
+                password = project.findProperty("PASSWORD")?.toString() ?: ""
+            }
+        }
+    }
 }

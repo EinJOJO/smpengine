@@ -5,12 +5,14 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.database.PlayerDatabase;
 import it.einjojo.smpengine.util.NameUUIDCache;
-import org.bukkit.Bukkit;
+import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class SMPPlayerManager {
     private final SMPEnginePlugin plugin;
@@ -62,6 +64,14 @@ public class SMPPlayerManager {
         return getPlayer(uuid);
     }
 
+    public CompletableFuture<Optional<SMPPlayer>> getPlayerAsync(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> getPlayer(uuid)).exceptionally(throwable -> {
+            plugin.getLogger().severe("Error while getting player " + uuid);
+            throwable.printStackTrace();
+            return Optional.empty();
+        });
+    }
+
 
     /**
      * Invalidates the cache and updates the player in the database.
@@ -109,18 +119,29 @@ public class SMPPlayerManager {
         return fetched;
     }
 
+
+    @Getter
+    private boolean closing = false;
+
+    /**
+     * Updates all players in the database and invalidates the cache.
+     * This method should be called when the server is shutting down.
+     */
     public void closePlayers() {
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        closing = true;
+        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
             getPlayer(onlinePlayer.getUniqueId()).ifPresentOrElse(smpPlayer -> {
                         SMPPlayerImpl impl = (SMPPlayerImpl) smpPlayer;
                         impl.setOnline(false);
                         updatePlayer(impl);
+                        onlinePlayer.kick(Component.text("closed"));
                     },
                     () -> {
                         plugin.getLogger().warning("Player " + onlinePlayer.getName() + " (" + onlinePlayer.getUniqueId() + ") is empty!");
                         plugin.getLogger().warning("This player will not be saved!");
                     });
         }
+        closing = false;
     }
 
 

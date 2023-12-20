@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class TeamManager {
 
@@ -99,6 +100,13 @@ public class TeamManager {
         return getTeamById(teamId);
     }
 
+    public CompletableFuture<Optional<Team>> getTeamByNameAsync(String teamName) {
+        return CompletableFuture.supplyAsync(() -> getTeamByName(teamName)).exceptionally(e -> {
+            e.printStackTrace();
+            return Optional.empty();
+        });
+    }
+
     /**
      * Deletes a team from the database and removes all members from the team.
      *
@@ -139,7 +147,6 @@ public class TeamManager {
     public void removeInvite(UUID player) {
         teamInvites.invalidate(player);
     }
-
 
 
     private void applyPlugin(Team team) {

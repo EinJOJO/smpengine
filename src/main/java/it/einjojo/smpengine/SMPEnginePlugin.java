@@ -32,8 +32,12 @@ public class SMPEnginePlugin extends JavaPlugin {
     private static final Map<String, Component> cachedMessages = new WeakHashMap<>();
 
     private boolean startedSuccessfully = false;
+
     private DatabaseConfig databaseConfig;
     private MessagesConfig messagesConfig;
+
+    @Getter
+    private boolean shuttingDown = false;
 
     @Getter
     private ModuleConfig moduleConfig;
@@ -76,10 +80,12 @@ public class SMPEnginePlugin extends JavaPlugin {
         if (!startedSuccessfully) {
             return;
         }
+        shuttingDown = true;
         playerManager.closePlayers();
         sessionManager.closeSessions();
         hikariCP.close();
         clearCache();
+        shuttingDown = false;
     }
 
 

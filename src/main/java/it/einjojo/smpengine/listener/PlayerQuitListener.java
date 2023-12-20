@@ -17,10 +17,17 @@ public class PlayerQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerQuitDataHandler(PlayerQuitEvent event) {
-        // synchronously update player data because when server shuts down, it will not save player data
-        SMPPlayerImpl smpPlayer = (SMPPlayerImpl) plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId()).orElseThrow();
-        smpPlayer.setOnline(false);
-        plugin.getSessionManager().endSession(smpPlayer);
-        plugin.getPlayerManager().updatePlayer(smpPlayer);
+        if (plugin.isShuttingDown()) return;
+        plugin.getPlayerManager().getPlayerAsync(event.getPlayer().getUniqueId()).thenAcceptAsync((oSMPPlayer) -> {
+            oSMPPlayer.ifPresentOrElse((smpPlayer) -> {
+                ((SMPPlayerImpl) smpPlayer).setOnline(false);
+                plugin.getSessionManager().endSession(smpPlayer);
+                plugin.getPlayerManager().updatePlayer(smpPlayer);
+                plugin.getPlayerManager().updatePlayer(smpPlayer);
+            }, () -> {
+                plugin.getLogger().warning("Player " + event.getPlayer().getName() + " is not in database. Failed to update online mode on quit.");
+            });
+        });
+
     }
 }

@@ -3,7 +3,9 @@ package it.einjojo.smpengine.command.team;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
+import it.einjojo.smpengine.core.player.SMPPlayerManager;
 import it.einjojo.smpengine.core.team.Team;
+import it.einjojo.smpengine.core.team.TeamManager;
 import it.einjojo.smpengine.util.CommandUtil;
 import it.einjojo.smpengine.util.MessageUtil;
 import it.einjojo.smpengine.util.Placeholder;
@@ -17,22 +19,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TeamInviteSubCommand implements Command {
+public class InviteSubCommand implements Command {
 
     private final SMPEnginePlugin plugin;
+    private final TeamManager teamManager;
+    private final SMPPlayerManager playerManager;
 
-    public TeamInviteSubCommand(SMPEnginePlugin plugin) {
+    public InviteSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
+        this.teamManager = plugin.getTeamManager();
+        this.playerManager = plugin.getPlayerManager();
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         CommandUtil.requirePlayer(sender, (_player -> {
-            SMPPlayer smpPlayer = plugin.getPlayerManager().getPlayer(_player.getUniqueId()).orElseThrow();
+            SMPPlayer smpPlayer = playerManager.getPlayer(_player.getUniqueId()).orElseThrow();
             // accept invite
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("accept")) {
-                    plugin.getTeamManager().getInvite(smpPlayer.getUuid()).ifPresentOrElse(
+                    teamManager.getInvite(smpPlayer.getUuid()).ifPresentOrElse(
                             (teamId) -> joinTeam(teamId, smpPlayer),
                             () -> {
                                 _player.sendMessage(plugin.getMessage("command.team.invite.noInvite"));
@@ -65,7 +71,7 @@ public class TeamInviteSubCommand implements Command {
                         bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.usage"));
                         return;
                     }
-                    Optional<SMPPlayer> oTarget = plugin.getPlayerManager().getPlayer(args[0]);
+                    Optional<SMPPlayer> oTarget = playerManager.getPlayer(args[0]);
                     if (oTarget.isEmpty()) {
                         bukkitPlayer.sendMessage(plugin.getMessage("command.target-not-found"));
                         return;
@@ -80,7 +86,7 @@ public class TeamInviteSubCommand implements Command {
                         return;
                     }
                     // Send invite
-                    plugin.getTeamManager().createInvite(target.getUuid(), team);
+                    teamManager.createInvite(target.getUuid(), team);
                     bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.success"));
 
                     // Send notification to target
@@ -98,13 +104,14 @@ public class TeamInviteSubCommand implements Command {
 
     private void joinTeam(int teamID, SMPPlayer player) {
         if (player.getPlayer() == null) return;
-        plugin.getTeamManager().getTeamById(teamID).ifPresentOrElse((team) -> {
+        teamManager.getTeamById(teamID).ifPresentOrElse((team) -> {
             Placeholder teamPlaceholder = new Placeholder("team", team.getDisplayName());
             if (player.isInsideTeam()) {
                 player.getPlayer().sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("command.team.invite.acceptAlreadyInTeam"), teamPlaceholder));
                 return;
             }
             team.addMember(player);
+            teamManager.removeInvite(player.getUuid());
             player.getPlayer().sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("command.team.invite.accepted"), teamPlaceholder));
         }, () -> {
             player.getPlayer().sendMessage(plugin.getMessage("command.team.invite.expired"));
@@ -120,7 +127,7 @@ public class TeamInviteSubCommand implements Command {
         }
         plugin.getLogger().info(String.valueOf(args.length));
         if (args.length <= 1) {
-            SMPPlayer smpPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
+            SMPPlayer smpPlayer = playerManager.getPlayer(player.getUniqueId()).orElseThrow();
             if (!smpPlayer.isInsideTeam()) {
                 return result;
             }

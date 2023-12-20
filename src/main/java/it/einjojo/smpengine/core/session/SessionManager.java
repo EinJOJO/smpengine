@@ -1,7 +1,5 @@
 package it.einjojo.smpengine.core.session;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.database.SessionDatabase;
@@ -25,12 +23,20 @@ public class SessionManager {
         sessions = new HashMap<>();
     }
 
-    private Session getSessionByUUID(UUID uuid) {
+    private Session getLatestSession(UUID uuid) {
+        return null;
+    }
+
+    private Session getSessionByID(int id) {
         return null;
     }
 
     public Optional<Session> getSession(UUID uuid) {
-        return Optional.ofNullable(sessions.get(uuid));
+        Session session = sessions.get(uuid);
+        if (session == null) {
+            session = getLatestSession(uuid);
+        }
+        return Optional.ofNullable(session);
     }
 
     public void startSession(SMPPlayer player) {
@@ -40,11 +46,24 @@ public class SessionManager {
         }
         String playerIP = bukkitPlayer.getAddress().getAddress().getHostAddress();
         SessionImpl session = new SessionImpl(-1, player.getUuid(), playerIP, Instant.now(), null);
-        sessionDatabase.createSession(session);
+        if (sessionDatabase.createSession(session)) {
+            sessions.put(player.getUuid(), session);
+
+        } else {
+            throw new IllegalStateException("Failed to create session");
+        }
+        ;
     }
 
     public void endSession(SMPPlayer player) {
-        return;
+        Optional<Session> session = getSession(player.getUuid());
+        if (session.isEmpty()) {
+            return;
+        }
+        SessionImpl sessionImpl = (SessionImpl) session.get();
+        sessionImpl.setEndTime(Instant.now());
+        sessionDatabase.updateSession(sessionImpl);
+
     }
 
     public void closeSessions() {
