@@ -1,5 +1,6 @@
 package it.einjojo.smpengine.util;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -11,6 +12,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 public class MessageUtil {
     public static final MiniMessage miniMessage = MiniMessage.miniMessage();
 
+    @Getter
     public enum KEY {
         NO_PERMISSION("no-permission"),
         COMMAND_TARGET_NOT_FOUND("command.target-not-found"),
@@ -22,9 +24,6 @@ public class MessageUtil {
             this.key = key;
         }
 
-        public String getKey() {
-            return key;
-        }
     }
 
     public static Component format(String message, TextColor primaryColor, Component prefix) {

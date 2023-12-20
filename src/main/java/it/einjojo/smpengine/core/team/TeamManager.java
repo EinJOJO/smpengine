@@ -125,7 +125,7 @@ public class TeamManager {
             plugin.getLogger().info("Deleted team " + team.getName() + " (" + team.getId() + ")");
             teamIds.invalidate(team.getName());
             teamCache.invalidate(team.getId());
-            return teamDatabase.deleteTeam((TeamImpl) team);
+            return teamDatabase.deleteTeam(team);
         }
         return false;
     }

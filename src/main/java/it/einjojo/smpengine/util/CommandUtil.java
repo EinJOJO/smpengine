@@ -23,13 +23,12 @@ public class CommandUtil {
         return names;
     }
 
-    public static Optional<Player> requirePlayer(CommandSender sender, @Nullable Consumer<Player> playerConsumer) {
+    public static void requirePlayer(CommandSender sender, @Nullable Consumer<Player> playerConsumer) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("§cOnly players can execute this command!");
-            return Optional.empty();
+            return;
         }
         if (playerConsumer != null) playerConsumer.accept((Player) sender);
-        return Optional.of((Player) sender);
     }
 
 

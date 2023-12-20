@@ -47,9 +47,7 @@ public class TablistManager {
             bukkitTeam.prefix(prefix);
             bukkitTeam.addEntry(player.getName());
             bukkitTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
-        }, () -> {
-            noTeam(scoreboard, player);
-        });
+        }, () -> noTeam(scoreboard, player));
     }
 
     private void noTeam(Scoreboard scoreboard, Player player) {

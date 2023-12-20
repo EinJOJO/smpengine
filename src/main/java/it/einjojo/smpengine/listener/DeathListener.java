@@ -7,8 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import java.util.Iterator;
-
 public class DeathListener implements Listener {
 
     private final SMPEnginePlugin plugin;

@@ -70,9 +70,7 @@ public class TeamImpl implements Team {
         impl.setTeamId(id);
         plugin.getPlayerManager().updatePlayer(impl);
         members.add(player.getUuid());
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
-            plugin.getServer().getPluginManager().callEvent(new TeamPlayerJoinEvent(player, this));
-        });
+        plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new TeamPlayerJoinEvent(player, this)));
         return true;
     }
 
@@ -97,9 +95,7 @@ public class TeamImpl implements Team {
         plugin.getPlayerManager().updatePlayer(impl);
         boolean success = members.remove(player.getUuid());
         if (success) {
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                plugin.getServer().getPluginManager().callEvent(new TeamPlayerLeaveEvent(player, this));
-            }, 1);
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> plugin.getServer().getPluginManager().callEvent(new TeamPlayerLeaveEvent(player, this)), 1);
         }
         return success;
     }

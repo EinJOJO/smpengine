@@ -26,15 +26,7 @@ public class MemberSubCommand implements Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        CommandUtil.requirePlayer(sender, player -> {
-            plugin.getPlayerManager().getPlayerAsync(player.getUniqueId()).thenAcceptAsync(oSmpPlayer -> {
-                oSmpPlayer.orElseThrow().getTeam().ifPresentOrElse((team) -> {
-                    player.sendMessage(buildMessage(team.getMembers(), team));
-                }, () -> {
-                    player.sendMessage(plugin.getMessage("command.team.notInTeam"));
-                });
-            });
-        });
+        CommandUtil.requirePlayer(sender, player -> plugin.getPlayerManager().getPlayerAsync(player.getUniqueId()).thenAcceptAsync(oSmpPlayer -> oSmpPlayer.orElseThrow().getTeam().ifPresentOrElse((team) -> player.sendMessage(buildMessage(team.getMembers(), team)), () -> player.sendMessage(plugin.getMessage("command.team.notInTeam")))));
     }
 
     public Component buildMessage(List<SMPPlayer> members, Team team) {

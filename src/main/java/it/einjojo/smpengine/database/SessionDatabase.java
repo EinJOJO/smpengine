@@ -43,7 +43,7 @@ public class SessionDatabase {
         }
     }
 
-    public boolean updateSession(SessionImpl session) {
+    public void updateSession(SessionImpl session) {
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement("UPDATE sessions SET logout_at = ? WHERE session_owner_uuid = ?")) {
                 ps.setString(1, session.getUuid().toString());
@@ -51,11 +51,9 @@ public class SessionDatabase {
                 ps.setTimestamp(3, Timestamp.from(session.getStartTime()));
                 ps.setTimestamp(4, Timestamp.from(session.getEndTime()));
                 ps.executeUpdate();
-                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 }

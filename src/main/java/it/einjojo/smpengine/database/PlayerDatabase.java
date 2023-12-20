@@ -56,8 +56,7 @@ public class PlayerDatabase {
         }
     }
 
-    @Nullable
-    public SMPPlayer updatePlayer(@NotNull SMPPlayer smpPlayer) {
+    public void updatePlayer(@NotNull SMPPlayer smpPlayer) {
         SMPPlayerImpl player = (SMPPlayerImpl) smpPlayer;
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement("UPDATE `spieler` SET online = ?, last_join = ?, name = ?, team_id = ? WHERE uuid = ?")) {
@@ -67,10 +66,8 @@ public class PlayerDatabase {
                 ps.setObject(4, player.getTeamId());
                 ps.setString(5, player.getUuid().toString());
                 ps.executeUpdate();
-                return player;
             }
         } catch (SQLException e) {
-            return null;
         }
     }
 

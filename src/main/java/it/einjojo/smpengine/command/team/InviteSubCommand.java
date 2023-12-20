@@ -40,9 +40,7 @@ public class InviteSubCommand implements Command {
                 if (args[0].equalsIgnoreCase("accept")) {
                     teamManager.getInvite(smpPlayer.getUuid()).ifPresentOrElse(
                             (teamId) -> joinTeam(teamId, smpPlayer),
-                            () -> {
-                                _player.sendMessage(plugin.getMessage("command.team.invite.noInvite"));
-                            });
+                            () -> _player.sendMessage(plugin.getMessage("command.team.invite.noInvite")));
                     return;
                 }
 
@@ -53,52 +51,51 @@ public class InviteSubCommand implements Command {
                     _player.sendMessage(plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
                     return null;
                 }
-                sendInvite(teamOptional, smpPlayer, args);
+                sendInvite(teamOptional.orElse(null), smpPlayer, args);
                 return null;
             });
         }));
     }
 
-    private void sendInvite(Optional<Team> teamOptional, SMPPlayer player, String[] args) {
+    private void sendInvite(Team team, SMPPlayer player, String[] args) {
         Player bukkitPlayer = player.getPlayer();
         if (bukkitPlayer == null) return;
-        teamOptional.ifPresentOrElse((team) -> {
-                    if (!team.isOwner(player)) {
-                        bukkitPlayer.sendMessage(plugin.getMessage("command.team.notOwner"));
-                        return;
-                    }
-                    if (args.length != 1) {
-                        bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.usage"));
-                        return;
-                    }
-                    Optional<SMPPlayer> oTarget = playerManager.getPlayer(args[0]);
-                    if (oTarget.isEmpty()) {
-                        bukkitPlayer.sendMessage(plugin.getMessage("command.target-not-found"));
-                        return;
-                    }
-                    SMPPlayer target = oTarget.get();
-                    if (target.getPlayer() == null) {
-                        bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.playerOffline"));
-                        return;
-                    }
-                    if (target.getTeam().isPresent()) {
-                        bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.alreadyInTeam"));
-                        return;
-                    }
-                    // Send invite
-                    teamManager.createInvite(target.getUuid(), team);
-                    bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.success"));
+        if (team == null) {
+            bukkitPlayer.sendMessage(plugin.getMessage("command.team.notInTeam"));
+            return;
+        }
+        if (!team.isOwner(player)) {
+            bukkitPlayer.sendMessage(plugin.getMessage("command.team.notOwner"));
+            return;
+        }
+        if (args.length != 1) {
+            bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.usage"));
+            return;
+        }
+        Optional<SMPPlayer> oTarget = playerManager.getPlayer(args[0]);
+        if (oTarget.isEmpty()) {
+            bukkitPlayer.sendMessage(plugin.getMessage("command.target-not-found"));
+            return;
+        }
+        SMPPlayer target = oTarget.get();
+        if (target.getPlayer() == null) {
+            bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.playerOffline"));
+            return;
+        }
+        if (target.getTeam().isPresent()) {
+            bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.alreadyInTeam"));
+            return;
+        }
+        // Send invite
+        teamManager.createInvite(target.getUuid(), team);
+        bukkitPlayer.sendMessage(plugin.getMessage("command.team.invite.success"));
 
-                    // Send notification to target
-                    Placeholder teamPlaceholder = new Placeholder("team", team.getDisplayName());
-                    Component message = plugin.getMessage("command.team.invite.info")
-                            .clickEvent(ClickEvent.runCommand("/team invite accept"))
-                            .hoverEvent(HoverEvent.showText(Component.text("/team invite accept")));
-                    target.getPlayer().sendMessage(Placeholder.applyPlaceholders(message, teamPlaceholder));
-                },
-                () -> {
-                    bukkitPlayer.sendMessage(plugin.getMessage("command.team.notInTeam"));
-                });
+        // Send notification to target
+        Placeholder teamPlaceholder = new Placeholder("team", team.getDisplayName());
+        Component message = plugin.getMessage("command.team.invite.info")
+                .clickEvent(ClickEvent.runCommand("/team invite accept"))
+                .hoverEvent(HoverEvent.showText(Component.text("/team invite accept")));
+        target.getPlayer().sendMessage(Placeholder.applyPlaceholders(message, teamPlaceholder));
     }
 
 
@@ -113,9 +110,7 @@ public class InviteSubCommand implements Command {
             team.addMember(player);
             teamManager.removeInvite(player.getUuid());
             player.getPlayer().sendMessage(Placeholder.applyPlaceholders(plugin.getMessage("command.team.invite.accepted"), teamPlaceholder));
-        }, () -> {
-            player.getPlayer().sendMessage(plugin.getMessage("command.team.invite.expired"));
-        });
+        }, () -> player.getPlayer().sendMessage(plugin.getMessage("command.team.invite.expired")));
     }
 
     @Override

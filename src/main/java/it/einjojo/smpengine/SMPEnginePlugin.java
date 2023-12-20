@@ -190,9 +190,7 @@ public class SMPEnginePlugin extends JavaPlugin {
     }
 
     public void syncKick(Player player, Component message) {
-        getServer().getScheduler().runTask(this, () -> {
-            player.kick(message);
-        });
+        getServer().getScheduler().runTask(this, () -> player.kick(message));
     }
 
     public Component getPrefix() {

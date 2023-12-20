@@ -1,7 +1,6 @@
 package it.einjojo.smpengine.core.player;
 
 import it.einjojo.smpengine.core.team.Team;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 

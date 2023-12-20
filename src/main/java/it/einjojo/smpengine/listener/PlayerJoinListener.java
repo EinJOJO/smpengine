@@ -48,7 +48,7 @@ public class PlayerJoinListener implements Listener {
                     handleAsyncException(player, throwable);
                     return Optional.empty();
                 })
-                .thenAcceptAsync(smpPlayer -> handlePlayerData(player, smpPlayer));
+                .thenAcceptAsync(smpPlayer -> handlePlayerData(player, smpPlayer.orElse(null)));
     }
 
 
@@ -57,14 +57,15 @@ public class PlayerJoinListener implements Listener {
         syncKick(player, plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
     }
 
-    private void handlePlayerData(Player player, Optional<SMPPlayer> playerOptional) {
-        if (playerOptional.isEmpty()) {
-            playerOptional = plugin.getPlayerManager().createPlayer(player.getUniqueId(), player.getName());
+    private void handlePlayerData(Player player, SMPPlayer smpPlayer) {
+        if (player == null) return;
+        if (smpPlayer == null) {
+            smpPlayer = plugin.getPlayerManager().createPlayer(player.getUniqueId(), player.getName()).orElseThrow(() -> {
+                syncKick(player, plugin.getMessage("error.player-creation-failed"));
+                return new IllegalStateException("Player creation failed");
+            });
         }
-        SMPPlayerImpl smpPlayerImpl = (SMPPlayerImpl) playerOptional.orElseThrow(() -> {
-            syncKick(player, plugin.getMessage("error.player-creation-failed"));
-            return new IllegalStateException("Player creation failed");
-        });
+        SMPPlayerImpl smpPlayerImpl = (SMPPlayerImpl) smpPlayer;
         smpPlayerImpl.setOnline(true);
         smpPlayerImpl.setName(player.getName());
         smpPlayerImpl.setLastJoin(Instant.now());
