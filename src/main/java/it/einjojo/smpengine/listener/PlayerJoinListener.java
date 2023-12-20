@@ -29,7 +29,7 @@ public class PlayerJoinListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void maintenanceCheck(PlayerLoginEvent event) {
         if (maintenanceConfig.isEnabled() && !event.getPlayer().hasPermission(maintenanceConfig.getBypassPermission())) {
             event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
@@ -37,7 +37,7 @@ public class PlayerJoinListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void loadPlayer(PlayerLoginEvent event) {
         if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
             return;
@@ -50,6 +50,7 @@ public class PlayerJoinListener implements Listener {
                 })
                 .thenAcceptAsync(smpPlayer -> handlePlayerData(player, smpPlayer));
     }
+
 
     private void handleAsyncException(Player player, Throwable throwable) {
         plugin.getLogger().warning("Failed to load player " + player.getName() + " (" + player.getUniqueId() + ")");

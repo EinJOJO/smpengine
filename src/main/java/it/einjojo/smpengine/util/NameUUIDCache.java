@@ -20,7 +20,6 @@ public class NameUUIDCache {
 
     private static UUID fetchUUID(String name) {
         try {
-            System.out.println("Fetching UUID for " + name);
             HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_TO_UUID_URL, name)).openConnection();
             connection.setRequestMethod("GET");
             connection.setReadTimeout(5000);

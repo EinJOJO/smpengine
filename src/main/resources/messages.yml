@@ -73,4 +73,3 @@ command:
 
 death.global: "<prefix> Der Spieler {player} ist gestorben!"
 death.player: "<prefix> Du bist an den Koordinaten x:{x} y:{y} z:{z}"
-message: "<prefix> "
