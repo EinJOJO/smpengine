@@ -9,11 +9,12 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class PlayerJoinListener implements Listener {
@@ -27,7 +28,7 @@ public class PlayerJoinListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void maintenanceCheck(PlayerLoginEvent event) {
         if (maintenanceConfig.isEnabled() && !event.getPlayer().hasPermission(maintenanceConfig.getBypassPermission())) {
             event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
@@ -35,43 +36,55 @@ public class PlayerJoinListener implements Listener {
         }
     }
 
-    public void applyTablist(PlayerJoinEvent event) {
+    @EventHandler
+    public void loadPlayer(PlayerLoginEvent event) {
+        if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
+            return;
+        }
+        Player player = event.getPlayer();
+        CompletableFuture.supplyAsync(() -> plugin.getPlayerManager().getPlayer(player.getUniqueId()))
+                .exceptionally((throwable) -> {
+                    plugin.getLogger().warning("Failed to load player " + player.getName() + " (" + player.getUniqueId() + ")");
+                    event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+                    syncKick(player, plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                    return Optional.empty();
+                })
+                .thenAccept(smpPlayer -> {
+                    if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
+                        return;
+                    }
+                    if (smpPlayer.isEmpty()) {
+                        smpPlayer = plugin.getPlayerManager().createPlayer(player.getUniqueId(), player.getName());
+                    }
+                    var smpPlayerImpl = (SMPPlayerImpl) smpPlayer.orElseThrow(() -> {
+                        syncKick(player, plugin.getMessage("error.player-creation-failed"));
+                        return new IllegalStateException("Player creation failed");
+                    });
+                    smpPlayerImpl.setOnline(true);
+                    smpPlayerImpl.setName(event.getPlayer().getName());
+                    smpPlayerImpl.setLastJoin(Instant.now());
+                    CompletableFuture
+                            .runAsync(() -> plugin.getPlayerManager().updatePlayer(smpPlayerImpl))
+                            .exceptionally((throwable) -> {
+                                plugin.getLogger().warning("Failed to update player " + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ")");
+                                syncKick(player, plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                                return null;
+                            })
+                            .thenRun(this::applyTablist);
+                });
+    }
+
+
+    public void applyTablist() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             plugin.getTablistManager().update(player);
         }
     }
 
-    public void joinMessage(PlayerJoinEvent event) {
-        event.joinMessage(plugin.getPrefix().appendSpace().append(event.joinMessage()));
-    }
 
-    @EventHandler
-    public void loadPlayer(PlayerJoinEvent event) {
-        CompletableFuture.supplyAsync(() -> plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId())).thenAccept(smpPlayer -> {
-            if (smpPlayer.isEmpty()) {
-                var optionalPlayer = plugin.getPlayerManager().createPlayer(event.getPlayer().getUniqueId(), event.getPlayer().getName());
-                if (optionalPlayer.isEmpty()) {
-                    plugin.getLogger().warning("Failed to create player " + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ")");
-                    syncKick(event, plugin.getMessage("error.player-creation-failed"));
-                    return;
-                }
-                smpPlayer = optionalPlayer;
-            }
-            var smpPlayerImpl = (SMPPlayerImpl) smpPlayer.get();
-            smpPlayerImpl.setOnline(true);
-            smpPlayerImpl.setLastJoin(Instant.now());
-            smpPlayerImpl.setName(event.getPlayer().getName());
-            CompletableFuture
-                    .runAsync(() -> plugin.getPlayerManager().updatePlayer(smpPlayerImpl))
-                    .thenRun(() -> applyTablist(event))
-                    .thenRun(() -> joinMessage(event));
-            ;
-        });
-    }
-
-    private void syncKick(PlayerJoinEvent event, Component kickMessage) {
+    private void syncKick(Player player, Component kickMessage) {
         Bukkit.getScheduler().runTask(plugin, () -> {
-            event.getPlayer().kick(kickMessage);
+            player.kick(kickMessage);
         });
     }
 
