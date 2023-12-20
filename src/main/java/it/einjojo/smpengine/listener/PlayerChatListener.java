@@ -4,6 +4,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +23,7 @@ public class PlayerChatListener implements Listener {
                 .appendSpace()
                 .append(ARROW)
                 .appendSpace()
-                .append(event.originalMessage());
+                .append(event.originalMessage().color(TextColor.color(0x9D9D9D)));
         event.setCancelled(true);
         Bukkit.getServer().sendMessage(message);
     }

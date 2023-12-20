@@ -45,7 +45,6 @@ public class TablistManager {
                     .append(Component.text("] ").color(muted));
 
             bukkitTeam.prefix(prefix);
-            bukkitTeam.color(NamedTextColor.GRAY);
             bukkitTeam.addEntry(player.getName());
             bukkitTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
         }, () -> {
@@ -60,6 +59,7 @@ public class TablistManager {
         }
         bukkitTeam.color(NamedTextColor.GREEN);
         bukkitTeam.addEntry(player.getName());
+
     }
 
 
