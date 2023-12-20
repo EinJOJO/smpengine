@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Optional;
+
 public class TablistManager {
 
     private final SMPEnginePlugin plugin;
@@ -24,7 +26,12 @@ public class TablistManager {
     }
 
     public void applyTeam(Player player) {
-        SMPPlayer smpPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId()).orElseThrow();
+        Optional<SMPPlayer> osmpPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId());
+        if (osmpPlayer.isEmpty()) {
+            noTeam(player.getScoreboard(), player);
+            return;
+        }
+        SMPPlayer smpPlayer = osmpPlayer.get();
         Scoreboard scoreboard = player.getScoreboard();
         smpPlayer.getTeam().ifPresentOrElse(team -> {
             String key = team.getId() + "_" + team.getName() + "_" + player.getName();
@@ -42,14 +49,17 @@ public class TablistManager {
             bukkitTeam.addEntry(player.getName());
             bukkitTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
         }, () -> {
-            Team bukkitTeam = scoreboard.getTeam(NO_TEAM);
-            if (bukkitTeam == null) {
-                bukkitTeam = scoreboard.registerNewTeam(NO_TEAM);
-            }
-            bukkitTeam.color(NamedTextColor.GREEN);
-            bukkitTeam.addEntry(player.getName());
+            noTeam(scoreboard, player);
         });
+    }
 
+    private void noTeam(Scoreboard scoreboard, Player player) {
+        Team bukkitTeam = scoreboard.getTeam(NO_TEAM);
+        if (bukkitTeam == null) {
+            bukkitTeam = scoreboard.registerNewTeam(NO_TEAM);
+        }
+        bukkitTeam.color(NamedTextColor.GREEN);
+        bukkitTeam.addEntry(player.getName());
     }
 
 

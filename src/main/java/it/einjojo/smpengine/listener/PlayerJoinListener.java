@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import java.time.Instant;
@@ -69,16 +70,21 @@ public class PlayerJoinListener implements Listener {
                                 plugin.getLogger().warning("Failed to update player " + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ")");
                                 syncKick(player, plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
                                 return null;
-                            })
-                            .thenRun(this::applyTablist);
+                            });
                 });
     }
 
 
-    public void applyTablist() {
+    @EventHandler
+    public void joinHandler(PlayerJoinEvent event) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             plugin.getTablistManager().update(player);
         }
+        Component joinMessage = event.joinMessage();
+        if (joinMessage == null) {
+            return;
+        }
+        event.joinMessage(plugin.getPrefix().append(joinMessage));
     }
 
 
