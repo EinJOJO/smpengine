@@ -5,7 +5,6 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.database.PlayerDatabase;
 import it.einjojo.smpengine.util.NameUUIDCache;
-import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -120,15 +119,11 @@ public class SMPPlayerManager {
     }
 
 
-    @Getter
-    private boolean closing = false;
-
     /**
      * Updates all players in the database and invalidates the cache.
      * This method should be called when the server is shutting down.
      */
     public void closePlayers() {
-        closing = true;
         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
             getPlayer(onlinePlayer.getUniqueId()).ifPresentOrElse(smpPlayer -> {
                         SMPPlayerImpl impl = (SMPPlayerImpl) smpPlayer;
@@ -141,7 +136,14 @@ public class SMPPlayerManager {
                         plugin.getLogger().warning("This player will not be saved!");
                     });
         }
-        closing = false;
+    }
+
+    /**
+     * When the server starts, all players are offline.
+     * It gets set in case the server got shut down unexpectedly and the players are still online in database.
+     */
+    public void setEveryoneOffline() {
+        playerDatabase.updateEveryoneToOffline();
     }
 
 

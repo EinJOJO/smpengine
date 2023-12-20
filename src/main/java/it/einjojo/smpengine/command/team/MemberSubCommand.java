@@ -12,7 +12,6 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,15 +28,17 @@ public class MemberSubCommand implements Command {
         CommandUtil.requirePlayer(sender, player -> plugin.getPlayerManager().getPlayerAsync(player.getUniqueId())
                 .thenAcceptAsync(oSmpPlayer -> oSmpPlayer.orElseThrow().getTeam()
                         .ifPresentOrElse(
-                                (team) -> player.sendMessage(buildMessage(team.getMembers(), team)),
+                                (team) -> player.sendMessage(buildMessage(team.getMembers(), team, player.getName())),
                                 () -> player.sendMessage(plugin.getMessage("command.team.notInTeam"))
                         )
-                )
+                ).exceptionally(throwable -> {
+                    throwable.printStackTrace();
+                    return null;
+                })
         );
     }
 
-    public Component buildMessage(List<SMPPlayer> members, Team team) {
-        List<SMPPlayer> modifiableMembers = new ArrayList<>(members);
+    public Component buildMessage(List<SMPPlayer> members, Team team, String receiver) {
         TextColor primary = plugin.getPrimaryColor();
         TextColor dark_gray = NamedTextColor.DARK_GRAY;
         TextColor muted = NamedTextColor.GRAY;
@@ -54,22 +55,25 @@ public class MemberSubCommand implements Command {
                         .appendNewline()
                         .append(Component.text("Mitglieder: ").color(muted)));
 
-
-        Iterator<SMPPlayer> iterator = modifiableMembers.iterator();
+        Iterator<SMPPlayer> iterator = members.iterator();
         while (iterator.hasNext()) {
             SMPPlayer member = iterator.next();
-            if (member.getName().equals(team.getOwner().getName())) {
-                iterator.remove();
+            String name = member.getName();
+            if (name.equals(receiver)) {
+                name = "Du";
             }
-        }
-        iterator = modifiableMembers.iterator();
-        while (iterator.hasNext()) {
-            SMPPlayer member = iterator.next();
-            Component playerName = Component.text(member.getName()).color(primary);
-            Component comma = Component.text(", ").color(muted);
-            builder.append(playerName);
+
+            Component onlineStatus = member.isOnline() ?
+                    Component.text("✓").color(NamedTextColor.GREEN) :
+                    Component.text("✗").color(NamedTextColor.RED);
+
+            Component wrapped = Component.text("[").color(dark_gray)
+                    .append(onlineStatus)
+                    .append(Component.text("] ").color(dark_gray));
+
+            builder.append(Component.text(name).color(primary)).appendSpace().append(wrapped);
             if (iterator.hasNext()) {
-                builder.append(comma);
+                builder.append(Component.text(", ").color(muted));
             }
         }
         return builder
