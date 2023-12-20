@@ -11,27 +11,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 
-public class JoinListener implements Listener {
+public class PlayerJoinListener implements Listener {
 
     private final SMPEnginePlugin plugin;
     private final MaintenanceConfig maintenanceConfig;
 
-    public JoinListener(SMPEnginePlugin plugin) {
+    public PlayerJoinListener(SMPEnginePlugin plugin) {
         this.plugin = plugin;
         this.maintenanceConfig = plugin.getMaintenanceConfig();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler()
-    public void maintenanceCheck(PlayerJoinEvent event) {
+    @EventHandler
+    public void maintenanceCheck(PlayerLoginEvent event) {
         if (maintenanceConfig.isEnabled() && !event.getPlayer().hasPermission(maintenanceConfig.getBypassPermission())) {
-            syncKick(event, MessageUtil.format(
-                    maintenanceConfig.getKickMessage(), plugin.getPrimaryColor(), plugin.getPrefix())
-            );
+            event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+            event.kickMessage(MessageUtil.format(maintenanceConfig.getKickMessage(), plugin.getPrimaryColor(), plugin.getPrefix()));
         }
     }
 
