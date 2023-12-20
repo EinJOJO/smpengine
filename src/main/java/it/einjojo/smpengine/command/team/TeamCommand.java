@@ -33,6 +33,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
         registerSubCommand(new KickSubCommand(plugin));
         registerSubCommand(new LeaveSubCommand(plugin));
         registerSubCommand(new TeamInviteSubCommand(plugin));
+        registerSubCommand(new MemberSubCommand(plugin));
 
         plugin.getCommand("team").setExecutor(this);
         plugin.getCommand("team").setTabCompleter(this);
