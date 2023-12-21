@@ -9,4 +9,6 @@ public class StatsManager {
     public StatsManager(SMPEnginePlugin plugin) {
         this.plugin = plugin;
     }
+
+
 }

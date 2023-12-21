@@ -16,6 +16,7 @@ import it.einjojo.smpengine.database.HikariCP;
 import it.einjojo.smpengine.listener.*;
 import it.einjojo.smpengine.scoreboard.TablistManager;
 import it.einjojo.smpengine.util.MessageUtil;
+import it.einjojo.smpengine.util.Placeholder;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -152,6 +153,10 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     public Component getMessage(MessageUtil.KEY key) {
         return getMessage(key.getKey());
+    }
+
+    public Component getMessage(String key, Placeholder... placeholders){
+        return Placeholder.applyPlaceholders(getMessage(key), placeholders);
     }
 
     public Component getMessage(String key) {
