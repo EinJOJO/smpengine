@@ -87,7 +87,14 @@ public class PlayerJoinListener implements Listener {
             return;
         }
         event.joinMessage(plugin.getPrefix().append(joinMessage));
-        plugin.getSessionManager().startSession(plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId()).orElseThrow());
+
+        plugin.getPlayerManager().getPlayerAsync(event.getPlayer().getUniqueId())
+                .thenAcceptAsync((smpPlayer) -> plugin.getSessionManager().startSession(smpPlayer.orElseThrow(() -> {
+                    plugin.getLogger().warning("Failed to start session for " + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ")");
+                    syncKick(event.getPlayer(), plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                    return new IllegalStateException("Failed to start session");
+                })));
+
     }
 
     private void syncKick(Player player, Component kickMessage) {
