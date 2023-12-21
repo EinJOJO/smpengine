@@ -5,7 +5,6 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.database.PlayerDatabase;
 import it.einjojo.smpengine.util.NameUUIDCache;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
@@ -138,7 +137,6 @@ public class SMPPlayerManager {
                         SMPPlayerImpl impl = (SMPPlayerImpl) smpPlayer;
                         impl.setOnline(false);
                         updatePlayer(impl);
-                        onlinePlayer.kick(Component.text("closed"));
                     },
                     () -> {
                         plugin.getLogger().warning("Player " + onlinePlayer.getName() + " (" + onlinePlayer.getUniqueId() + ") is empty!");
