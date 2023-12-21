@@ -111,6 +111,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         playerManager = new SMPPlayerManager(this);
         playerManager.setEveryoneOffline();
         sessionManager = new SessionManager(this);
+        sessionManager.cleanUpBuggySessions();
         teamManager = new TeamManager(this);
         statsManager = new StatsManager(this);
         tablistManager = new TablistManager(this);

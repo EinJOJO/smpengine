@@ -25,8 +25,7 @@ public class SessionManager {
     }
 
     private Session getActiveSession(UUID uuid) {
-        return null;
-        // TODO: 12/21/2023
+        return sessionDatabase.getActiveSession(uuid.toString());
     }
 
     private Session getSessionByID(int id) {
@@ -34,10 +33,19 @@ public class SessionManager {
         // TODO: 12/21/2023  
     }
 
+    /**
+     * Gets the session of a player
+     *
+     * @param uuid The UUID of the player
+     * @return The session of the player if it exists or an empty optional if it doesn't
+     */
     public Optional<Session> getSession(UUID uuid) {
         Session session = sessions.get(uuid);
         if (session == null) {
             session = getActiveSession(uuid);
+            if (session != null) {
+                sessions.put(uuid, session);
+            }
         }
         return Optional.ofNullable(session);
     }
@@ -47,6 +55,11 @@ public class SessionManager {
         if (bukkitPlayer == null) {
             throw new IllegalStateException("Player is not online");
         }
+
+        if (getSession(player.getUuid()).isPresent()) {
+            endSession(player);
+        }
+
         String playerIP = bukkitPlayer.getAddress().getAddress().getHostAddress();
         SessionImpl session = new SessionImpl(-1, player.getUuid(), playerIP, Instant.now(), null);
         if (!sessionDatabase.createSession(session)) {
@@ -57,11 +70,12 @@ public class SessionManager {
     public void endSession(SMPPlayer player) {
         Optional<Session> session = getSession(player.getUuid());
         if (session.isEmpty()) {
-            return;
+            throw new IllegalStateException("Player has no active session");
         }
         SessionImpl sessionImpl = (SessionImpl) session.get();
         sessionImpl.setEndTime(Instant.now());
         sessionDatabase.updateSession(sessionImpl);
+        sessions.remove(player.getUuid());
     }
 
     public void closeSessions() {
@@ -76,7 +90,8 @@ public class SessionManager {
     }
 
     public void cleanUpBuggySessions() {
-        // TODO: 12/21/2023  On Start Up, check if there are any sessions that have not been closed properly. If so, close them by setting a logout time.
+        int closed = sessionDatabase.closeUnclosedSessions();
+        plugin.getLogger().info("Closed " + closed + " buggy sessions");
     }
 
 

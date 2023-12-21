@@ -5,6 +5,7 @@ import it.einjojo.smpengine.command.Command;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.util.CommandUtil;
+import it.einjojo.smpengine.util.MessageUtil;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -39,15 +40,19 @@ public class CreateSubCommand implements Command {
                     player.sendMessage(plugin.getMessage("command.team.create.alreadyInTeam"));
                     return;
                 }
+
                 Team team = plugin.getTeamManager().createTeam(args[0], smpPlayer);
                 if (team == null) {
                     player.sendMessage(plugin.getMessage("general-error"));
                     return;
                 }
                 player.sendMessage(plugin.getMessage("command.team.create.success"));
+            }).exceptionally(throwable -> {
+                player.sendMessage(plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
+                throwable.printStackTrace();
+                return null;
             });
         }));
-
     }
 
     @Override

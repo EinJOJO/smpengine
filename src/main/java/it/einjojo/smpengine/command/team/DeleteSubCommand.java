@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class DeleteSubCommand implements Command {
@@ -28,13 +27,14 @@ public class DeleteSubCommand implements Command {
             if (args.length == 0) {
                 deleteOwnTeam(smpSender);
             } else if (args.length == 1) {
-                Optional<Team> oTeam = plugin.getTeamManager().getTeamByName(args[0]);
-                if (oTeam.isEmpty()) {
-                    player.sendMessage(plugin.getMessage("command.team.notExist"));
-                    return;
-                }
-                Team team = oTeam.get();
-                deleteOtherTeam(smpSender, team);
+                plugin.getTeamManager().getTeamByNameAsync(args[0]).thenAccept(oTeam -> {
+                    if (oTeam.isEmpty()) {
+                        player.sendMessage(plugin.getMessage("command.team.notExist"));
+                        return;
+                    }
+                    Team team = oTeam.get();
+                    deleteOtherTeam(smpSender, team);
+                });
             } else {
                 player.sendMessage(plugin.getMessage("commend.team.delete.usage"));
             }
@@ -47,17 +47,18 @@ public class DeleteSubCommand implements Command {
         if (player == null) {
             return;
         }
-        Optional<Team> oSenderTeam = smpSender.getTeam();
-        if (oSenderTeam.isEmpty()) {
-            player.sendMessage(plugin.getMessage("command.team.notInTeam"));
-            return;
-        }
-        Team team = oSenderTeam.get();
-        if (!team.isOwner(smpSender)) {
-            player.sendMessage(plugin.getMessage("command.team.notOwner"));
-            return;
-        }
-        deleteTeam(player, team);
+        smpSender.getTeamAsync().thenAccept((oSenderTeam) -> {
+            if (oSenderTeam.isEmpty()) {
+                player.sendMessage(plugin.getMessage("command.team.notInTeam"));
+                return;
+            }
+            Team team = oSenderTeam.get();
+            if (!team.isOwner(smpSender)) {
+                player.sendMessage(plugin.getMessage("command.team.notOwner"));
+                return;
+            }
+            deleteTeam(player, team);
+        });
     }
 
     private void deleteOtherTeam(SMPPlayer player, Team team) {

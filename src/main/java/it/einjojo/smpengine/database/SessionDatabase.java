@@ -1,10 +1,7 @@
 package it.einjojo.smpengine.database;
 
-import it.einjojo.smpengine.core.player.SMPPlayer;
-import it.einjojo.smpengine.core.player.SMPPlayerImpl;
 import it.einjojo.smpengine.core.session.Session;
 import it.einjojo.smpengine.core.session.SessionImpl;
-import it.einjojo.smpengine.core.stats.StatsImpl;
 
 import java.sql.*;
 import java.time.Instant;
@@ -19,9 +16,9 @@ public class SessionDatabase {
     }
 
 
-    public Session getSession(String uuid) {
-        try(Connection connection = hikariCP.getConnection()){
-            try(PreparedStatement ps = connection.prepareStatement("SELECT * FROM sessions WHERE player_uuid = ?")){
+    public Session getActiveSession(String uuid) {
+        try (Connection connection = hikariCP.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM sessions WHERE session_owner_uuid = ? AND logout_at IS NULL")) {
                 ps.setString(1, uuid);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (!rs.next()) {
@@ -32,6 +29,7 @@ public class SessionDatabase {
 
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -59,11 +57,9 @@ public class SessionDatabase {
 
     public void updateSession(SessionImpl session) {
         try (Connection connection = hikariCP.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement("UPDATE sessions SET logout_at = ? WHERE session_owner_uuid = ?")) {
-                ps.setString(1, session.getUuid().toString());
-                ps.setString(2, session.getIp());
-                ps.setTimestamp(3, Timestamp.from(session.getStartTime()));
-                ps.setTimestamp(4, Timestamp.from(session.getEndTime()));
+            try (PreparedStatement ps = connection.prepareStatement("UPDATE sessions SET logout_at = ? WHERE id = ?")) {
+                ps.setTimestamp(1, Timestamp.from(session.getEndTime()));
+                ps.setInt(2, session.getSession_id());
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
@@ -71,13 +67,29 @@ public class SessionDatabase {
         }
     }
 
+    public int closeUnclosedSessions() {
+        try (Connection connection = hikariCP.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("UPDATE sessions SET logout_at = ? WHERE logout_at IS NULL")) {
+                ps.setTimestamp(1, Timestamp.from(Instant.now()));
+                return ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     public Session rsToSession(ResultSet rs) {
         try {
-            Integer sessionID = rs.getObject("session_id", Integer.class);
-            UUID uuid = UUID.fromString(rs.getString("player_uuid"));
-            String ip  = rs.getString("ip_address");
+            Integer sessionID = rs.getObject("id", Integer.class);
+            UUID uuid = UUID.fromString(rs.getString("session_owner_uuid"));
+            String ip = rs.getString("ip_address");
             Instant startTime = rs.getTimestamp("login_at").toInstant();
-            Instant endTime = rs.getTimestamp("logout_at").toInstant();
+            Timestamp logoutAt = rs.getTimestamp("logout_at");
+            Instant endTime = null;
+            if (logoutAt != null) {
+                endTime = logoutAt.toInstant();
+            }
             return new SessionImpl(sessionID, uuid, ip, startTime, endTime);
         } catch (SQLException e) {
             e.printStackTrace();
