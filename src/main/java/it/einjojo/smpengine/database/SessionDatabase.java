@@ -44,11 +44,10 @@ public class SessionDatabase {
      */
     public boolean createSession(SessionImpl session) {
         try (Connection connection = hikariCP.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO sessions (session_owner_uuid, ip_address, login_at ,logout_at) VALUES (?, ?, ?, ?)")) {
+            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO sessions (session_owner_uuid, ip_address, login_at) VALUES (?, ?, ?)")) {
                 ps.setString(1, session.getUuid().toString());
                 ps.setString(2, session.getIp());
                 ps.setTimestamp(3, Timestamp.from(session.getStartTime()));
-                ps.setTimestamp(4, Timestamp.from(session.getStartTime()));
                 ps.executeUpdate();
             }
             return true;
