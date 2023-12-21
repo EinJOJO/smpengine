@@ -82,8 +82,8 @@ public class SMPEnginePlugin extends JavaPlugin {
             return;
         }
         shuttingDown = true;
-        playerManager.closePlayers();
         sessionManager.closeSessions();
+        playerManager.closePlayers();
         hikariCP.close();
         clearCache();
         shuttingDown = false;
