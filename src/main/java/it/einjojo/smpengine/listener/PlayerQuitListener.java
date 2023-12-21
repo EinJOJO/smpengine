@@ -22,7 +22,6 @@ public class PlayerQuitListener implements Listener {
             ((SMPPlayerImpl) smpPlayer).setOnline(false);
             plugin.getSessionManager().endSession(smpPlayer);
             plugin.getPlayerManager().updatePlayer(smpPlayer);
-            plugin.getPlayerManager().updatePlayer(smpPlayer);
         }, () -> plugin.getLogger().warning("Player " + event.getPlayer().getName() + " is not in database. Failed to update online mode on quit.")));
 
     }
