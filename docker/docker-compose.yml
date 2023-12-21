@@ -1,9 +1,9 @@
 version: "3.9"
+name: "survival_engine"
 services:
   mysql:
     image: mariadb:10.8.3
     command: --default-authentication-plugin=mysql_native_password
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: minecraft
@@ -11,6 +11,5 @@ services:
       - "3306:3306"
   adminer:
     image: adminer
-    restart: always
     ports:
-      - "8080:8080"
+      - "8081:8080"
