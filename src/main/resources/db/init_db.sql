@@ -47,9 +47,10 @@ ALTER TABLE `team`
 ALTER TABLE `stats`
     ADD FOREIGN KEY (`player_uuid`) REFERENCES `spieler` (`uuid`);
 
-ALTER TABLE `sessions`
-    ADD FOREIGN KEY (`id`) REFERENCES `stats` (`session_id`);
+ALTER TABLE `stats`
+    ADD FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`);
 
 ALTER TABLE `sessions`
     ADD FOREIGN KEY (`session_owner_uuid`) REFERENCES `spieler` (`uuid`);
-ALTER TABLE sessions ADD INDEX (session_owner_uuid);
+ALTER TABLE sessions
+    ADD INDEX (session_owner_uuid);

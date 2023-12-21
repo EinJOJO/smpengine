@@ -85,6 +85,9 @@ public class SMPEnginePlugin extends JavaPlugin {
         sessionManager.closeSessions();
         playerManager.closePlayers();
         hikariCP.close();
+        for (Player onlinePlayer : getServer().getOnlinePlayers()) {
+            onlinePlayer.kick(Component.text("Shutdown"));
+        }
         clearCache();
         shuttingDown = false;
     }
@@ -155,7 +158,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         return getMessage(key.getKey());
     }
 
-    public Component getMessage(String key, Placeholder... placeholders){
+    public Component getMessage(String key, Placeholder... placeholders) {
         return Placeholder.applyPlaceholders(getMessage(key), placeholders);
     }
 
