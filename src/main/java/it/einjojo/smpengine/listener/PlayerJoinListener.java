@@ -87,7 +87,7 @@ public class PlayerJoinListener implements Listener {
             return;
         }
         event.joinMessage(plugin.getPrefix().append(joinMessage));
-        //plugin.getSessionManager().startSession(plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId()).orElseThrow());
+        plugin.getSessionManager().startSession(plugin.getPlayerManager().getPlayer(event.getPlayer().getUniqueId()).orElseThrow());
     }
 
     private void syncKick(Player player, Component kickMessage) {
