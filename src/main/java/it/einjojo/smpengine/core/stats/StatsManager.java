@@ -10,6 +10,6 @@ public class StatsManager {
         this.plugin = plugin;
     }
 
-    public
+
 
 }
