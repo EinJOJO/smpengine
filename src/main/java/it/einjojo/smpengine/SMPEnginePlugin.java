@@ -1,6 +1,7 @@
 package it.einjojo.smpengine;
 
 import it.einjojo.smpengine.command.DifficultyCommand;
+import it.einjojo.smpengine.command.StatsCommand;
 import it.einjojo.smpengine.command.admin.AdminCommand;
 import it.einjojo.smpengine.command.team.TeamCommand;
 import it.einjojo.smpengine.config.DatabaseConfig;
@@ -128,6 +129,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         new AdminCommand(this);
         new TeamCommand(this);
         new DifficultyCommand(this);
+        new StatsCommand(this);
     }
 
     private void loadListener() {

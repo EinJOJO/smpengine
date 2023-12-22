@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class StatsDatabase {
@@ -36,8 +38,22 @@ public class StatsDatabase {
         return null;
     }
 
-    public StatsImpl getGlobalStats() {
-        return null; // TODO: 12/22/2023
+    public StatsImpl getGlobalStats(UUID uuid) {
+        List<StatsImpl> statsList = new ArrayList<>();
+        try(Connection connection = hikariCP.getConnection()){
+            try(PreparedStatement ps = connection.prepareStatement("SELECT session_id, player_uuid, SUM(blocksDestroyed) AS blocksDestroyed, SUM(blocksPlaced) AS blocksPlaced, SUM(mobKills) AS mobKills, SUM(playerKills) AS playerKills, SUM(deaths) AS deaths, SUM(villagerTrades) AS villagerTrades FROM stats WHERE player_uuid = ?")){
+                ps.setString(1, uuid.toString());
+                try(ResultSet rs = ps.executeQuery()){
+                    if(!rs.next()){
+                        return null;
+                    }
+                    return rsToStats(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean createStats(int sessionID, UUID uuid) {
