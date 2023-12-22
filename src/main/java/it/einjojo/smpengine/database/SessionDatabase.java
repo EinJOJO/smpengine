@@ -16,6 +16,9 @@ public class SessionDatabase {
     }
 
 
+    //PLAYTIME RANKING SQL
+    //SELECT SUM(TIMESTAMPDIFF(SECOND, login_at, logout_at)) AS seconds, session_owner_uuid as player FROM sessions GROUP BY player ORDER BY minuten DESC;
+
     public Session getActiveSession(String uuid) {
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM sessions WHERE session_owner_uuid = ? AND logout_at IS NULL")) {
@@ -59,7 +62,7 @@ public class SessionDatabase {
         try (Connection connection = hikariCP.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement("UPDATE sessions SET logout_at = ? WHERE id = ?")) {
                 ps.setTimestamp(1, Timestamp.from(session.getEndTime()));
-                ps.setInt(2, session.getSession_id());
+                ps.setInt(2, session.getSessionId());
                 ps.executeUpdate();
             }
         } catch (SQLException e) {

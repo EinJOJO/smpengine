@@ -2,14 +2,17 @@ package it.einjojo.smpengine.core.stats;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
+import it.einjojo.smpengine.core.session.Session;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
 @Setter
-public class StatsImpl implements Stats{
+public class StatsImpl implements Stats {
 
     private final Integer sessionID;
     private final UUID uuid;
@@ -19,6 +22,8 @@ public class StatsImpl implements Stats{
     private int playerKills;
     private int deaths;
     private int villagerTrades;
+
+    private Instant globalPlayTime;
 
     private SMPEnginePlugin plugin;
 
@@ -39,7 +44,19 @@ public class StatsImpl implements Stats{
     }
 
     @Override
-    public int getPlayTime() {
-        return 0;
+    public Optional<Session> getSession() {
+        if (sessionID == null) {
+            return Optional.empty();
+        }
+        return plugin.getSessionManager().getSessionByID(sessionID);
+    }
+
+    @Override
+    public Instant getPlayTime() {
+        var oSession = getSession();
+        if (oSession.isPresent()) {
+            return oSession.get().duration();
+        }
+        return globalPlayTime;
     }
 }

@@ -4,14 +4,25 @@ import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.core.stats.Stats;
 
 import java.time.Instant;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface Session {
+
+    Integer getSessionId();
 
     /**
      * @return the stats of the session.
      */
     Stats getSessionStats();
+
+    CompletableFuture<Stats> getSessionStatsAsync();
+
+    /**
+     * @return the uuid of the player.
+     */
+    UUID getUuid();
+
 
     /**
      * @return the player of the session.
@@ -43,4 +54,7 @@ public interface Session {
      * @return true if session is active, false if session is ended.
      */
     boolean isActive();
+
+    Instant duration();
+
 }

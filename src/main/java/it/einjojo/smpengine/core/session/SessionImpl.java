@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 @Setter
 public class SessionImpl implements Session {
 
-    private final int session_id;
+    private final Integer sessionId;
     private final UUID uuid;
     private String ip;
     private Instant startTime;
@@ -23,7 +23,7 @@ public class SessionImpl implements Session {
     private transient SMPEnginePlugin plugin;
 
     public SessionImpl(int session_id, UUID uuid, String ip, Instant startTime, Instant endTime) {
-        this.session_id = session_id;
+        this.sessionId = session_id;
         this.uuid = uuid;
         this.ip = ip;
         this.startTime = startTime;
@@ -37,16 +37,23 @@ public class SessionImpl implements Session {
 
     @Override
     public Stats getSessionStats() {
-        return null;
+        Stats stats = plugin.getStatsManager().getBySession(getSessionId());
+        if (stats == null) {
+            plugin.getStatsManager().createStats(this);
+            return plugin.getStatsManager().getBySession(getSessionId());
+        }
+        return stats;
+    }
+
+    @Override
+    public CompletableFuture<Stats> getSessionStatsAsync() {
+        return CompletableFuture.supplyAsync(this::getSessionStats);
     }
 
     @Override
     public SMPPlayer getPlayer() {
-        var player = plugin.getPlayerManager().getPlayer(uuid);
-        if (player.isEmpty()) {
-            throw new IllegalStateException("Player { " + uuid + " } is not loaded");
-        }
-        return player.get();
+        return plugin.getPlayerManager().getPlayer(uuid).orElseThrow(() -> new IllegalStateException("Player { " + uuid + " } is not loaded"));
+
     }
 
     @Override
@@ -55,9 +62,17 @@ public class SessionImpl implements Session {
     }
 
     @Override
+    public Instant duration() {
+        if (endTime == null) {
+            return Instant.now().minusMillis(startTime.toEpochMilli());
+        }
+        return endTime.minusMillis(startTime.toEpochMilli());
+    }
+
+    @Override
     public String toString() {
         return "SessionImpl{" +
-                "session_id=" + session_id +
+                "session_id=" + sessionId +
                 ", uuid=" + uuid +
                 ", ip='" + ip + '\'' +
                 ", startTime=" + startTime +

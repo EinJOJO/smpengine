@@ -28,7 +28,7 @@ public class SessionManager {
         return sessionDatabase.getActiveSession(uuid.toString());
     }
 
-    private Session getSessionByID(int id) {
+    public Optional<Session> getSessionByID(int id) {
         return null;
         // TODO: 12/21/2023  
     }

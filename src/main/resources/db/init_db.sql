@@ -31,6 +31,7 @@ CREATE TABLE `stats`
     `session_id`      int PRIMARY KEY NOT NULL,
     `player_uuid`     varchar(36)     NOT NULL,
     `blocksDestroyed` int DEFAULT 0,
+    `blocksPlaced`    int DEFAULT 0,
     `mobKills`        int DEFAULT 0,
     `playerKills`     int DEFAULT 0,
     `deaths`          int DEFAULT 0,
