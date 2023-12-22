@@ -134,7 +134,7 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     private void loadListener() {
         new PlayerJoinListener(this);
-        new DeathListener(this);
+        new DeathMessageListener(this);
         new PlayerQuitListener(this);
         new TeamListener(this);
         new PlayerChatListener(this);
@@ -189,6 +189,10 @@ public class SMPEnginePlugin extends JavaPlugin {
         maintenanceConfig.load();
         messagesConfig.load();
         cachedMessages.clear();
+    }
+
+    public Component getGeneralErrorMessage() {
+        return getMessage(MessageUtil.KEY.GENERAL_ERROR);
     }
 
 

@@ -16,6 +16,7 @@ public class SessionManager {
 
     private final SMPEnginePlugin plugin;
     private final LoadingCache<UUID, Session> sessions;
+    private final LoadingCache<Integer, Session> sessionsByID;
     private final SessionDatabase sessionDatabase;
 
     public SessionManager(SMPEnginePlugin plugin) {
@@ -29,12 +30,19 @@ public class SessionManager {
                     }
                     return session;
                 });
+        sessionsByID = Caffeine.newBuilder()
+                .build(id -> {
+                    var session = sessionDatabase.getSessionById(id);
+                    if (session != null) {
+                        applyPlugin(session);
+                    }
+                    return session;
+                });
     }
 
 
     public Optional<Session> getSessionByID(int id) {
-        return null;
-        // TODO: 12/21/2023  
+        return Optional.ofNullable(sessionsByID.get(id));
     }
 
     /**

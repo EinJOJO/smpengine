@@ -37,6 +37,25 @@ public class SessionDatabase {
         }
     }
 
+    public Session getSessionById(int sessionID) {
+        try (Connection connection = hikariCP.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM sessions WHERE id = ?")) {
+                ps.setInt(1, sessionID);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        return null;
+                    }
+                    return rsToSession(rs);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     /**
      * Creates a session in the database
      *

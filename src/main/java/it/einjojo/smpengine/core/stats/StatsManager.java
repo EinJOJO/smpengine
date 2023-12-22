@@ -5,10 +5,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.session.Session;
-import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.database.StatsDatabase;
 
-import java.sql.Connection;
 import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -39,14 +37,19 @@ public class StatsManager {
     }
 
 
-    public Stats getByPlayer(UUID player){
-        Stats stats = statsCacheByUUID.synchronous().get(player);
-        return stats;
+    public Stats getByPlayer(UUID player) {
+        return statsCacheByUUID.synchronous().get(player);
     }
 
-    public Stats getByTeam(int id){
-        Stats stats = statsCacheByTeam.synchronous().get(id);
-        return stats;
+    public CompletableFuture<Stats> getByPlayerAsync(UUID player) {
+        return statsCacheByUUID.get(player);
+    }
+
+    public Stats getByTeam(int id) {
+        return statsCacheByTeam.synchronous().get(id);
+    }
+    public CompletableFuture<Stats> getByTeamAsync(int id) {
+        return statsCacheByTeam.get(id);
     }
 
     /**
