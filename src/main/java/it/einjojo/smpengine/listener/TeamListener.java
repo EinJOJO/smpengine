@@ -1,6 +1,7 @@
 package it.einjojo.smpengine.listener;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
+import it.einjojo.smpengine.command.team.ChatSubCommand;
 import it.einjojo.smpengine.event.TeamPlayerJoinEvent;
 import it.einjojo.smpengine.event.TeamPlayerLeaveEvent;
 import it.einjojo.smpengine.util.Placeholder;
@@ -32,6 +33,7 @@ public class TeamListener implements Listener {
 
     @EventHandler
     public void leaveTeam(TeamPlayerLeaveEvent event) {
+        ChatSubCommand.TEAM_CHAT_STATUS.remove(event.getPlayer().getUuid());
         for (Player player : event.getTeam().getOnlineMembers()) {
             Component message = Placeholder.applyPlaceholders(plugin.getMessage("team.leave"), Placeholder.player(event.getPlayer().getName()));
             player.sendMessage(message);

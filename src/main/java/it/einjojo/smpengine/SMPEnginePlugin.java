@@ -134,7 +134,7 @@ public class SMPEnginePlugin extends JavaPlugin {
 
     private void loadListener() {
         new PlayerJoinListener(this);
-        new DeathListener(this);
+        new DeathMessageListener(this);
         new PlayerQuitListener(this);
         new TeamListener(this);
         new PlayerChatListener(this);
