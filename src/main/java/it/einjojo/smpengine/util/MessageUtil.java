@@ -1,5 +1,6 @@
 package it.einjojo.smpengine.util;
 
+import it.einjojo.smpengine.core.stats.Stats;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
