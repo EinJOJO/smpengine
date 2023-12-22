@@ -5,7 +5,6 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.database.PlayerDatabase;
 import it.einjojo.smpengine.util.NameUUIDCache;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
@@ -16,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
 public class SMPPlayerManager {
     private final SMPEnginePlugin plugin;
     private final PlayerDatabase playerDatabase;
-    private BossBar bossBar;
     private final LoadingCache<UUID, SMPPlayer> playerCache;
 
     public SMPPlayerManager(SMPEnginePlugin plugin) {
@@ -153,14 +151,6 @@ public class SMPPlayerManager {
      */
     public void setEveryoneOffline() {
         playerDatabase.updateEveryoneToOffline();
-    }
-
-    public BossBar getBossBar() {
-        return bossBar;
-    }
-
-    public void setBossBar(BossBar bossBar) {
-        this.bossBar = bossBar;
     }
 
 }
