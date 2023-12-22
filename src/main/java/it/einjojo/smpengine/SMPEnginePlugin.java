@@ -139,6 +139,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         new TeamListener(this);
         new PlayerChatListener(this);
         new StatsListener(this);
+        new AnvilListener(this);
     }
 
 
