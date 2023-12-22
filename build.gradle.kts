@@ -7,7 +7,7 @@ plugins {
 
 
 group = "it.einjojo.smpengine"
-version = "1.2"
+version = "1.3"
 
 repositories {
     mavenCentral()
@@ -37,7 +37,7 @@ tasks {
 
     //jpenillia
     runServer {
-        minecraftVersion("1.20.2")
+        minecraftVersion("1.20.4")
     }
 
     shadowJar {
