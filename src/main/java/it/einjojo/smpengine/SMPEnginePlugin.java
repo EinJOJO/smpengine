@@ -190,6 +190,10 @@ public class SMPEnginePlugin extends JavaPlugin {
         cachedMessages.clear();
     }
 
+    public Component getGeneralErrorMessage() {
+        return getMessage(MessageUtil.KEY.GENERAL_ERROR);
+    }
+
 
     public TextColor getPrimaryColor() {
         return moduleConfig.getColor();
