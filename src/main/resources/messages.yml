@@ -69,7 +69,7 @@ command:
     usage: "<prefix> <red>Bitte benutze /difficulty <Schwierigkeit> <Zeit in Minuten>"
     maxTime: "<prefix> <red>Die maximale Zeit beträgt 1 Stunde!"
     cooldown: "<prefix> <red>Oh nein! Ein Cooldown..."
-    remainingTimeCooldown: "<prefix> <red>Verbleibende Zeit: {time}!"
+    remainingTimeCooldown: "<prefix> <red>Verbleibende Zeit: time} Minuten!"
     reset: "<prefix> <green>Die Schwierigkeit wurde zurückgesetzt!"
     change: "<prefix> <green>Die Schwierigkeit wurde von {player} auf {difficulty} geändert!"
     length: "<prefix> <green>Länge: {time} Minuten!"
