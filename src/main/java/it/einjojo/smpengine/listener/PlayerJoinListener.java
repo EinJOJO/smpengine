@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class PlayerJoinListener implements Listener {
@@ -88,9 +89,12 @@ public class PlayerJoinListener implements Listener {
         }
         event.joinMessage(plugin.getPrefix().append(joinMessage));
 
-        plugin.getPlayerManager().getPlayerAsync(event.getPlayer().getUniqueId())
+        UUID uuid = event.getPlayer().getUniqueId();
+        plugin.getPlayerManager().getPlayerAsync(uuid)
                 .thenAcceptAsync((smpPlayer) -> plugin.getSessionManager().startSession(smpPlayer.orElseThrow()))
+                .thenRunAsync(() -> plugin.getSessionManager().getSession(uuid).orElseThrow().getSessionStats())
                 .exceptionally(throwable -> {
+                    throwable.printStackTrace();
                     plugin.getLogger().warning("Failed to start session for " + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ")");
                     syncKick(event.getPlayer(), plugin.getMessage(MessageUtil.KEY.GENERAL_ERROR));
                     return null;

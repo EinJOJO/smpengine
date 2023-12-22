@@ -13,3 +13,5 @@ commands:
     description: Team Commands
   difficulty:
     description: Difficulty Commands
+  stats:
+    description: Stats Commands

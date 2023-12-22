@@ -23,7 +23,7 @@ public class StatsManager {
         this.statsDatabase = new StatsDatabase(plugin.getHikariCP());
         statsCache = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofMinutes(5))
-                .removalListener((k, v, cause) -> {
+                .evictionListener((k, v, cause) -> {
                     if (v instanceof Stats stats) {
                         statsDatabase.updateStats(stats);
                     }
@@ -34,6 +34,10 @@ public class StatsManager {
                 .buildAsync((uuid, executor) -> getGlobalStatsOfPlayer(uuid));
     }
 
+
+    public Stats getByPlayer(UUID player ){
+        return null;
+    }
 
     /**
      * Gets the stats of a player by their UUID
@@ -76,11 +80,11 @@ public class StatsManager {
     public void updateStats(Stats stats) {
         StatsImpl statsImpl = (StatsImpl) stats;
         if (statsImpl.getSessionID() == null) return;
+        statsDatabase.updateStats(stats);
         statsCache.invalidate(statsImpl.getSessionID());
     }
 
     public void closeStats() {
-        statsCache.invalidateAll();
+        statsCache.asMap().values().forEach(this::updateStats);
     }
-
 }

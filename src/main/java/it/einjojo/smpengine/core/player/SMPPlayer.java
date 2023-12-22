@@ -1,5 +1,7 @@
 package it.einjojo.smpengine.core.player;
 
+import it.einjojo.smpengine.core.session.Session;
+import it.einjojo.smpengine.core.stats.Stats;
 import it.einjojo.smpengine.core.team.Team;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +60,14 @@ public interface SMPPlayer {
      * @return {@link CompletableFuture} with {@link Optional<Team>} or {@link Optional#empty()} if player is not in a team.
      */
     CompletableFuture<Optional<Team>> getTeamAsync();
+
+    Stats getStats();
+
+    CompletableFuture<Stats> getStatsAsync();
+
+    Optional<Session> getSession();
+
+    CompletableFuture<Optional<Session>> getSessionAsync();
 
 
 }

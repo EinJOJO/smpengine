@@ -82,6 +82,7 @@ public class SMPEnginePlugin extends JavaPlugin {
             return;
         }
         shuttingDown = true;
+        statsManager.closeStats();
         sessionManager.closeSessions();
         playerManager.closePlayers();
         hikariCP.close();
@@ -135,6 +136,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         new PlayerQuitListener(this);
         new TeamListener(this);
         new PlayerChatListener(this);
+        new StatsListener(this);
     }
 
 

@@ -1,6 +1,8 @@
 package it.einjojo.smpengine.core.player;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
+import it.einjojo.smpengine.core.session.Session;
+import it.einjojo.smpengine.core.stats.Stats;
 import it.einjojo.smpengine.core.team.Team;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,6 +47,26 @@ public class SMPPlayerImpl implements SMPPlayer {
     @Override
     public CompletableFuture<Optional<Team>> getTeamAsync() {
         return CompletableFuture.supplyAsync(this::getTeam);
+    }
+
+    @Override
+    public Stats getStats() {
+        return plugin.getStatsManager().getByPlayer(uuid);
+    }
+
+    @Override
+    public CompletableFuture<Stats> getStatsAsync() {
+        return CompletableFuture.supplyAsync(this::getStats);
+    }
+
+    @Override
+    public Optional<Session> getSession() {
+        return plugin.getSessionManager().getSession(uuid);
+    }
+
+    @Override
+    public CompletableFuture<Optional<Session>> getSessionAsync() {
+        return CompletableFuture.supplyAsync(this::getSession);
     }
 
     public Player getPlayer() {

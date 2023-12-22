@@ -74,7 +74,7 @@ public class InviteSubCommand implements Command {
         }
         Optional<SMPPlayer> oTarget = playerManager.getPlayerByName(args[0]);
         if (oTarget.isEmpty()) {
-            bukkitPlayer.sendMessage(plugin.getMessage("command.target-not-found"));
+            bukkitPlayer.sendMessage(plugin.getMessage("command.targetNotFound"));
             return;
         }
         SMPPlayer target = oTarget.get();

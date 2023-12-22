@@ -37,7 +37,7 @@ public class StatsDatabase {
     }
 
     public StatsImpl getGlobalStats() {
-        return null; // TODO: 12/22/2023  
+        return null; // TODO: 12/22/2023
     }
 
     public boolean createStats(int sessionID, UUID uuid) {

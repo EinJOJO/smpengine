@@ -15,7 +15,7 @@ public class MessageUtil {
     @Getter
     public enum KEY {
         NO_PERMISSION("no-permission"),
-        COMMAND_TARGET_NOT_FOUND("command.target-not-found"),
+        COMMAND_TARGET_NOT_FOUND("command.targetNotFound"),
         GENERAL_ERROR("general-error");
 
         private final String key;

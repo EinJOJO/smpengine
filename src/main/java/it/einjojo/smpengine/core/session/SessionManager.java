@@ -1,5 +1,7 @@
 package it.einjojo.smpengine.core.session;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
 import it.einjojo.smpengine.database.SessionDatabase;
@@ -7,26 +9,28 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 public class SessionManager {
 
     private final SMPEnginePlugin plugin;
-    private final Map<UUID, Session> sessions;
+    private final LoadingCache<UUID, Session> sessions;
     private final SessionDatabase sessionDatabase;
 
     public SessionManager(SMPEnginePlugin plugin) {
         this.plugin = plugin;
         this.sessionDatabase = new SessionDatabase(plugin.getHikariCP());
-        sessions = new HashMap<>();
+        sessions = Caffeine.newBuilder()
+                .build(uuid -> {
+                    var session = sessionDatabase.getActiveSession(uuid.toString());
+                    if (session != null) {
+                        applyPlugin(session);
+                    }
+                    return session;
+                });
     }
 
-    private Session getActiveSession(UUID uuid) {
-        return sessionDatabase.getActiveSession(uuid.toString());
-    }
 
     public Optional<Session> getSessionByID(int id) {
         return null;
@@ -40,14 +44,7 @@ public class SessionManager {
      * @return The session of the player if it exists or an empty optional if it doesn't
      */
     public Optional<Session> getSession(UUID uuid) {
-        Session session = sessions.get(uuid);
-        if (session == null) {
-            session = getActiveSession(uuid);
-            if (session != null) {
-                sessions.put(uuid, session);
-            }
-        }
-        return Optional.ofNullable(session);
+        return Optional.ofNullable(sessions.get(uuid));
     }
 
     public void startSession(SMPPlayer player) {
@@ -75,7 +72,7 @@ public class SessionManager {
         SessionImpl sessionImpl = (SessionImpl) session.get();
         sessionImpl.setEndTime(Instant.now());
         sessionDatabase.updateSession(sessionImpl);
-        sessions.remove(player.getUuid());
+        sessions.invalidate(player.getUuid());
     }
 
     public void closeSessions() {
@@ -94,5 +91,10 @@ public class SessionManager {
         plugin.getLogger().info("Closed " + closed + " buggy sessions");
     }
 
+    private void applyPlugin(Session s) {
+        if (s instanceof SessionImpl) {
+            ((SessionImpl) s).setPlugin(plugin);
+        }
+    }
 
 }

@@ -13,7 +13,7 @@ team:
 # Commands
 command:
   unknown: "<prefix> <red>Unbekannter Befehl!"
-  target-not-found: "<prefix> <red>Der Spieler wurde nicht gefunden!"
+  targetNotFound: "<prefix> <red>Der Spieler wurde nicht gefunden!"
   maintenance:
     enabled: "<prefix> <gray>Der Wartungsmodus wurde <green>aktiviert</green><!"
     disabled: "<prefix> <gray>Der Wartungsmodus wurde <red>deaktiviert</red><!"
