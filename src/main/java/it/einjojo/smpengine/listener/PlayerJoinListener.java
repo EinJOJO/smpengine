@@ -87,7 +87,7 @@ public class PlayerJoinListener implements Listener {
         if (joinMessage == null) {
             return;
         }
-        event.joinMessage(plugin.getPrefix().append(joinMessage));
+        event.joinMessage(plugin.getPrefix().appendSpace().append(joinMessage));
 
         UUID uuid = event.getPlayer().getUniqueId();
         plugin.getPlayerManager().getPlayerAsync(uuid)

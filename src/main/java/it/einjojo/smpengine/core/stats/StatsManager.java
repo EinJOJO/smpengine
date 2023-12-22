@@ -23,7 +23,7 @@ public class StatsManager {
         this.plugin = plugin;
         this.statsDatabase = new StatsDatabase(plugin.getHikariCP(), plugin);
         statsCache = Caffeine.newBuilder()
-                .expireAfterAccess(Duration.ofMinutes(5))
+                .expireAfterWrite(Duration.ofMinutes(2)) // Update stats every 2 minutes
                 .evictionListener((k, v, cause) -> {
                     if (v instanceof Stats stats) {
                         statsDatabase.updateStats(stats);
@@ -31,9 +31,14 @@ public class StatsManager {
                 })
                 .build();
         statsCacheByUUID = Caffeine.newBuilder()
-                .expireAfterWrite(Duration.ofSeconds(10))
+                .expireAfterAccess(Duration.ofSeconds(10))
+                .evictionListener((key, value, cause) -> {
+                    plugin.getLogger().info("Evicting stats of player " + key);
+                })
                 .buildAsync((uuid, executor) -> getGlobalStatsOfPlayer(uuid));
-        statsCacheByTeam = Caffeine.newBuilder().expireAfterWrite(Duration.ofSeconds(10)).buildAsync((integer, executor) -> getGlobalStatsOfTeam(integer));
+        statsCacheByTeam = Caffeine.newBuilder()
+                .expireAfterWrite(Duration.ofSeconds(10))
+                .buildAsync((integer, executor) -> getGlobalStatsOfTeam(integer));
     }
 
 
@@ -48,6 +53,7 @@ public class StatsManager {
     public Stats getByTeam(int id) {
         return statsCacheByTeam.synchronous().get(id);
     }
+
     public CompletableFuture<Stats> getByTeamAsync(int id) {
         return statsCacheByTeam.get(id);
     }
@@ -87,15 +93,26 @@ public class StatsManager {
     }
 
     private CompletableFuture<Stats> getGlobalStatsOfPlayer(UUID player) {
-        Stats stats = statsDatabase.getGlobalStats(player);
-        if (stats != null) {
-            applyMeta(stats);
-            return CompletableFuture.completedFuture(stats);
-        }
-        return CompletableFuture.completedFuture(null);
+        return CompletableFuture.supplyAsync(() -> {
+            GlobalStats s1 = statsDatabase.getGlobalStats(player);
+            if (s1 != null) {
+                plugin.getSessionManager().getSession(player).ifPresent((v) -> {
+                    Stats s2 = v.getSessionStats();
+                    s1.setBlocksDestroyed(s2.getBlocksDestroyed() + s1.getBlocksDestroyed());
+                    s1.setBlocksPlaced(s2.getBlocksPlaced() + s1.getBlocksPlaced());
+                    s1.setDeaths(s2.getDeaths() + s1.getDeaths());
+                    s1.setMobKills(s2.getMobKills() + s1.getMobKills());
+                    s1.setPlayerKills(s2.getPlayerKills() + s1.getPlayerKills());
+                    s1.setPlaytimeMillis(s2.getPlayTime().plusMillis(s1.getPlayTime().toEpochMilli()));
+                });
+                applyMeta(s1);
+                return s1;
+            }
+            return null;
+        });
     }
 
-    private CompletableFuture<Stats> getGlobalStatsOfTeam(int id) {
+    private CompletableFuture<Stats> getGlobalStatsOfTeam(int id) { //TODO Eventuell anderes Verfahren.
         Stats stats = statsDatabase.getTeamStats(id);
         if (stats != null) {
             applyMeta(stats);
