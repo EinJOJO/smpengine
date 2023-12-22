@@ -125,7 +125,7 @@ public class DifficultyCommand implements TabCompleter, CommandExecutor {
 
     private boolean hasCooldown(Player player) {
         if (cooldown.containsKey(player)) {
-            if (cooldown.get(player).isAfter(Instant.now())) {
+            if (cooldown.get(player).isBefore(Instant.now())) {
                 cooldown.remove(player);
                 return false;
             }

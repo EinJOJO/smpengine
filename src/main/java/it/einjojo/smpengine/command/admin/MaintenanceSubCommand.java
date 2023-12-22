@@ -12,10 +12,12 @@ import java.util.List;
 public class MaintenanceSubCommand implements Command {
 
     private final SMPEnginePlugin plugin;
+    boolean enabled;
 
     public MaintenanceSubCommand(SMPEnginePlugin plugin) {
         this.plugin = plugin;
     }
+
 
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -24,14 +26,14 @@ public class MaintenanceSubCommand implements Command {
                 if (!player.hasPermission(plugin.getMaintenanceConfig().getBypassPermission())) {
                     player.kick(MessageUtil.format(plugin.getMaintenanceConfig().getKickMessage(), plugin.getPrimaryColor(), plugin.getPrefix()));
                 }
-                if(!plugin.getMaintenanceConfig().isEnabled())
-                    Bukkit.broadcast(plugin.getMessage("command.maintenance.enabled"));
-                if(plugin.getMaintenanceConfig().isEnabled())
-                    Bukkit.broadcast(plugin.getMessage("command.maintenance.disabled"));
             }
+            Bukkit.broadcast(plugin.getMessage("command.maintenance.enabled"));
             plugin.getMaintenanceConfig().setEnabled(true);
 
-        } else plugin.getMaintenanceConfig().setEnabled(false);
+        } else {
+            plugin.getMaintenanceConfig().setEnabled(false);
+            Bukkit.broadcast(plugin.getMessage("command.maintenance.disabled"));
+        }
     }
 
     @Override
