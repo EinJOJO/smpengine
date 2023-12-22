@@ -23,8 +23,6 @@ public class StatsImpl implements Stats {
     private int deaths;
     private int villagerTrades;
 
-    private Instant globalPlayTime;
-
     private SMPEnginePlugin plugin;
 
     public StatsImpl(Integer sessionID, UUID uuid, int blocksDestroyed, int blocksPlaced, int mobKills, int playerKills, int deaths, int villagerTrades) {
@@ -54,9 +52,6 @@ public class StatsImpl implements Stats {
     @Override
     public Instant getPlayTime() {
         var oSession = getSession();
-        if (oSession.isPresent()) {
-            return oSession.get().duration();
-        }
-        return globalPlayTime;
+        return oSession.map(Session::duration).orElse(null);
     }
 }

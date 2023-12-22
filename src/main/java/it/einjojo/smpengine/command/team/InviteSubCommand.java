@@ -40,7 +40,7 @@ public class InviteSubCommand implements Command {
                 if (args[0].equalsIgnoreCase("accept")) {
                     teamManager.getInvite(smpPlayer.getUuid()).ifPresentOrElse(
                             (teamId) -> joinTeam(teamId, smpPlayer),
-                            () -> _player.sendMessage(plugin.getMessage("command.team.invite.noInvite")));
+                            () -> _player.sendMessage(plugin.getMessage("command.team.invite.noInvites")));
                     return;
                 }
 

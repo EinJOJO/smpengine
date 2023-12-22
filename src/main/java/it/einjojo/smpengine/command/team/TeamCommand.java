@@ -35,6 +35,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
         registerSubCommand(new InviteSubCommand(plugin));
         registerSubCommand(new MemberSubCommand(plugin));
         registerSubCommand(new ChatSubCommand(plugin));
+        registerSubCommand(new StatsSubCommand(plugin));
 
         plugin.getCommand("team").setExecutor(this);
         plugin.getCommand("team").setTabCompleter(this);
@@ -42,7 +43,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player p = (Player) sender;
+        //Player p = (Player) sender;
         if (args.length == 0) {
             showHelp(sender);
             return true;

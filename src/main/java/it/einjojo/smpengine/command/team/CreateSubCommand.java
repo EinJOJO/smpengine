@@ -40,7 +40,10 @@ public class CreateSubCommand implements Command {
                     player.sendMessage(plugin.getMessage("command.team.create.alreadyInTeam"));
                     return;
                 }
-
+                if(args[0].length() > 16){
+                    player.sendMessage(plugin.getMessage("command.team.create.nameTooLong"));
+                    return;
+                }
                 Team team = plugin.getTeamManager().createTeam(args[0], smpPlayer);
                 if (team == null) {
                     player.sendMessage(plugin.getMessage("general-error"));

@@ -15,8 +15,8 @@ command:
   unknown: "<prefix> <red>Unbekannter Befehl!"
   targetNotFound: "<prefix> <red>Der Spieler wurde nicht gefunden!"
   maintenance:
-    enabled: "<prefix> <gray>Der Wartungsmodus wurde <green>aktiviert</green><!"
-    disabled: "<prefix> <gray>Der Wartungsmodus wurde <red>deaktiviert</red><!"
+    enabled: "<prefix> <gray>Der Wartungsmodus wurde <green>aktiviert</green>!"
+    disabled: "<prefix> <gray>Der Wartungsmodus wurde <red>deaktiviert</red>!"
   team:
     notOwner: "<prefix> <red>Du bist nicht der Ersteller des Teams!"
     notInTeam: "<prefix> <red>Du bist nicht in einem Team!"
@@ -29,6 +29,7 @@ command:
       success: "<prefix> <green>Das Team wurde erfolgreich erstellt!"
       alreadyExists: "<prefix> <red>Das Team existiert bereits!"
       alreadyInTeam: "<prefix> <red>Du bist bereits in einem Team!"
+      nameTooLong: "<prefix> <red>Der Name des Teams ist zu lang!"
     leave:
       success: "<prefix> <green>Du hast dein Team verlassen!"
       owner: "<prefix> <red>Der Ersteller des Teams kann das Team nicht verlassen!"
@@ -61,6 +62,9 @@ command:
       usage: "<prefix> <red>Bitte benutze /teamchat <Nachricht>"
       notInTeam: "<prefix> <red>Du bist in keinem Team!"
       toggle: "<prefix> <green>Du hast den Teamchat getoggled!"
+    stats:
+      notFound: "<prefix> <red>Das Team wurde nicht gefunden!"
+      usage: "<prefix> <red>Bitte benutze /team stats oder /team stats [name]"
   difficulty:
     usage: "<prefix> <red>Bitte benutze /difficulty <Schwierigkeit> <Zeit in Minuten>"
     maxTime: "<prefix> <red>Die maximale Zeit beträgt 1 Stunde!"

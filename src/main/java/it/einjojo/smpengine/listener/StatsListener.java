@@ -1,5 +1,6 @@
 package it.einjojo.smpengine.listener;
 
+import io.papermc.paper.event.player.PlayerTradeEvent;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.session.SessionManager;
 import it.einjojo.smpengine.core.stats.StatsImpl;
@@ -58,6 +59,10 @@ public class StatsListener implements Listener {
     }
 
 
-    // TODO: 12/22/2023 Villager Trades 
+    @EventHandler
+    public void onTrade(PlayerTradeEvent event) {
+        var stats = getStats(event.getPlayer().getUniqueId());
+        stats.setVillagerTrades(stats.getVillagerTrades() + 1);
+    }
 
 }

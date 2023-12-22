@@ -24,6 +24,10 @@ public class MaintenanceSubCommand implements Command {
                 if (!player.hasPermission(plugin.getMaintenanceConfig().getBypassPermission())) {
                     player.kick(MessageUtil.format(plugin.getMaintenanceConfig().getKickMessage(), plugin.getPrimaryColor(), plugin.getPrefix()));
                 }
+                if(!plugin.getMaintenanceConfig().isEnabled())
+                    Bukkit.broadcast(plugin.getMessage("command.maintenance.enabled"));
+                if(plugin.getMaintenanceConfig().isEnabled())
+                    Bukkit.broadcast(plugin.getMessage("command.maintenance.disabled"));
             }
             plugin.getMaintenanceConfig().setEnabled(true);
 

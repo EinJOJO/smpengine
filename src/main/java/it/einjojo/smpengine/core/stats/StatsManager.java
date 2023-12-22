@@ -5,8 +5,10 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.session.Session;
+import it.einjojo.smpengine.core.team.Team;
 import it.einjojo.smpengine.database.StatsDatabase;
 
+import java.sql.Connection;
 import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -16,11 +18,12 @@ public class StatsManager {
     private final SMPEnginePlugin plugin;
     private final StatsDatabase statsDatabase;
     private final Cache<Integer, Stats> statsCache; // sessionID, stats
-    private final AsyncLoadingCache<UUID, Stats> statsCacheByUUID; // player, global-stats
+    private final AsyncLoadingCache<UUID, Stats> statsCacheByUUID;
+    private final AsyncLoadingCache<Integer, Stats> statsCacheByTeam;// player, global-stats
 
     public StatsManager(SMPEnginePlugin plugin) {
         this.plugin = plugin;
-        this.statsDatabase = new StatsDatabase(plugin.getHikariCP());
+        this.statsDatabase = new StatsDatabase(plugin.getHikariCP(), plugin);
         statsCache = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofMinutes(5))
                 .evictionListener((k, v, cause) -> {
@@ -32,11 +35,18 @@ public class StatsManager {
         statsCacheByUUID = Caffeine.newBuilder()
                 .expireAfterWrite(Duration.ofSeconds(10))
                 .buildAsync((uuid, executor) -> getGlobalStatsOfPlayer(uuid));
+        statsCacheByTeam = Caffeine.newBuilder().expireAfterWrite(Duration.ofSeconds(10)).buildAsync((integer, executor) -> getGlobalStatsOfTeam(integer));
     }
 
 
-    public Stats getByPlayer(UUID player ){
-        return null;
+    public Stats getByPlayer(UUID player){
+        Stats stats = statsCacheByUUID.synchronous().get(player);
+        return stats;
+    }
+
+    public Stats getByTeam(int id){
+        Stats stats = statsCacheByTeam.synchronous().get(id);
+        return stats;
     }
 
     /**
@@ -74,7 +84,21 @@ public class StatsManager {
     }
 
     private CompletableFuture<Stats> getGlobalStatsOfPlayer(UUID player) {
-        return null;
+        Stats stats = statsDatabase.getGlobalStats(player);
+        if (stats != null) {
+            applyMeta(stats);
+            return CompletableFuture.completedFuture(stats);
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private CompletableFuture<Stats> getGlobalStatsOfTeam(int id) {
+        Stats stats = statsDatabase.getTeamStats(id);
+        if (stats != null) {
+            applyMeta(stats);
+            return CompletableFuture.completedFuture(stats);
+        }
+        return CompletableFuture.completedFuture(null);
     }
 
     public void updateStats(Stats stats) {
