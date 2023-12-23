@@ -26,7 +26,7 @@ public class AnvilListener implements Listener {
 
     private final SMPEnginePlugin plugin;
 
-    public AnvilListener (SMPEnginePlugin plugin) {
+    public AnvilListener(SMPEnginePlugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.playerManager = plugin.getPlayerManager();
         this.plugin = plugin;
@@ -36,13 +36,9 @@ public class AnvilListener implements Listener {
     public void removeLevelCap(PrepareAnvilEvent e) {
         AnvilInventory inventory = e.getInventory();
         Player player = (Player) e.getView().getPlayer();
-
-
         inventory.setMaximumRepairCost(Integer.MAX_VALUE);
-
-
         BossBar bossBar = bossBarMap.get(player.getUniqueId());
-        if(bossBar == null) {
+        if (bossBar == null) {
             bossBar = Bukkit.createBossBar(
                     "",
                     BarColor.WHITE,
@@ -52,19 +48,16 @@ public class AnvilListener implements Listener {
             bossBarMap.put(player.getUniqueId(), bossBar);
         }
         String textColor;
-        double progress = (double) player.getLevel() / (double) inventory.getRepairCost();
-
-        if(Double.isNaN(progress)) {
-            progress = 0D;
-        }
-
-        if(progress >= 1) {
-            progress = 1D;
+        double requirement = (double) player.getLevel() / (double) inventory.getRepairCost();
+        double progress;
+        if (requirement >= 1) {
+            progress = 1.0f;
             bossBar.setColor(BarColor.GREEN);
             textColor = "§a";
         } else {
             bossBar.setColor(BarColor.RED);
             textColor = "§c";
+            progress = requirement;
         }
         bossBar.setProgress(progress);
         bossBar.setTitle("§7Kosten: " + textColor + inventory.getRepairCost());
@@ -73,10 +66,10 @@ public class AnvilListener implements Listener {
 
     @EventHandler
     public void onCloseAnvil(InventoryCloseEvent e) {
-        if(e.getInventory().getType().equals(InventoryType.ANVIL)) {
+        if (e.getInventory().getType().equals(InventoryType.ANVIL)) {
             BossBar bossbar = bossBarMap.get(e.getPlayer().getUniqueId());
 
-            if(bossbar != null) {
+            if (bossbar != null) {
                 bossbar.setVisible(false);
             }
         }
