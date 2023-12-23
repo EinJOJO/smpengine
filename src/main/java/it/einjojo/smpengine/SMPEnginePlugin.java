@@ -26,6 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -59,6 +60,8 @@ public class SMPEnginePlugin extends JavaPlugin {
     private TeamManager teamManager;
     @Getter
     private StatsManager statsManager;
+    @Getter
+    private Instant startTime;
 
     @Override
     public void onEnable() {
@@ -74,6 +77,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         }
         loadCommands();
         loadListener();
+        startTime = Instant.now();
         startedSuccessfully = true;
     }
 
@@ -190,6 +194,8 @@ public class SMPEnginePlugin extends JavaPlugin {
         messagesConfig.load();
         cachedMessages.clear();
     }
+
+
 
     public Component getGeneralErrorMessage() {
         return getMessage(MessageUtil.KEY.GENERAL_ERROR);

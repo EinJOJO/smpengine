@@ -2,6 +2,7 @@ package it.einjojo.smpengine.scoreboard;
 
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.player.SMPPlayer;
+import it.einjojo.smpengine.util.MessageUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -9,6 +10,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+
+import java.time.Instant;
 
 public class TablistManager {
 
@@ -63,10 +66,15 @@ public class TablistManager {
 
 
     private Component getHeader() {
-        return plugin.getPrefix().append(Component.text(" Winter Minecraft Projekt").color(NamedTextColor.GRAY));
+        Component line1 = plugin.getPrefix().appendSpace().append(Component.text(plugin.getPluginMeta().getVersion()).color(NamedTextColor.BLUE));
+        Instant duration = Instant.now().minusMillis(plugin.getStartTime().toEpochMilli());
+        String uptime = MessageUtil.formatPlaytime(duration);
+        Component line2 = Component.text("Uptime: ~").color(NamedTextColor.GRAY).append(Component.text(uptime).color(NamedTextColor.GREEN));
+
+        return line1.append(Component.newline()).append(line2).appendNewline();
     }
 
-    private static final Component Footer = MiniMessage.miniMessage().deserialize("<color:#4A0ff><b>Commands</b></color> <newline><gradient:#8E2DE2:#4A0ff>/team ⋆ /stats ⋆ difficulty</gradient><newline><newline><rainbow:4>Regenbogen.</rainbow>");
+    private static final Component Footer = MiniMessage.miniMessage().deserialize("<newline><color:#4A0ff><b>Commands</b></color> <newline><gradient:#8E2DE2:#4A0ff>/team ⋆ /stats ⋆ /difficulty</gradient><newline>");
 
     private Component getFooter() {
         return Footer;

@@ -11,10 +11,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
-import java.util.TreeMap;
-
 import java.time.Duration;
 import java.time.Instant;
+import java.util.TreeMap;
 
 @UtilityClass
 public class MessageUtil {
@@ -94,20 +93,17 @@ public class MessageUtil {
         duration = duration.minusHours(hours);
         long minutes = duration.toMinutes();
 
-        String daysString = String.format("%d Tage, ", days);
-        String hoursString = String.format("%d Stunden, ", hours);
-        String minutesString = String.format("%d Minuten", minutes);
-        String finalString = "";
-        StringBuilder builder = new StringBuilder(finalString);
+        StringBuilder builder = new StringBuilder();
         if (days > 0) {
+            String daysString = String.format("%d Tage, ", days);
             builder.append(daysString);
         }
         if (hours > 0) {
+            String hoursString = String.format("%d Stunden, ", hours);
             builder.append(hoursString);
         }
-        if (minutes > 0) {
-            builder.append(minutesString);
-        }
+        String minutesString = String.format("%d Minuten", minutes);
+        builder.append(minutesString);
 
         return builder.toString();
     }
@@ -142,11 +138,11 @@ public class MessageUtil {
     }
 
     public static String toRoman(int number) {
-        int l =  map.floorKey(number);
-        if ( number == l ) {
+        int l = map.floorKey(number);
+        if (number == l) {
             return map.get(number);
         }
-        return map.get(l) + toRoman(number-l);
+        return map.get(l) + toRoman(number - l);
     }
 
 }
