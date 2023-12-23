@@ -98,12 +98,7 @@ public class StatsManager {
             if (s1 != null) {
                 plugin.getSessionManager().getSession(player).ifPresent((v) -> {
                     Stats s2 = v.getSessionStats();
-                    s1.setBlocksDestroyed(s2.getBlocksDestroyed() + s1.getBlocksDestroyed());
-                    s1.setBlocksPlaced(s2.getBlocksPlaced() + s1.getBlocksPlaced());
-                    s1.setDeaths(s2.getDeaths() + s1.getDeaths());
-                    s1.setMobKills(s2.getMobKills() + s1.getMobKills());
-                    s1.setPlayerKills(s2.getPlayerKills() + s1.getPlayerKills());
-                    s1.setPlaytimeMillis(s2.getPlayTime().plusMillis(s1.getPlayTime().toEpochMilli()));
+                    s1.add(s2);
                 });
                 applyMeta(s1);
                 return s1;

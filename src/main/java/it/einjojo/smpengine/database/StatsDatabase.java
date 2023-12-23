@@ -46,19 +46,20 @@ public class StatsDatabase {
 
     public GlobalStats getTeamStats(int id) {
         try (Connection connection = hikariCP.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(STATS_JOIN_QUERY + " WHERE player_uuid IN (SELECT uuid FROM spieler WHERE team_id = ?")) {
+            try (PreparedStatement ps = connection.prepareStatement(STATS_JOIN_QUERY + " WHERE player_uuid IN (SELECT uuid FROM spieler WHERE team_id = ?) GROUP BY player_uuid")) {
                 ps.setInt(1, id);
                 try (ResultSet rs = ps.executeQuery()) {
-                    if (!rs.next()) {
-                        return null;
+                    GlobalStats teamStats = new GlobalStats(null, 0, 0, 0, 0, 0, 0, Instant.EPOCH, 0);
+                    while (rs.next()) {
+                        teamStats.add(rsToGlobalStats(rs));
                     }
-                    return rsToGlobalStats(rs);
+                    return teamStats;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     public GlobalStats getGlobalStats(UUID uuid) {
