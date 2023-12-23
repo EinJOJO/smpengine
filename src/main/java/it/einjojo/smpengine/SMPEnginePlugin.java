@@ -16,6 +16,7 @@ import it.einjojo.smpengine.database.DatabaseMigrator;
 import it.einjojo.smpengine.database.HikariCP;
 import it.einjojo.smpengine.listener.*;
 import it.einjojo.smpengine.scoreboard.TablistManager;
+import it.einjojo.smpengine.task.TablistUpdater;
 import it.einjojo.smpengine.util.MessageUtil;
 import it.einjojo.smpengine.util.Placeholder;
 import lombok.Getter;
@@ -78,6 +79,7 @@ public class SMPEnginePlugin extends JavaPlugin {
         loadCommands();
         loadListener();
         startTime = Instant.now();
+
         startedSuccessfully = true;
     }
 
@@ -121,6 +123,8 @@ public class SMPEnginePlugin extends JavaPlugin {
         teamManager = new TeamManager(this);
         statsManager = new StatsManager(this);
         tablistManager = new TablistManager(this);
+
+        new TablistUpdater(this).start();
 
         return true;
     }
