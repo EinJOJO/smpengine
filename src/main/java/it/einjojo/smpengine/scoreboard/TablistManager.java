@@ -5,6 +5,7 @@ import it.einjojo.smpengine.core.player.SMPPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -62,11 +63,13 @@ public class TablistManager {
 
 
     private Component getHeader() {
-        return plugin.getPrefix().append(Component.text(" Header"));
+        return plugin.getPrefix().append(Component.text(" Winter Minecraft Projekt").color(NamedTextColor.GRAY));
     }
 
+    private static final Component Footer = MiniMessage.miniMessage().deserialize("<color:#4A0ff><b>Commands</b></color> <newline><gradient:#8E2DE2:#4A0ff>/team ⋆ /stats ⋆ difficulty</gradient><newline><newline><rainbow:4>Regenbogen.</rainbow>");
+
     private Component getFooter() {
-        return plugin.getPrefix().append(Component.text(" Footer"));
+        return Footer;
     }
 
 }

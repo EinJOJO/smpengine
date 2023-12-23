@@ -15,7 +15,7 @@ import org.bukkit.event.Listener;
 public class PlayerChatListener implements Listener {
 
     private static final Component ARROW = Component.text("»").color(NamedTextColor.DARK_GRAY);
-    private static final Component tcPrefix = MiniMessage.miniMessage().deserialize("<gray>[<red>Teamchat</red>]</gray>");
+    private static final Component tcPrefix = MiniMessage.miniMessage().deserialize("<gray>[<red>Teamchat</red>]</gray> ");
     private final SMPEnginePlugin plugin;
 
     public PlayerChatListener(SMPEnginePlugin plugin) {
@@ -38,7 +38,7 @@ public class PlayerChatListener implements Listener {
         plugin.getPlayerManager().getPlayerAsync(event.getPlayer().getUniqueId()).thenAcceptAsync(smpPlayer -> {
             smpPlayer.orElseThrow().getTeam().ifPresent(team -> {
                 for (Player player : team.getOnlineMembers()) {
-                    player.sendMessage(formatMessage(event));
+                    player.sendMessage(tcPrefix.append(formatMessage(event)));
                 }
             });
         });
