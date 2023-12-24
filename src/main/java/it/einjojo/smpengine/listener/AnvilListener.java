@@ -49,6 +49,9 @@ public class AnvilListener implements Listener {
         }
         String textColor;
         double requirement = (double) player.getLevel() / (double) inventory.getRepairCost();
+        if (Double.isNaN(requirement)) {
+            requirement = 0;
+        }
         double progress = Math.min(1.0, Math.max(0.0, requirement));
         if (requirement >= 1) {
             bossBar.setColor(BarColor.GREEN);
