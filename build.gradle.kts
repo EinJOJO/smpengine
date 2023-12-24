@@ -7,7 +7,7 @@ plugins {
 
 
 group = "it.einjojo.smpengine"
-version = "1.4.1"
+version = "1.5.1"
 
 repositories {
     mavenCentral()
