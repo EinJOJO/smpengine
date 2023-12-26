@@ -26,15 +26,13 @@ public class StatsManager {
                 .expireAfterWrite(Duration.ofMinutes(2)) // Update stats every 2 minutes
                 .evictionListener((k, v, cause) -> {
                     if (v instanceof Stats stats) {
+                        plugin.getLogger().info("updating stats of player " + stats.getPlayer().getName() + " sessionID " + ((StatsImpl) stats).getSessionID());
                         statsDatabase.updateStats(stats);
                     }
                 })
                 .build();
         statsCacheByUUID = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofSeconds(10))
-                .evictionListener((key, value, cause) -> {
-                    plugin.getLogger().info("Evicting stats of player " + key);
-                })
                 .buildAsync((uuid, executor) -> getGlobalStatsOfPlayer(uuid));
         statsCacheByTeam = Caffeine.newBuilder()
                 .expireAfterWrite(Duration.ofSeconds(10))
