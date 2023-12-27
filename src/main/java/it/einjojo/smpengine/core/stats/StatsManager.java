@@ -3,6 +3,7 @@ package it.einjojo.smpengine.core.stats;
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalCause;
 import it.einjojo.smpengine.SMPEnginePlugin;
 import it.einjojo.smpengine.core.session.Session;
 import it.einjojo.smpengine.database.StatsDatabase;
@@ -24,7 +25,8 @@ public class StatsManager {
         this.statsDatabase = new StatsDatabase(plugin.getHikariCP(), plugin);
         statsCache = Caffeine.newBuilder()
                 .expireAfterWrite(Duration.ofMinutes(2)) // Update stats every 2 minutes
-                .evictionListener((k, v, cause) -> {
+                .removalListener((k, v, cause) -> {
+                    if (cause == RemovalCause.EXPLICIT) return;
                     if (v instanceof Stats stats) {
                         statsDatabase.updateStats(stats);
                     }
