@@ -26,7 +26,6 @@ public class StatsManager {
                 .expireAfterWrite(Duration.ofMinutes(2)) // Update stats every 2 minutes
                 .evictionListener((k, v, cause) -> {
                     if (v instanceof Stats stats) {
-                        plugin.getLogger().info("updating "+ stats +" of player " + stats.getPlayer().getName() + " sessionID " + ((StatsImpl) stats).getSessionID());
                         statsDatabase.updateStats(stats);
                     }
                 })
@@ -66,13 +65,16 @@ public class StatsManager {
         // cache lookup
         Stats stats = statsCache.getIfPresent(sessionID);
         if (stats != null) {
+            plugin.getLogger().info("[CACHE] fetched " + stats + " of player " + stats.getPlayer().getName() + " sessionID " + ((StatsImpl) stats).getSessionID());
             return stats;
         }
+
         // fetch from database
         Stats stats2 = statsDatabase.getBySession(sessionID);
         if (stats2 != null) {
             applyMeta(stats2);
             statsCache.put(sessionID, stats2);
+            plugin.getLogger().info("[DATABASE] fetched " + stats2 + " of player " + stats2.getPlayer().getName() + " sessionID " + ((StatsImpl) stats2).getSessionID());
         }
         return stats2;
     }
@@ -119,6 +121,7 @@ public class StatsManager {
         if (statsImpl.getSessionID() == null) return;
         statsDatabase.updateStats(stats);
         statsCache.invalidate(statsImpl.getSessionID());
+        plugin.getLogger().info("updating " + stats + " of player " + stats.getPlayer().getName() + " sessionID " + ((StatsImpl) stats).getSessionID());
     }
 
     public void closeStats() {
