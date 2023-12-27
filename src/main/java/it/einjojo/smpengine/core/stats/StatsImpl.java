@@ -54,4 +54,18 @@ public class StatsImpl implements Stats {
         var oSession = getSession();
         return oSession.map(Session::duration).orElse(null);
     }
+
+    @Override
+    public String toString() {
+        return "StatsImpl{" +
+                "sessionID=" + sessionID +
+                ", uuid=" + uuid +
+                ", blocksDestroyed=" + blocksDestroyed +
+                ", blocksPlaced=" + blocksPlaced +
+                ", mobKills=" + mobKills +
+                ", playerKills=" + playerKills +
+                ", deaths=" + deaths +
+                ", villagerTrades=" + villagerTrades +
+                '}';
+    }
 }

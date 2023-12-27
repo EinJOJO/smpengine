@@ -26,7 +26,7 @@ public class StatsManager {
                 .expireAfterWrite(Duration.ofMinutes(2)) // Update stats every 2 minutes
                 .evictionListener((k, v, cause) -> {
                     if (v instanceof Stats stats) {
-                        plugin.getLogger().info("updating stats of player " + stats.getPlayer().getName() + " sessionID " + ((StatsImpl) stats).getSessionID());
+                        plugin.getLogger().info("updating "+ stats +" of player " + stats.getPlayer().getName() + " sessionID " + ((StatsImpl) stats).getSessionID());
                         statsDatabase.updateStats(stats);
                     }
                 })
