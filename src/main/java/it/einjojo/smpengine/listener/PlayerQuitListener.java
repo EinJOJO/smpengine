@@ -24,24 +24,20 @@ public class PlayerQuitListener implements Listener {
                         plugin.getLogger().warning("Player data not found on quit");
                         return;
                     }
-
                     SMPPlayerImpl smpPlayer = (SMPPlayerImpl) optionalPlayer.get();
                     smpPlayer.setOnline(false);
-
                     smpPlayer.getSessionAsync().thenAcceptAsync(optionalSession -> {
                         if (optionalSession.isEmpty()) {
                             plugin.getLogger().warning("Session data not found for player on quit");
                             return;
                         }
-
                         plugin.getStatsManager().updateStats(optionalSession.get().getSessionStats());
+                        plugin.getSessionManager().endSession(smpPlayer);
+                        plugin.getPlayerManager().updatePlayer(smpPlayer);
                     }).exceptionally(throwable -> {
-                        plugin.getLogger().warning("Failed to update player stats on quit: " + throwable.getMessage());
+                        plugin.getLogger().warning("Failed to update player on quit: " + throwable.getMessage());
                         return null;
                     });
-
-                    plugin.getSessionManager().endSession(smpPlayer);
-                    plugin.getPlayerManager().updatePlayer(smpPlayer);
                 }).exceptionally(throwable -> {
                     plugin.getLogger().warning("Failed to update player data on quit: " + throwable.getMessage());
                     return null;
